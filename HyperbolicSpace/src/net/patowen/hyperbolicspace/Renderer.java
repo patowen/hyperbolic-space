@@ -4,14 +4,17 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLUniformData;
 import javax.media.opengl.glu.GLU;
 
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
-import com.jogamp.opengl.util.glsl.ShaderUtil;
+import com.jogamp.opengl.util.glsl.ShaderState;
 
 
 public class Renderer
@@ -88,6 +91,21 @@ public class Renderer
 	public void render(GL2 gl)
 	{
 		ShaderProgram prog = new ShaderProgram();
+		prog.init(gl);
+		
+		ShaderCode vsCode = ShaderHandler.getShaderCode(GL2.GL_VERTEX_SHADER, "hyperbolic_vs");
+		vsCode.compile(gl);
+		prog.add(vsCode);
+		
+		ShaderCode fsCode = ShaderHandler.getShaderCode(GL2.GL_FRAGMENT_SHADER, "hyperbolic_fs");
+		fsCode.compile(gl);
+		prog.add(fsCode);
+		
+		prog.link(gl, System.err);
+		
+		ShaderState state = new ShaderState();
+		state.attachShaderProgram(gl, prog, true);
+		state.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
 		
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
