@@ -1,13 +1,10 @@
 package net.patowen.hyperbolicspace;
-import java.nio.FloatBuffer;
-
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLUniformData;
-import javax.media.opengl.glu.GLU;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.event.WindowAdapter;
@@ -92,9 +89,7 @@ public class Renderer
 				gl.glMatrixMode(GL2.GL_PROJECTION);
 				gl.glLoadIdentity();
 				
-				GLU glu = new GLU();
 				float[] mat = new float[16];
-//				shaderState.uniform(gl, new GLUniformData("transform", 4, 4, buf));
 				mh.setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
 			}
 		});
