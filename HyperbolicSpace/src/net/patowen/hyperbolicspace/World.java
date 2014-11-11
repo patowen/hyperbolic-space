@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
+import com.jogamp.opengl.math.FloatUtil;
+
 
 public class World
 {
@@ -24,8 +26,8 @@ public class World
 		o = new Orientation(new Vector3(0, 0, -1), new Vector3(1, 0, 0), new Vector3(0, 1, 0));
 		
 		v = new ArrayList<Vertex>();
-//		makeHorosphere();
-		makeDodecahedron();
+		makeHorosphere();
+//		makeDodecahedron();
 //		makeCylinder();
 		
 		System.out.println(v.size());
@@ -276,10 +278,16 @@ public class World
 		input.updatePressed();
 	}
 	
-	public void draw(GL2 gl)
+	public void render(MatrixHandler mh, GL2 gl)
 	{
 		GLU glu = new GLU();
-		glu.gluLookAt(0,0,0, o.x.x, o.x.y, o.x.z, o.z.x, o.z.y, o.z.z);
+//		glu.gluLookAt(0,0,0, o.x.x, o.x.y, o.x.z, o.z.x, o.z.y, o.z.z);
+		float[] result = new float[16], tmp = new float[16];
+		FloatUtil.makeLookAt(result, 0, new float[]{0, 0, 0}, 0, new float[] {(float)o.x.x, (float)o.x.y, (float)o.x.z},
+				0, new float[] {(float)o.z.x, (float)o.z.y, (float)o.z.z}, 0, tmp);
+		FloatUtil.multMatrix(mh.transformArray(), result);
+		
+		mh.update(gl);
 		
 		gl.glColor3d(1, 1, 1);
 		gl.glBegin(GL2.GL_LINES);

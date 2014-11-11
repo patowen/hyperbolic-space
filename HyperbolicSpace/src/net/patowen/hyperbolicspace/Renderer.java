@@ -1,4 +1,6 @@
 package net.patowen.hyperbolicspace;
+import java.nio.FloatBuffer;
+
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -11,6 +13,7 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
@@ -21,7 +24,10 @@ public class Renderer
 {	
 	private GLWindow win;
 	private World world;
+	private ShaderState shaderState;
 	private FPSAnimator anim;
+	
+	private MatrixHandler mh;
 		
 	public Renderer(GLWindow win)
 	{
@@ -56,9 +62,28 @@ public class Renderer
 			
 			public void init(GLAutoDrawable drawable)
 			{
-				GL gl = drawable.getGL();
+				GL2 gl = drawable.getGL().getGL2();
 				gl.glClearColor(0, 0, 0, 1);
 				gl.glEnable(GL.GL_DEPTH_TEST);
+				
+				ShaderProgram prog = new ShaderProgram();
+				prog.init(gl);
+				
+				ShaderCode vsCode = ShaderHandler.getShaderCode(GL2.GL_VERTEX_SHADER, "hyperbolic_vs");
+				vsCode.compile(gl);
+				prog.add(vsCode);
+				
+				ShaderCode fsCode = ShaderHandler.getShaderCode(GL2.GL_FRAGMENT_SHADER, "hyperbolic_fs");
+				fsCode.compile(gl);
+				prog.add(fsCode);
+				
+				prog.link(gl, System.err);
+				prog.validateProgram(gl, System.err);
+				
+				shaderState = new ShaderState();
+				mh = new MatrixHandler(shaderState);
+				shaderState.attachShaderProgram(gl, prog, true);
+				shaderState.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
 			}
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
@@ -68,7 +93,9 @@ public class Renderer
 				gl.glLoadIdentity();
 				
 				GLU glu = new GLU();
-				glu.gluPerspective(45, (double)width/height, 0.01, 8.1);
+				float[] mat = new float[16];
+//				shaderState.uniform(gl, new GLUniformData("transform", 4, 4, buf));
+				mh.setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
 			}
 		});
 		
@@ -89,28 +116,12 @@ public class Renderer
 	}
 	
 	public void render(GL2 gl)
-	{
-		ShaderProgram prog = new ShaderProgram();
-		prog.init(gl);
-		
-		ShaderCode vsCode = ShaderHandler.getShaderCode(GL2.GL_VERTEX_SHADER, "hyperbolic_vs");
-		vsCode.compile(gl);
-		prog.add(vsCode);
-		
-		ShaderCode fsCode = ShaderHandler.getShaderCode(GL2.GL_FRAGMENT_SHADER, "hyperbolic_fs");
-		fsCode.compile(gl);
-		prog.add(fsCode);
-		
-		prog.link(gl, System.err);
-		
-		ShaderState state = new ShaderState();
-		state.attachShaderProgram(gl, prog, true);
-		state.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
-		
+	{		
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
+//		gl.glLoadIdentity();
+		mh.reset();
 		
-		world.draw(gl);
+		world.render(mh, gl);
 	}
 }
