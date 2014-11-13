@@ -296,7 +296,6 @@ public class World
 		mh.update(gl);
 		
 		gl.glColor3d(1, 1, 1);
-//		gl.glBegin(GL2.GL_LINES);
 		for (int i=0; i<v.size(); i++)
 		{
 			v.get(i).use(vertexBuffer, normalBuffer);
@@ -305,8 +304,6 @@ public class World
 		normalBuffer.rewind();
 		
 		gl.glVertexPointer(3, GL.GL_FLOAT, 0, vertexBuffer);
-//		gl.glNormalPointer(GL.GL_FLOAT, 0, normalBuffer);
 		gl.glDrawArrays(GL2.GL_LINES, 0, v.size());
-//		gl.glEnd();
 	}
 }
