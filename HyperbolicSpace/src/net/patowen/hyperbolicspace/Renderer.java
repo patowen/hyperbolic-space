@@ -62,6 +62,8 @@ public class Renderer
 				GL2 gl = drawable.getGL().getGL2();
 				gl.glClearColor(0, 0, 0, 1);
 				gl.glEnable(GL.GL_DEPTH_TEST);
+				gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+				gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 				
 				ShaderProgram prog = new ShaderProgram();
 				prog.init(gl);

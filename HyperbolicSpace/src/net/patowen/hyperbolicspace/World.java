@@ -31,8 +31,8 @@ public class World
 		o = new Orientation(new Vector3(0, 0, -1), new Vector3(1, 0, 0), new Vector3(0, 1, 0));
 		
 		v = new ArrayList<Vertex>();
-//		makeHorosphere();
-//		makeDodecahedron();
+		makeHorosphere();
+		makeDodecahedron();
 		makeCylinder();
 		
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*v.size());
