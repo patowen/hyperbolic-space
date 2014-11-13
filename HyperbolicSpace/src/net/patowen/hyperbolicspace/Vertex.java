@@ -10,28 +10,48 @@ public class Vertex
 	private Vector3 pos;
 	private Vector3 vt;
 	
+	private Vector3 norm;
+	private Vector3 nt;
+	
 	private FloatBuffer vertBuffer;
 	private int offset;
 	
 	/**
 	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x x-position
+	 * @param y y-position
+	 * @param z z-position
 	 */
 	public Vertex(double x, double y, double z)
 	{
-		this(new Vector3(x, y, z));
+		this(new Vector3(x, y, z), new Vector3());
+	}
+	
+	/**
+	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
+	 * @param x x-position
+	 * @param y y-position
+	 * @param z z-position
+	 * @param nx x-coordinate of normal vector
+	 * @param ny y-coordinate of normal vector
+	 * @param nz z-coordinate of normal vector
+	 */
+	public Vertex(double x, double y, double z, double nx, double ny, double nz)
+	{
+		this(new Vector3(x, y, z), new Vector3(nx, ny, nz));
 	}
 	
 	/**
 	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
 	 * @param pos
 	 */
-	public Vertex(Vector3 pos)
+	public Vertex(Vector3 pos, Vector3 norm)
 	{
 		this.pos = pos;
 		this.vt = new Vector3(pos);
+		
+		this.norm = norm;
+		this.nt = new Vector3(norm);
 	}
 	
 	/**
@@ -47,6 +67,12 @@ public class Vertex
 		double vFactor = 1 + pos.dot(pos) + 2*(v.dot(pos));
 		double vPosFactor = 1 - v.dot(v);
 		
+		double denomN = 2*(v.dot(v)*pos.dot(norm) + v.dot(norm));
+		double vFactorN = 2*(pos.dot(norm) + v.dot(norm));
+		
+		nt = (norm.times(vPosFactor).plus(v.times(vFactorN)).times(denom))
+				.minus(pos.times(vPosFactor).plus(v.times(vFactor)).times(denomN));
+		nt.normalize();
 		vt = (pos.times(vPosFactor).plus(v.times(vFactor))).times(1/denom);
 	}
 	
@@ -82,10 +108,18 @@ public class Vertex
 	}
 	
 	/**
-	 * Returns the x-position of the vertex after its transformation.
+	 * Returns the position of the vertex after its transformation.
 	 */
 	public Vector3 getVt()
 	{
 		return vt;
+	}
+	
+	/**
+	 * Returns the normal of the vertex after its transformation.
+	 */
+	public Vector3 getNt()
+	{
+		return nt;
 	}
 }

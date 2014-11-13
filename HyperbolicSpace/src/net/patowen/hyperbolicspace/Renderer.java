@@ -32,7 +32,7 @@ public class Renderer
 		win.setSize(1024, 768);
 		
 		win.setTitle("Hyperbolic space");
-		win.setDefaultCloseOperation(WindowClosingMode.DO_NOTHING_ON_CLOSE);
+		win.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
 		
 		win.addWindowListener(new WindowAdapter()
 		{

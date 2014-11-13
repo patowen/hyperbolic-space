@@ -120,7 +120,7 @@ public class World
 		for (int i=0; i<80; i++)
 		{
 			ver.translate(back);
-			ver = new Vertex(ver.getVt());
+			ver = new Vertex(ver.getVt(), ver.getNt());
 		}
 		
 		v.add(ver);
@@ -128,7 +128,7 @@ public class World
 		for (int i=0; i<160; i++)
 		{
 			ver.translate(forth);
-			ver = new Vertex(ver.getVt());
+			ver = new Vertex(ver.getVt(), ver.getNt());
 			v.add(ver);
 			
 			if (i != 159) v.add(ver);
