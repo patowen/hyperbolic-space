@@ -94,6 +94,17 @@ public class Vertex
 		}
 	}
 	
+	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer)
+	{
+		vertexBuffer.put((float)vt.x);
+		vertexBuffer.put((float)vt.y);
+		vertexBuffer.put((float)vt.z);
+		
+		normalBuffer.put((float)nt.x);
+		normalBuffer.put((float)nt.y);
+		normalBuffer.put((float)nt.z);
+	}
+	
 	/**
 	 * Inverts the point about the given circle with given coordinates for the center, and a given radius.
 	 * @param c

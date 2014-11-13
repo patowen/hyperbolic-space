@@ -1,9 +1,12 @@
 package net.patowen.hyperbolicspace;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.math.FloatUtil;
 
 
@@ -15,6 +18,9 @@ public class World
 	private Orientation o;
 	
 	private ArrayList<Vertex> v;
+	
+	private FloatBuffer vertexBuffer;
+	private FloatBuffer normalBuffer;
 	
 	public World(InputHandler inputHandler)
 	{
@@ -28,6 +34,9 @@ public class World
 //		makeHorosphere();
 //		makeDodecahedron();
 		makeCylinder();
+		
+		vertexBuffer = Buffers.newDirectFloatBuffer(3*v.size());
+		normalBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		
 		System.out.println(v.size());
 	}
@@ -287,12 +296,17 @@ public class World
 		mh.update(gl);
 		
 		gl.glColor3d(1, 1, 1);
-		gl.glBegin(GL2.GL_LINES);
+//		gl.glBegin(GL2.GL_LINES);
 		for (int i=0; i<v.size(); i++)
 		{
-			v.get(i).use(gl);
+			v.get(i).use(vertexBuffer, normalBuffer);
 		}
+		vertexBuffer.rewind();
+		normalBuffer.rewind();
 		
-		gl.glEnd();
+		gl.glVertexPointer(3, GL.GL_FLOAT, 0, vertexBuffer);
+//		gl.glNormalPointer(GL.GL_FLOAT, 0, normalBuffer);
+		gl.glDrawArrays(GL2.GL_LINES, 0, v.size());
+//		gl.glEnd();
 	}
 }
