@@ -16,18 +16,17 @@ import com.jogamp.newt.opengl.GLWindow;
 /**
  * Handles mouse grabbing and keyboard input.
  * @author Patrick Owen
- * @author Michael Ekstrom
  */
 public class InputHandler implements KeyListener, MouseListener //Add MouseMotionListener, add methods at bottom
 {
 	private Robot robot;
 	private GLWindow win;
+	private boolean focused;
 	
 	//Mouse controls
 	private int screenWidth, screenHeight;
 	private double mouseX, mouseY;
 	private double mouseSensitivity;
-	private double mouseXPos, mouseYPos;
 	
 	//Variables used outside to choose which control is being inspected
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, SLOW = 4; //Keyboard
@@ -88,6 +87,7 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 		
 		win.addKeyListener(this);
 		win.addMouseListener(this);
+		focused = false;
 		
 		mouseSensitivity = 1.0/45/200;
 		
@@ -137,7 +137,7 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 	 */
 	public void readMouse()
 	{
-		if (win.hasFocus())
+		if (win.hasFocus() && focused)
 		{
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			int centerX = win.getX() + win.getWidth()/2;
@@ -150,6 +150,7 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 		}
 		else
 		{
+			setFocused(false);
 			mouseX = 0;
 			mouseY = 0;
 		}
@@ -226,24 +227,6 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 	}
 	
 	/**
-	 * Returns the current x value of the mouse's position
-	 * @return Mouse x value
-	 */
-	public double getMouseXPos()//HEY
-	{
-		return mouseXPos;
-	}//end getMouseXPos
-	
-	/**
-	 * Returns the current y value of the mouse's position
-	 * @return Mouse y value
-	 */
-	public double getMouseYPos()//HEY
-	{
-		return mouseYPos;
-	}//end getMouseYPos
-	
-	/**
 	 * Returns the x-component of the displacement of the mouse determined by the readMouse method.
 	 * @see readMouse
 	 */
@@ -301,6 +284,22 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 		return mousePressed[button];
 	}
 	
+	private void setFocused(boolean focused)
+	{
+		this.focused = focused;
+		if (focused)
+		{
+			win.setPointerVisible(false);
+			int centerX = win.getX() + win.getWidth()/2;
+			int centerY = win.getY() + win.getHeight()/2;			
+			robot.mouseMove(centerX, centerY);
+		}
+		else
+		{
+			win.setPointerVisible(true);
+		}
+	}
+	
 	/**
 	 * Updates the keys based on the event received by the component.
 	 */
@@ -342,8 +341,6 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 		}
 	}
 	
-	public void keyTyped(KeyEvent e) {}
-	
 	public void mouseClicked(MouseEvent e) {}
 	
 	/**
@@ -360,6 +357,8 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 				mouseDown[i] = true;
 			}
 		}
+		
+		setFocused(true);
 	}
 	
 	/**
@@ -383,20 +382,9 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 
 	public void mouseExited(MouseEvent e) {}
 
-	public void mouseDragged(MouseEvent e)
-	{
-		mouseXPos = e.getX();
-		mouseYPos = e.getY();
-	}
+	public void mouseDragged(MouseEvent e) {}
 
-	public void mouseMoved(MouseEvent e)
-	{
-		mouseXPos = e.getX();
-		mouseYPos = e.getY();
-	}
+	public void mouseMoved(MouseEvent e) {}
 	
-	public void mouseWheelMoved(MouseEvent e)
-	{
-		
-	}
+	public void mouseWheelMoved(MouseEvent e) {}
 }

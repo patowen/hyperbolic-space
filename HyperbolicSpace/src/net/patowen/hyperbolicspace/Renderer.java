@@ -42,8 +42,6 @@ public class Renderer
 			}
 		});
 		
-		win.setPointerVisible(false);
-		
 		win.addGLEventListener(new GLEventListener()
 		{
 			public void display(GLAutoDrawable drawable)
