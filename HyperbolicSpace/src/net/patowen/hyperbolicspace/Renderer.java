@@ -25,7 +25,7 @@ public class Renderer
 	private FPSAnimator anim;
 	
 	private MatrixHandler mh;
-		
+	
 	public Renderer(GLWindow win)
 	{
 		this.win = win;
@@ -81,6 +81,7 @@ public class Renderer
 				mh = new MatrixHandler(shaderState);
 				shaderState.attachShaderProgram(gl, prog, true);
 				shaderState.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
+				
 			}
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
