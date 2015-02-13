@@ -69,6 +69,10 @@ public class Renderer
 				vsCode.compile(gl);
 				prog.add(vsCode);
 				
+				ShaderCode gsCode = ShaderHandler.getShaderCode(GL3.GL_GEOMETRY_SHADER, "hyperbolic_gs");
+				gsCode.compile(gl);
+				prog.add(gsCode);
+				
 				ShaderCode fsCode = ShaderHandler.getShaderCode(GL3.GL_FRAGMENT_SHADER, "hyperbolic_fs");
 				fsCode.compile(gl);
 				prog.add(fsCode);

@@ -34,8 +34,8 @@ public class World
 		
 		v = new ArrayList<Vertex>();
 		makeHorosphere();
-//		makeDodecahedron();
-//		makeCylinder();
+		makeDodecahedron();
+		makeCylinder();
 		
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		normalBuffer = Buffers.newDirectFloatBuffer(3*v.size());
