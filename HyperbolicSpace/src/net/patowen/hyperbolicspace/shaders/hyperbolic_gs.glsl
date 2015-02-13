@@ -12,15 +12,10 @@ void main()
 	ap0 = apparent_position[0];
 	ap1 = apparent_position[1];
 	
-	if (ap0 != ap0)
-	{
-		ap0 = vec4(0,0,0,0);
-	}
-	
-	gl_Position = gl_in[0].gl_Position;
+	gl_Position = gl_in[0].gl_Position + vec4(0,0,-0.03125,0);
 	EmitVertex();
 	
-	gl_Position = gl_in[1].gl_Position;
+	gl_Position = gl_in[1].gl_Position + vec4(0,0,-0.03125,0);
 	EmitVertex();
 	
 	EndPrimitive();
