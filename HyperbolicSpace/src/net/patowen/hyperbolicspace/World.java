@@ -22,6 +22,8 @@ public class World
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer normalBuffer;
 	
+	private IntBuffer positionBufferObject;
+	
 	public World(InputHandler inputHandler)
 	{
 		input = inputHandler;
@@ -286,6 +288,15 @@ public class World
 		input.updatePressed();
 	}
 	
+	public void renderInit(GL3 gl)
+	{
+		positionBufferObject = Buffers.newDirectIntBuffer(1);
+		gl.glGenBuffers(1, positionBufferObject);
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, positionBufferObject.get(0));
+		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
+	}
+	
 	public void render(MatrixHandler mh, GL3 gl)
 	{
 		float[] result = new float[16], tmp = new float[16];
@@ -302,13 +313,12 @@ public class World
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
 		
-		gl.glEnableVertexAttribArray(0);
-		IntBuffer positionBufferObject = Buffers.newDirectIntBuffer(1);
-		gl.glGenBuffers(1, positionBufferObject);
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, positionBufferObject.get(0));
 		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
-		gl.glDrawArrays(GL3.GL_LINES, 0, v.size());
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
+		
+		gl.glEnableVertexAttribArray(0);
+		gl.glDrawArrays(GL3.GL_TRIANGLE_STRIP, 0, v.size());
 		gl.glDisableVertexAttribArray(0);
 	}
 }
