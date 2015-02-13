@@ -1,7 +1,6 @@
 package net.patowen.hyperbolicspace;
 import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
+import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLUniformData;
@@ -47,7 +46,7 @@ public class Renderer
 			public void display(GLAutoDrawable drawable)
 			{
 				step(1.0/60);
-				render(drawable.getGL().getGL2());
+				render(drawable.getGL().getGL3());
 			}
 			
 			public void dispose(GLAutoDrawable drawable)
@@ -57,20 +56,20 @@ public class Renderer
 			
 			public void init(GLAutoDrawable drawable)
 			{
-				GL2 gl = drawable.getGL().getGL2();
+				GL3 gl = drawable.getGL().getGL3();
 				gl.glClearColor(0, 0, 0, 1);
-				gl.glEnable(GL.GL_DEPTH_TEST);
-				gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-				gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+				gl.glEnable(GL3.GL_DEPTH_TEST);
+//				gl.glEnableClientState(GL3.GL_VERTEX_ARRAY);
+//				gl.glEnableClientState(GL3.GL_NORMAL_ARRAY);
 				
 				ShaderProgram prog = new ShaderProgram();
 				prog.init(gl);
 				
-				ShaderCode vsCode = ShaderHandler.getShaderCode(GL2.GL_VERTEX_SHADER, "hyperbolic_vs");
+				ShaderCode vsCode = ShaderHandler.getShaderCode(GL3.GL_VERTEX_SHADER, "hyperbolic_vs");
 				vsCode.compile(gl);
 				prog.add(vsCode);
 				
-				ShaderCode fsCode = ShaderHandler.getShaderCode(GL2.GL_FRAGMENT_SHADER, "hyperbolic_fs");
+				ShaderCode fsCode = ShaderHandler.getShaderCode(GL3.GL_FRAGMENT_SHADER, "hyperbolic_fs");
 				fsCode.compile(gl);
 				prog.add(fsCode);
 				
@@ -85,11 +84,7 @@ public class Renderer
 			}
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
-			{
-				GL2 gl = drawable.getGL().getGL2();
-				gl.glMatrixMode(GL2.GL_PROJECTION);
-				gl.glLoadIdentity();
-				
+			{				
 				float[] mat = new float[16];
 				mh.setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
 			}
@@ -111,11 +106,9 @@ public class Renderer
 		world.step(dt);
 	}
 	
-	public void render(GL2 gl)
+	public void render(GL3 gl)
 	{		
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-//		gl.glLoadIdentity();
+		gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 		mh.reset();
 		
 		world.render(mh, gl);

@@ -2,8 +2,6 @@ package net.patowen.hyperbolicspace;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL2;
-
 
 public class Vertex
 {
@@ -12,9 +10,6 @@ public class Vertex
 	
 	private Vector3 norm;
 	private Vector3 nt;
-	
-	private FloatBuffer vertBuffer;
-	private int offset;
 	
 	/**
 	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
@@ -74,24 +69,6 @@ public class Vertex
 				.minus(pos.times(vPosFactor).plus(v.times(vFactor)).times(denomN));
 		nt.normalize();
 		vt = (pos.times(vPosFactor).plus(v.times(vFactor))).times(1/denom);
-	}
-	
-	/**
-	 * Calls glVertex with this vertex
-	 * @param gl
-	 */
-	public void use(GL2 gl)
-	{
-		if (vertBuffer != null)
-		{
-			vertBuffer.put(offset, (float)vt.x);
-			vertBuffer.put(offset+1, (float)vt.y);
-			vertBuffer.put(offset+2, (float)vt.z);
-		}
-		else
-		{
-			gl.glVertex3d(vt.x, vt.y, vt.z);
-		}
 	}
 	
 	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer)

@@ -2,7 +2,7 @@ package net.patowen.hyperbolicspace;
 
 import java.nio.FloatBuffer;
 
-import javax.media.opengl.GL2;
+import javax.media.opengl.GL3;
 import javax.media.opengl.GLUniformData;
 
 import com.jogamp.common.nio.Buffers;
@@ -59,7 +59,7 @@ public class MatrixHandler
 		perspectiveArray = perspective;
 	}
 	
-	public void update(GL2 gl)
+	public void update(GL3 gl)
 	{
 		FloatUtil.multMatrix(perspectiveArray, transformArray, totalArray);
 		totalBuf.put(totalArray).rewind();

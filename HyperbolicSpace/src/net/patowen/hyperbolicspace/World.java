@@ -1,10 +1,10 @@
 package net.patowen.hyperbolicspace;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
+import javax.media.opengl.GL3;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.math.FloatUtil;
@@ -32,8 +32,8 @@ public class World
 		
 		v = new ArrayList<Vertex>();
 		makeHorosphere();
-		makeDodecahedron();
-		makeCylinder();
+//		makeDodecahedron();
+//		makeCylinder();
 		
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		normalBuffer = Buffers.newDirectFloatBuffer(3*v.size());
@@ -286,7 +286,7 @@ public class World
 		input.updatePressed();
 	}
 	
-	public void render(MatrixHandler mh, GL2 gl)
+	public void render(MatrixHandler mh, GL3 gl)
 	{
 		float[] result = new float[16], tmp = new float[16];
 		FloatUtil.makeLookAt(result, 0, new float[]{0, 0, 0}, 0, new float[] {(float)o.x.x, (float)o.x.y, (float)o.x.z},
@@ -295,7 +295,6 @@ public class World
 		
 		mh.update(gl);
 		
-		gl.glColor3d(1, 1, 1);
 		for (int i=0; i<v.size(); i++)
 		{
 			v.get(i).use(vertexBuffer, normalBuffer);
@@ -303,7 +302,13 @@ public class World
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
 		
-		gl.glVertexPointer(3, GL.GL_FLOAT, 0, vertexBuffer);
-		gl.glDrawArrays(GL2.GL_LINES, 0, v.size());
+		gl.glEnableVertexAttribArray(0);
+		IntBuffer positionBufferObject = Buffers.newDirectIntBuffer(1);
+		gl.glGenBuffers(1, positionBufferObject);
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, positionBufferObject.get(0));
+		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
+		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
+		gl.glDrawArrays(GL3.GL_LINES, 0, v.size());
+		gl.glDisableVertexAttribArray(0);
 	}
 }
