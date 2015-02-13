@@ -318,7 +318,7 @@ public class World
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
 		
 		gl.glEnableVertexAttribArray(0);
-		gl.glDrawArrays(GL3.GL_TRIANGLES, 0, v.size());
+		gl.glDrawArrays(GL3.GL_LINES, 0, v.size());
 		gl.glDisableVertexAttribArray(0);
 	}
 }
