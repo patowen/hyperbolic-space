@@ -24,6 +24,8 @@ public class World
 	
 	private IntBuffer positionBufferObject;
 	
+	private SceneNode sceneNode;
+	
 	public World(InputHandler inputHandler)
 	{
 		input = inputHandler;
@@ -40,7 +42,7 @@ public class World
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		normalBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		
-		System.out.println(v.size());
+		sceneNode = new SceneNode();
 	}
 	
 	public void makeHorosphere()
@@ -290,11 +292,7 @@ public class World
 	
 	public void renderInit(GL3 gl)
 	{
-		positionBufferObject = Buffers.newDirectIntBuffer(1);
-		gl.glGenBuffers(1, positionBufferObject);
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, positionBufferObject.get(0));
-		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
+		sceneNode.renderInit(gl);
 	}
 	
 	public void render(MatrixHandler mh, GL3 gl)
@@ -306,19 +304,13 @@ public class World
 		
 		mh.update(gl);
 		
-		for (int i=0; i<v.size(); i++)
-		{
-			v.get(i).use(vertexBuffer, normalBuffer);
-		}
-		vertexBuffer.rewind();
-		normalBuffer.rewind();
-		
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, positionBufferObject.get(0));
-		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
-		
-		gl.glEnableVertexAttribArray(0);
-		gl.glDrawArrays(GL3.GL_LINES, 0, v.size());
-		gl.glDisableVertexAttribArray(0);
+		sceneNode.render(gl);
+//		
+//		for (int i=0; i<v.size(); i++)
+//		{
+//			v.get(i).use(vertexBuffer, normalBuffer);
+//		}
+//		vertexBuffer.rewind();
+//		normalBuffer.rewind();
 	}
 }

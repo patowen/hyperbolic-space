@@ -16,6 +16,11 @@ public class Orientation
 		this(new Vector3(o.x), new Vector3(o.y), new Vector3(o.z));
 	}
 	
+	public Orientation()
+	{
+		this(new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1));
+	}
+	
 	public void normalize()
 	{
 		x.normalize();
