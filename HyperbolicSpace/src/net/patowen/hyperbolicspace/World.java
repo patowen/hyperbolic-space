@@ -24,7 +24,7 @@ public class World
 	
 	private IntBuffer positionBufferObject;
 	
-	private SceneNode sceneNode;
+	private SceneNode dodeca;
 	
 	public World(InputHandler inputHandler)
 	{
@@ -35,14 +35,15 @@ public class World
 		o = new Orientation(new Vector3(0, 0, -1), new Vector3(1, 0, 0), new Vector3(0, 1, 0));
 		
 		v = new ArrayList<Vertex>();
-		makeHorosphere();
+//		makeHorosphere();
 //		makeDodecahedron();
 //		makeCylinder();
 		
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		normalBuffer = Buffers.newDirectFloatBuffer(3*v.size());
 		
-		sceneNode = new SceneNode();
+		dodeca = new Dodecahedron();
+		dodeca.reposition(pos);
 	}
 	
 	public void makeHorosphere()
@@ -282,6 +283,8 @@ public class World
 		for (int i=0; i<v.size(); i++)
 			v.get(i).translate(pos);
 		
+		dodeca.reposition(pos);
+		
 		handleTurning();
 		handleMovement(dt);
 		
@@ -292,7 +295,7 @@ public class World
 	
 	public void renderInit(GL3 gl)
 	{
-		sceneNode.renderInit(gl);
+		dodeca.renderInit(gl);
 	}
 	
 	public void render(MatrixHandler mh, GL3 gl)
@@ -304,7 +307,7 @@ public class World
 		
 		mh.update(gl);
 		
-		sceneNode.render(gl);
+		dodeca.render(gl);
 //		
 //		for (int i=0; i<v.size(); i++)
 //		{
