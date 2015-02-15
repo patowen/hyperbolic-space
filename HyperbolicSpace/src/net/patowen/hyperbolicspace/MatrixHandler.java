@@ -33,6 +33,11 @@ public class MatrixHandler
 		perspectiveBuf = Buffers.newDirectFloatBuffer(perspectiveArray);
 	}
 	
+	public ShaderState getShaderState()
+	{
+		return shaderState;
+	}
+	
 	public float[] transformArray()
 	{
 		return transformArray;

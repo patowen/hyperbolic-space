@@ -4,6 +4,7 @@ uniform mat4 transform;
 uniform mat4 perspective;
 
 in vec3 vertex_position;
+in vec3 normal_position;
 out vec4 apparent_position;
 
 void main()

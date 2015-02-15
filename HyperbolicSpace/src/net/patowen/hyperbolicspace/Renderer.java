@@ -85,7 +85,7 @@ public class Renderer
 				shaderState.attachShaderProgram(gl, prog, true);
 				shaderState.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
 				
-				world.renderInit(gl);
+				world.renderInit(gl, mh);
 				
 			}
 			

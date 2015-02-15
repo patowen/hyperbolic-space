@@ -80,9 +80,9 @@ public class World
 		input.updatePressed();
 	}
 	
-	public void renderInit(GL3 gl)
+	public void renderInit(GL3 gl, MatrixHandler mh)
 	{
-		dodeca.renderInit(gl);
+		dodeca.renderInit(gl, mh);
 	}
 	
 	public void render(MatrixHandler mh, GL3 gl)

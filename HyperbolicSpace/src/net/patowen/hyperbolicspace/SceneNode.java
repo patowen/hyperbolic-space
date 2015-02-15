@@ -6,7 +6,7 @@ public interface SceneNode
 {
 	public void reposition(Vector3 v);
 	
-	public void renderInit(GL3 gl);
+	public void renderInit(GL3 gl, MatrixHandler mh);
 	
 	public void render(GL3 gl);
 }
