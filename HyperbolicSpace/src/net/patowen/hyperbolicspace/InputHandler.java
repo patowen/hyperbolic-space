@@ -303,10 +303,13 @@ public class InputHandler implements KeyListener, MouseListener
 		
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 		{
+			win.destroy();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+		{
 			if (focused)
 				setFocused(false);
-			else
-				win.destroy();
 		}
 		
 		//Handle keys

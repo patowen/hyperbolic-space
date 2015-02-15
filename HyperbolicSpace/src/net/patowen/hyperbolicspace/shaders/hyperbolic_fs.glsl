@@ -17,8 +17,8 @@ void main()
 	else if (int(gl_FragCoord.x) % 2 == 1) xx = ap1.x;
 	else xx = ap1.x;
 	
-	if (xx < 0) fragColor = vec4(1,1,1,1);
-	else if (xx > 0) fragColor = vec4(1,1,1,1);
-	else fragColor = vec4 (1,1,1,1);
-	//fragColor = inputColor;
+	/*if (xx < 0) fragColor = vec4(1,0,0,1);
+	else if (xx > 0) fragColor = vec4(0,1,0,1);
+	else fragColor = vec4 (1,1,0,1);*/
+	fragColor = vec4(1, 1, 1, 1);
 }

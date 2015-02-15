@@ -13,10 +13,10 @@ public class MatrixHandler
 {
 	private ShaderState shaderState;
 	
-//	private FloatBuffer perspectiveBuf;
+	private FloatBuffer perspectiveBuf;
 	private float[] perspectiveArray;
 	
-//	private FloatBuffer transformBuf;
+	private FloatBuffer transformBuf;
 	private float[] transformArray;
 	
 	private FloatBuffer totalBuf;
@@ -34,9 +34,9 @@ public class MatrixHandler
 		FloatUtil.makeIdentity(perspectiveArray);
 		FloatUtil.makeIdentity(totalArray);
 		
-		totalBuf = Buffers.newDirectFloatBuffer(totalArray);
-//		transformBuf = Buffers.newDirectFloatBuffer(transformArray);
-//		perspectiveBuf = Buffers.newDirectFloatBuffer(perspectiveArray);
+//		totalBuf = Buffers.newDirectFloatBuffer(totalArray);
+		transformBuf = Buffers.newDirectFloatBuffer(transformArray);
+		perspectiveBuf = Buffers.newDirectFloatBuffer(perspectiveArray);
 	}
 	
 	public float[] transformArray()
@@ -61,8 +61,9 @@ public class MatrixHandler
 	
 	public void update(GL3 gl)
 	{
-		FloatUtil.multMatrix(perspectiveArray, transformArray, totalArray);
-		totalBuf.put(totalArray).rewind();
-		shaderState.uniform(gl, new GLUniformData("transform", 4, 4, totalBuf));
+		transformBuf.put(transformArray).rewind();
+		perspectiveBuf.put(perspectiveArray).rewind();
+		shaderState.uniform(gl, new GLUniformData("transform", 4, 4, transformBuf));
+		shaderState.uniform(gl, new GLUniformData("perspective", 4, 4, perspectiveBuf));
 	}
 }
