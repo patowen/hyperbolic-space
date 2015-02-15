@@ -68,7 +68,7 @@ public class Vertex
 		nt = (norm.times(vPosFactor).plus(v.times(vFactorN)).times(denom))
 				.minus(pos.times(vPosFactor).plus(v.times(vFactor)).times(denomN));
 		nt.normalize();
-		vt = (pos.times(vPosFactor).plus(v.times(vFactor))).times(1/denom);
+		vt = pos.hyperTranslate(v);
 	}
 	
 	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer)

@@ -32,11 +32,6 @@ public class World
 		o.rotate(o.y, -input.getMouseY()*45);
 	}
 	
-	public void normalize()
-	{
-		o.normalize();
-	}
-	
 	public void translate(double x, double y, double z)
 	{
 		translate(new Vector3(x, y, z));
@@ -47,40 +42,18 @@ public class World
 		Vector3 vv = pos;
 		pos = v.times(-1);
 		translateView(vv);
-		
-		normalize();
 	}
 	
-	/**
-	 * Translates the vertex as simply as possible so that the given coordinates are translated
-	 * to the origin.
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public void translateView(Vector3 v)
 	{
-		//Function determined through circle inversion followed by reflection
-		double denom = v.dot(v)*pos.dot(pos) + 2*v.dot(pos) + 1;
-		double vFactor = 1 + pos.dot(pos) + 2*v.dot(pos);
-		double vPosFactor = 1 - v.dot(v);
+		o.x = o.x.hyperTranslate(pos).hyperTranslate(v);
+		o.z = o.z.hyperTranslate(pos).hyperTranslate(v);
 		
-		//Derivative of xto, yto, and zto
-		double denomTo = 2*(v.dot(v)*pos.dot(o.x) + v.dot(o.x));
-		double vFactorTo = 2*(pos.dot(o.x) + v.dot(o.x));
+		pos = pos.hyperTranslate(v);
 		
-		//Derivative of xup, yup, and zup
-		double denomUp = 2*(v.dot(v)*pos.dot(o.z) + v.dot(o.z));
-		double vFactorUp = 2*(pos.dot(o.z) + v.dot(o.z));
-		
-		//denom*(o.x*vPosFactor + v*vFactorTo) - denomTo*(pos*vPosFactor + v*vFactor)
-		o.x = (o.x.times(vPosFactor).plus(v.times(vFactorTo)).times(denom))
-				.minus(pos.times(vPosFactor).plus(v.times(vFactor)).times(denomTo));
-		o.z = (o.z.times(vPosFactor).plus(v.times(vFactorUp)).times(denom))
-				.minus(pos.times(vPosFactor).plus(v.times(vFactor)).times(denomUp));
+		o.x = o.x.hyperTranslate(pos.times(-1));
+		o.z = o.z.hyperTranslate(pos.times(-1));
 		o.normalize();
-		
-		pos = (pos.times(vPosFactor).plus(v.times(vFactor))).times(1/denom);
 	}
 	
 	public void handleMovement(double dt)
@@ -109,8 +82,6 @@ public class World
 		
 		handleTurning();
 		handleMovement(dt);
-		
-		normalize();
 		
 		input.updatePressed();
 	}

@@ -42,6 +42,11 @@ public class Vector3
 		return Math.sqrt(x*x+y*y+z*z);
 	}
 	
+	public double squared()
+	{
+		return x*x+y*y+z*z;
+	}
+	
 	public Vector3 plus(Vector3 v)
 	{
 		return new Vector3(x+v.x, y+v.y, z+v.z);
@@ -110,5 +115,14 @@ public class Vector3
 		double zNew = x*(xx*zz-xx*zz*c-yy*s) + y*(yy*zz-yy*zz*c+xx*s) + z*(zz*zz+(1-zz*zz)*c);
 		
 		x = xNew; y = yNew; z = zNew;
+	}
+	
+	public Vector3 hyperTranslate(Vector3 v)
+	{
+		double denom = v.squared()*squared() + 2*dot(v) + 1;
+		double vFactor = 1 + squared() + 2*dot(v);
+		double factor = 1 - v.squared();
+		
+		return (times(factor).plus(v.times(vFactor))).times(1/denom);
 	}
 }
