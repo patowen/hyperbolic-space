@@ -46,14 +46,8 @@ public class World
 	
 	public void translateView(Vector3 v)
 	{
-		o.x = o.x.hyperTranslate(pos).hyperTranslate(v);
-		o.z = o.z.hyperTranslate(pos).hyperTranslate(v);
-		
+		o.hyperTranslate(pos, v);
 		pos = pos.hyperTranslate(v);
-		
-		o.x = o.x.hyperTranslate(pos.times(-1));
-		o.z = o.z.hyperTranslate(pos.times(-1));
-		o.normalize();
 	}
 	
 	public void handleMovement(double dt)

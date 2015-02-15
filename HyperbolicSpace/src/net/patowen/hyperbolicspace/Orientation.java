@@ -40,4 +40,17 @@ public class Orientation
 	{
 		return new Vector3(x.dot(v), y.dot(v), z.dot(v));
 	}
+	
+	public void hyperTranslate(Vector3 pos, Vector3 v)
+	{
+		x = x.hyperTranslate(pos).hyperTranslate(v);
+		z = z.hyperTranslate(pos).hyperTranslate(v);
+		
+		pos = pos.hyperTranslate(v);
+		
+		x = x.hyperTranslate(pos.times(-1));
+		z = z.hyperTranslate(pos.times(-1));
+		
+		normalize();
+	}
 }
