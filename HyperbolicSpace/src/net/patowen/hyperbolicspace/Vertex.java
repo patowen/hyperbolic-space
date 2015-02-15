@@ -2,7 +2,11 @@ package net.patowen.hyperbolicspace;
 
 import java.nio.FloatBuffer;
 
-
+/**
+ * The {@code Vertex} class represents a vertex in hyperbolic space represented via the
+ * Poincaré ball model.
+ * @author Patrick Owen
+ */
 public class Vertex
 {
 	private Vector3 pos;
@@ -12,10 +16,10 @@ public class Vertex
 	private Vector3 nt;
 	
 	/**
-	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
-	 * @param x x-position
-	 * @param y y-position
-	 * @param z z-position
+	 * Constructs a {@code Vertex} object in the Poincaré ball with no defined normal.
+	 * @param x the x-position
+	 * @param y the y-position
+	 * @param z the z-position
 	 */
 	public Vertex(double x, double y, double z)
 	{
@@ -23,13 +27,13 @@ public class Vertex
 	}
 	
 	/**
-	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
-	 * @param x x-position
-	 * @param y y-position
-	 * @param z z-position
-	 * @param nx x-coordinate of normal vector
-	 * @param ny y-coordinate of normal vector
-	 * @param nz z-coordinate of normal vector
+	 * Constructs a {@code Vertex} object with the given coordinates for its position and normal.
+	 * @param x the x-coordinate of the position vector
+	 * @param y the y-coordinate of the position vector
+	 * @param z the z-coordinate of the position vector
+	 * @param nx the x-coordinate of the normal vector
+	 * @param ny the y-coordinate of the normal vector
+	 * @param nz the z-coordinate of the normal vector
 	 */
 	public Vertex(double x, double y, double z, double nx, double ny, double nz)
 	{
@@ -37,8 +41,9 @@ public class Vertex
 	}
 	
 	/**
-	 * Creates a vertex in the Poincare ball with the given coordinates in the model.
-	 * @param pos
+	 * Constructs a {@code Vertex} object with the given vectors for its position and normal.
+	 * @param pos the position vector
+	 * @param norm the normal vector
 	 */
 	public Vertex(Vector3 pos, Vector3 norm)
 	{
@@ -50,11 +55,9 @@ public class Vertex
 	}
 	
 	/**
-	 * Translates the vertex as simply as possible so that the given coordinates are translated
-	 * to the origin.
-	 * @param x
-	 * @param y
-	 * @param z
+	 * Stores the state of the vertex after a translation in the Poincaré ball model that directly moves the
+	 * origin to the initial location of {@code v}.
+	 * @param v a vector of magnitude less than 1
 	 */
 	public void translate(Vector3 v)
 	{
@@ -71,6 +74,11 @@ public class Vertex
 		vt = pos.hyperTranslate(v);
 	}
 	
+	/**
+	 * Places the vertex's x, y, and z coordinates into the given buffers.
+	 * @param vertexBuffer the FloatBuffer for the position vector
+	 * @param normalBuffer the FloatBuffer for the normal vector
+	 */
 	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer)
 	{
 		vertexBuffer.put((float)vt.x);
@@ -80,34 +88,5 @@ public class Vertex
 		normalBuffer.put((float)nt.x);
 		normalBuffer.put((float)nt.y);
 		normalBuffer.put((float)nt.z);
-	}
-	
-	/**
-	 * Inverts the point about the given circle with given coordinates for the center, and a given radius.
-	 * @param c
-	 * @param r radius
-	 */
-	public void invert(Vector3 c, double r)
-	{
-		vt.subtract(c);
-		double s = vt.dot(vt);
-		vt.multiply(r*r/s);
-		vt.add(c);
-	}
-	
-	/**
-	 * Returns the position of the vertex after its transformation.
-	 */
-	public Vector3 getVt()
-	{
-		return vt;
-	}
-	
-	/**
-	 * Returns the normal of the vertex after its transformation.
-	 */
-	public Vector3 getNt()
-	{
-		return nt;
 	}
 }

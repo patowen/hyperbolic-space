@@ -24,7 +24,7 @@ public class Orientation
 	public Vector3 z;
 	
 	/**
-	 * Constructs a {@code Orientation} object with its matrix's columns set to the given vectors.
+	 * Constructs an {@code Orientation} object with its matrix's columns set to the given vectors.
 	 * @param x the forward-facing component of the orientation, or the first column of the matrix
 	 * @param y the right-facing component of the orientation, or the second column of the matrix
 	 * @param z the up-facing component of the orientation, or the third column of the matrix
@@ -37,7 +37,7 @@ public class Orientation
 	}
 	
 	/**
-	 * Constructs a {@code Orientation} object that represents the same orientation as the argument.
+	 * Constructs an {@code Orientation} object that represents the same orientation as the argument.
 	 * @param o an {@code Orientation}
 	 */
 	public Orientation(Orientation o)
@@ -46,7 +46,7 @@ public class Orientation
 	}
 	
 	/**
-	 * Constructs a {@code Orientation} object with the identity matrix, representing a neutral orientation.
+	 * Constructs an {@code Orientation} object with the identity matrix, representing a neutral orientation.
 	 */
 	public Orientation()
 	{
