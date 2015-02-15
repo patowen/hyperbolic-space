@@ -201,7 +201,7 @@ public class Vector3
 	}
 	
 	/**
-	 * Returns the vector rotated about the given unit vector by {@code theta}.
+	 * Rotates the vector about the given unit vector by {@code theta}.
 	 * @param v a unit vector
 	 * @param theta the angle in radians
 	 */
@@ -219,7 +219,7 @@ public class Vector3
 	
 	/**
 	 * Returns the vector after a translation in the Poincaré ball model that directly moves the
-	 * origin to the initial location of v.
+	 * origin to the initial location of {@code v}.
 	 * @param v a vector of magnitude less than 1
 	 * @return the vector after the translation
 	 */
