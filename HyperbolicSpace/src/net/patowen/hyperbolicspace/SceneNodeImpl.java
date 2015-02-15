@@ -69,10 +69,11 @@ public class SceneNodeImpl
 	
 	public void renderInit(GL3 gl)
 	{
-		IntBuffer tempBuffer = Buffers.newDirectIntBuffer(2);
-		gl.glGenBuffers(2, tempBuffer);
+		IntBuffer tempBuffer = Buffers.newDirectIntBuffer(3);
+		gl.glGenBuffers(3, tempBuffer);
 		vertexBufferPos = tempBuffer.get(0);
-		elementBufferPos = tempBuffer.get(1);
+		normalBufferPos = tempBuffer.get(1);
+		elementBufferPos = tempBuffer.get(2);
 	}
 	
 	public void render(GL3 gl)
@@ -82,14 +83,21 @@ public class SceneNodeImpl
 		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
 		
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, normalBufferPos);
+		gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 0, 0);
+		gl.glBufferData(GL3.GL_ARRAY_BUFFER, normalBuffer.capacity()*4, normalBuffer, GL3.GL_DYNAMIC_DRAW);
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
+		
 		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
 		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBuffer.capacity()*4, elementBuffer, GL3.GL_STATIC_DRAW);
 		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
 		
 		gl.glEnableVertexAttribArray(0);
+		gl.glEnableVertexAttribArray(1);
 		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
-		gl.glDrawElements(GL3.GL_LINES, elementBuffer.capacity(), GL3.GL_UNSIGNED_INT, 0);
+		gl.glDrawElements(GL3.GL_TRIANGLES, elementBuffer.capacity(), GL3.GL_UNSIGNED_INT, 0);
 		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+		gl.glDisableVertexAttribArray(1);
 		gl.glDisableVertexAttribArray(0);
 	}
 }
