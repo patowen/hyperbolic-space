@@ -1,11 +1,9 @@
 package net.patowen.hyperbolicspace;
 
 import java.awt.AWTException;
-import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
-import java.awt.Toolkit;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
@@ -14,17 +12,16 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.opengl.GLWindow;
 
 /**
- * Handles mouse grabbing and keyboard input.
+ * The {@code InputHandler} class handles mouse grabbing and keyboard input.
  * @author Patrick Owen
  */
-public class InputHandler implements KeyListener, MouseListener //Add MouseMotionListener, add methods at bottom
+public class InputHandler implements KeyListener, MouseListener
 {
 	private Robot robot;
 	private GLWindow win;
 	private boolean focused;
 	
 	//Mouse controls
-	private int screenWidth, screenHeight;
 	private double mouseX, mouseY;
 	private double mouseSensitivity;
 	
@@ -67,7 +64,7 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 	
 	/**
 	 * Initializes the inputs and sets up a Robot that controls the mouse.
-	 * @param comp The component that reads keyboard events.
+	 * @param comp the component that reads keyboard events
 	 */
 	public InputHandler(GLWindow win)
 	{
@@ -76,9 +73,6 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 		try
 		{
 			robot = new Robot();
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			screenWidth = (int)screenSize.getWidth(); screenHeight = (int)screenSize.getHeight();
-			robot.mouseMove(screenWidth/2, screenHeight/2);
 		}
 		catch (AWTException e)
 		{
@@ -131,9 +125,9 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 	
 	/**
 	 * Determines how far the mouse moved from the center and resets the mouse to the center.
-	 * The information can be retrieved with getMouseX and getMouseY
-	 * @see getMouseX
-	 * @see getMouseY
+	 * The information can be retrieved with {@code getMouseX()} and {@code getMouseY()}.
+	 * @see #getMouseX
+	 * @see #getMouseY
 	 */
 	public void readMouse()
 	{
@@ -309,7 +303,10 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 		
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 		{
-			win.destroy();
+			if (focused)
+				setFocused(false);
+			else
+				win.destroy();
 		}
 		
 		//Handle keys
@@ -355,10 +352,16 @@ public class InputHandler implements KeyListener, MouseListener //Add MouseMotio
 			{
 				if (!mouseDown[i]) mouseHelper[i] = true;
 				mouseDown[i] = true;
+				
+				if (focused == false)
+				{
+					setFocused(true);
+					mouseCanceled[i] = true;
+				}
+				
+				break;
 			}
 		}
-		
-		setFocused(true);
 	}
 	
 	/**
