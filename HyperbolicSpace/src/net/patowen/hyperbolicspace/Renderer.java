@@ -77,12 +77,16 @@ public class Renderer
 				fsCode.compile(gl);
 				prog.add(fsCode);
 				
-				prog.link(gl, System.err);
-				prog.validateProgram(gl, System.err);
-				
 				shaderState = new ShaderState();
 				mh = new MatrixHandler(shaderState);
-				shaderState.attachShaderProgram(gl, prog, true);
+				shaderState.attachShaderProgram(gl, prog, false);
+				shaderState.bindAttribLocation(gl, 0, "vertex_position");
+				shaderState.bindAttribLocation(gl, 1, "normal_position");
+				
+				prog.link(gl, System.err);
+				prog.validateProgram(gl, System.err);
+				shaderState.useProgram(gl, true);
+				
 				shaderState.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
 				
 				world.renderInit(gl, mh);
@@ -90,7 +94,8 @@ public class Renderer
 			}
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
-			{				
+			{
+				System.out.println(height);
 				float[] mat = new float[16];
 				mh.setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
 			}
