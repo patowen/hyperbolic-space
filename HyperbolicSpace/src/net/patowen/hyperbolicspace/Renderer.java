@@ -59,8 +59,6 @@ public class Renderer
 				GL3 gl = drawable.getGL().getGL3();
 				gl.glClearColor(0, 0, 0, 1);
 				gl.glEnable(GL3.GL_DEPTH_TEST);
-//				gl.glEnableClientState(GL3.GL_VERTEX_ARRAY);
-//				gl.glEnableClientState(GL3.GL_NORMAL_ARRAY);
 				
 				ShaderProgram prog = new ShaderProgram();
 				prog.init(gl);
@@ -95,7 +93,6 @@ public class Renderer
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 			{
-				System.out.println(height);
 				float[] mat = new float[16];
 				mh.setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
 			}
