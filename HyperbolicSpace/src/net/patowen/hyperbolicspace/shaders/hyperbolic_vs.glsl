@@ -14,5 +14,6 @@ void main()
 {
 	vec4 pos = vec4(vertex_position, 1.0);
 	apparent_position = transform*pos;
+	tex_coord = tex_coord_in;
 	gl_Position = perspective*apparent_position;
 }

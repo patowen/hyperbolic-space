@@ -2,11 +2,11 @@ package net.patowen.hyperbolicspace;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL3;
-import javax.media.opengl.GLException;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
@@ -41,7 +41,7 @@ public class Dodecahedron implements SceneNode
 		
 		sceneNode = new SceneNodeImpl();
 		sceneNode.setVertices(v);
-		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(v.size()*2);
+		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(v.size()/5*3*3);
 		
 		elementBuffer.put(new int[]
 		{
@@ -62,7 +62,29 @@ public class Dodecahedron implements SceneNode
 		});
 		elementBuffer.rewind();
 		
+		FloatBuffer textureBuffer = Buffers.newDirectFloatBuffer(v.size()*2);
+		
+		textureBuffer.put(new float[]
+		{
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
+		});
+		textureBuffer.rewind();
+		
 		sceneNode.setElementBuffer(elementBuffer);
+		sceneNode.setTexCoordBuffer(textureBuffer);
 	}
 	
 	public void reposition(Vector3 v)
