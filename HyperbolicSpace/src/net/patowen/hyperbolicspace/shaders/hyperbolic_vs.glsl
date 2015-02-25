@@ -5,7 +5,10 @@ uniform mat4 perspective;
 
 in vec3 vertex_position;
 in vec3 normal_position;
+in vec2 tex_coord_in;
+
 out vec4 apparent_position;
+out vec2 tex_coord;
 
 void main()
 {

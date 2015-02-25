@@ -1,7 +1,7 @@
 #version 150
 
-//uniform sampler2D texture;
-//varying vec2 texCoordVar;
+uniform sampler2D texture;
+in vec2 texCoord0, texCoord1, texCoord2;
 
 uniform vec4 inputColor;
 in vec4 ap0;

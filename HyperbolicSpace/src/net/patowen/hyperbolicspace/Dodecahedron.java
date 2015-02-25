@@ -1,11 +1,16 @@
 package net.patowen.hyperbolicspace;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL3;
+import javax.media.opengl.GLException;
 
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class Dodecahedron implements SceneNode
 {
@@ -68,6 +73,16 @@ public class Dodecahedron implements SceneNode
 	public void renderInit(GL3 gl, MatrixHandler mh)
 	{
 		sceneNode.renderInit(gl, mh);
+		
+		try
+		{
+			Texture tex = TextureIO.newTexture(new File("poincare.png"), false);
+			sceneNode.setTexture(tex);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public void render(GL3 gl)

@@ -82,6 +82,7 @@ public class Renderer
 				shaderState.attachShaderProgram(gl, prog, false);
 				shaderState.bindAttribLocation(gl, 0, "vertex_position");
 				shaderState.bindAttribLocation(gl, 1, "normal_position");
+				shaderState.bindAttribLocation(gl, 2, "tex_coord_in");
 				
 				prog.link(gl, System.err);
 				prog.validateProgram(gl, System.err);
