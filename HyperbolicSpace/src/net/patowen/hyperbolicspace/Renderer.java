@@ -17,7 +17,7 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 
 
 public class Renderer
-{	
+{
 	private GLWindow win;
 	private World world;
 	private ShaderState shaderState;
@@ -116,7 +116,7 @@ public class Renderer
 	}
 	
 	public void render(GL3 gl)
-	{		
+	{
 		gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 		mh.reset();
 		
