@@ -1,7 +1,6 @@
 package net.patowen.hyperbolicspace;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
@@ -10,26 +9,19 @@ public class ShaderHandler
 {
 	public static ShaderCode getShaderCode(int type, String fname)
 	{
-		ClassLoader cl = ShaderCode.class.getClassLoader();
-		File file = new File(cl.getResource("net/patowen/hyperbolicspace/shaders/"+fname+".glsl").getFile());
+		ClassLoader cl = ShaderHandler.class.getClassLoader();
+		InputStream stream = cl.getResourceAsStream("net/patowen/hyperbolicspace/shaders/"+fname+".glsl");
 		
 		StringBuilder str = new StringBuilder();
-		try
+		
+		Scanner scan = new Scanner(stream);
+		
+		while (scan.hasNextLine())
 		{
-			Scanner scan = new Scanner(file);
-			
-			while (scan.hasNextLine())
-			{
-				str.append(scan.nextLine() + "\n");
-			}
-			
-			scan.close();
+			str.append(scan.nextLine() + "\n");
 		}
-		catch (FileNotFoundException e)
-		{
-			//The file would only fail to exist in a broken installation
-			throw new RuntimeException(e);
-		}
+		
+		scan.close();
 		
 		ShaderCode code = new ShaderCode(type, 1, new CharSequence[][]{{str.toString()}});
 		return code;
