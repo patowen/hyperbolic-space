@@ -10,11 +10,24 @@ in vec2 tex_coord_in;
 out vec4 apparent_position;
 out vec2 tex_coord;
 
+vec3 poincare_translate(vec3 point, vec3 trans)
+{
+	float point_sqr = dot(point, point);
+	float trans_sqr = dot(trans, trans);
+	float product = 2*dot(point, trans);
+	float denom = point_sqr*trans_sqr + product + 1;
+	float trans_factor = 1 + point_sqr + product;
+	float point_factor = 1 - trans_sqr;
+	
+	return (point*point_factor + trans*trans_factor) / denom;
+}
+
 void main()
 {
 	tex_coord = tex_coord_in;
 	
-	vec4 pos = vec4(vertex_position, 1.0);
+	vec4 pos = vec4(poincare_translate(vertex_position, vec3(0,0,0.5)), 1.0);
+	pos = (2*pos)/(1+dot(pos,pos));
 	apparent_position = transform*pos;
 	gl_Position = perspective*apparent_position;
 }

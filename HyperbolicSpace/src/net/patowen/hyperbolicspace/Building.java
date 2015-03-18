@@ -12,11 +12,17 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class Dodecahedron implements SceneNode
+public class Building implements SceneNode
 {
 	SceneNodeImpl sceneNode;
 	
-	public Dodecahedron()
+	int baseSides;
+	int baseRadius;
+	
+	double totalHeight;
+	int heightSteps;
+	
+	public Building()
 	{
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
@@ -24,20 +30,7 @@ public class Dodecahedron implements SceneNode
 		double p = (1+Math.sqrt(5))/2;
 		double q = s/p; p = s*p;
 		
-		v.add(new Vertex( 0,  q,  p,  0,  p,  q)); v.add(new Vertex( s,  s,  s,  0,  p,  q)); v.add(new Vertex( q,  p,  0,  0,  p,  q)); v.add(new Vertex(-q,  p,  0,  0,  p,  q)); v.add(new Vertex(-s,  s,  s,  0,  p,  q));
-		v.add(new Vertex( 0,  q, -p,  0,  p, -q)); v.add(new Vertex(-s,  s, -s,  0,  p, -q)); v.add(new Vertex(-q,  p,  0,  0,  p, -q)); v.add(new Vertex( q,  p,  0,  0,  p, -q)); v.add(new Vertex( s,  s, -s,  0,  p, -q));
-		v.add(new Vertex( 0, -q,  p,  0, -p,  q)); v.add(new Vertex(-s, -s,  s,  0, -p,  q)); v.add(new Vertex(-q, -p,  0,  0, -p,  q)); v.add(new Vertex( q, -p,  0,  0, -p,  q)); v.add(new Vertex( s, -s,  s,  0, -p,  q));
-		v.add(new Vertex( 0, -q, -p,  0, -p, -q)); v.add(new Vertex( s, -s, -s,  0, -p, -q)); v.add(new Vertex( q, -p,  0,  0, -p, -q)); v.add(new Vertex(-q, -p,  0,  0, -p, -q)); v.add(new Vertex(-s, -s, -s,  0, -p, -q));
 		
-		v.add(new Vertex( p,  0,  q)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( 0,  q,  p)); v.add(new Vertex( 0, -q,  p)); v.add(new Vertex( s, -s,  s));
-		v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex( 0, -q,  p)); v.add(new Vertex( 0,  q,  p)); v.add(new Vertex(-s,  s,  s));
-		v.add(new Vertex( p,  0, -q)); v.add(new Vertex( s, -s, -s)); v.add(new Vertex( 0, -q, -p)); v.add(new Vertex( 0,  q, -p)); v.add(new Vertex( s,  s, -s));
-		v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex( 0,  q, -p)); v.add(new Vertex( 0, -q, -p)); v.add(new Vertex(-s, -s, -s));
-		
-		v.add(new Vertex( q,  p,  0)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( p,  0,  q)); v.add(new Vertex( p,  0, -q)); v.add(new Vertex( s,  s, -s));
-		v.add(new Vertex( q, -p,  0)); v.add(new Vertex( s, -s, -s)); v.add(new Vertex( p,  0, -q)); v.add(new Vertex( p,  0,  q)); v.add(new Vertex( s, -s,  s));
-		v.add(new Vertex(-q,  p,  0)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-s,  s,  s));
-		v.add(new Vertex(-q, -p,  0)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-s, -s, -s));
 		
 		sceneNode = new SceneNodeImpl();
 		sceneNode.setVertices(v);
@@ -98,7 +91,7 @@ public class Dodecahedron implements SceneNode
 		
 		try
 		{
-			Texture tex = TextureIO.newTexture(new File("flat_clouds.png"), false);
+			Texture tex = TextureIO.newTexture(new File("poincare.png"), false);
 			sceneNode.setTexture(tex);
 		}
 		catch (IOException e)
