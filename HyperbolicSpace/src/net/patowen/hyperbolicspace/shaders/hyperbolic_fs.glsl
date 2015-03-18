@@ -25,7 +25,7 @@ vec3 poincare_translate(vec3 point, vec3 trans)
 	float point_sqr = dot(point, point);
 	float trans_sqr = dot(trans, trans);
 	float product = 2*dot(point, trans);
-	float denom = point_sqr*trans_sqr + product + 1;
+	float denom = point_sqr*trans_sqr + product + 1; 
 	float trans_factor = 1 + point_sqr + product;
 	float point_factor = 1 - trans_sqr;
 	
@@ -41,9 +41,13 @@ void main()
 	pos[0] = poincare_translate(klein_to_poincare(f_pos[0]), trans);
 	pos[1] = poincare_translate(klein_to_poincare(f_pos[1]), trans)-pos[0];
 	pos[2] = poincare_translate(klein_to_poincare(f_pos[2]), trans)-pos[0];
-	center = center-pos[0];
+	center = -pos[0];
 	
-	mat3 transform1 = inverse(mat3(pos[1], pos[2], cross(pos[1], pos[2])));
+	mat3 transform1 = inverse(mat3(pos[1], pos[2], cross(pos[1],pos[2])));
 	mat3 transform2 = mat3(f_texcoord[1]-f_texcoord[0], 0, f_texcoord[2]-f_texcoord[0], 0, 0, 0, 0);
+	//fragColor = texture(texture_sampler, 0.2*vec2(dot(pos[1],pos[1]), 0.5));
 	fragColor = texture(texture_sampler, (transform2*transform1*center).st + f_texcoord[0]);
+	//fragColor = texture(texture_sampler, vec2(0.1*(1+1.5*f_interpolated_pos.z), 0.5));
+	//float norm_sqr = dot(pos[0], pos[0]);
+	//fragColor = vec4(vec3(1,1,1)*(1-norm_sqr), 1);
 }

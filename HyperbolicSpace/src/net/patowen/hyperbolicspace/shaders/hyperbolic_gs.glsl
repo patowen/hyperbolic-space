@@ -21,17 +21,17 @@ void main()
 	f_texcoord[1] = tex_coord[1];
 	f_texcoord[2] = tex_coord[2];
 	
-	gl_Position = gl_in[0].gl_Position;
+	gl_Position = gl_in[0].gl_Position+vec4(.00001,0,0,0);
 	interpolated_position = tex_coord[0];
 	f_interpolated_pos = apparent_position[0].xyz;
 	EmitVertex();
 	
-	gl_Position = gl_in[1].gl_Position;
+	gl_Position = gl_in[1].gl_Position+vec4(0,0,0,0);
 	interpolated_position = tex_coord[1];
 	f_interpolated_pos = apparent_position[1].xyz;
 	EmitVertex();
 	
-	gl_Position = gl_in[2].gl_Position;
+	gl_Position = gl_in[2].gl_Position+vec4(0,0,0,0);
 	interpolated_position = tex_coord[2];
 	f_interpolated_pos = apparent_position[2].xyz;
 	EmitVertex();

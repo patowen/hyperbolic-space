@@ -26,8 +26,7 @@ void main()
 {
 	tex_coord = tex_coord_in;
 	
-	vec4 pos = vec4(poincare_translate(vertex_position, vec3(0,0,0.5)), 1.0);
-	pos = (2*pos)/(1+dot(pos,pos));
-	apparent_position = transform*pos;
+	vec3 pos = (2*vertex_position)/(1+dot(vertex_position, vertex_position));
+	apparent_position = transform*vec4(pos, 1.0);
 	gl_Position = perspective*apparent_position;
 }
