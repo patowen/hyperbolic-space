@@ -105,22 +105,35 @@ public class Orientation
 	}
 	
 	/**
+	 * Returns an orientation that represents the argument transformed by the orientation.
+	 * @param o an orientation
+	 * @return an orientation that represents the argument transformed by the orientation
+	 */
+	public Orientation transform(Orientation o)
+	{
+		return new Orientation(transform(o.x), transform(o.y), transform(o.z));
+	}
+	
+	/**
 	 * Returns the orientation after a translation in the Poincaré ball model that directly moves the
 	 * origin to the initial location of {@code v}.
 	 * @param pos the initial location of the object that the orientation describes
 	 * @param v a vector of magnitude less than 1
 	 * @return the orientation after the translation
 	 */
-	public void hyperTranslate(Vector3 pos, Vector3 v)
+	public Orientation hyperTranslate(Vector3 pos, Vector3 v)
 	{
-		x = x.hyperTranslate(pos).hyperTranslate(v);
-		z = z.hyperTranslate(pos).hyperTranslate(v);
+		Vector3 x = this.x.hyperTranslate(pos).hyperTranslate(v);
+		Vector3 y = this.y;
+		Vector3 z = this.z.hyperTranslate(pos).hyperTranslate(v);
 		
 		pos = pos.hyperTranslate(v);
 		
 		x = x.hyperTranslate(pos.times(-1));
 		z = z.hyperTranslate(pos.times(-1));
 		
-		normalize();
+		Orientation o = new Orientation(x, y, z);
+		o.normalize();
+		return o;
 	}
 }

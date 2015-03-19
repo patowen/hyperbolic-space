@@ -48,7 +48,7 @@ public class World
 	
 	public void translateView(Vector3 v)
 	{
-		o.hyperTranslate(pos, v);
+		o = o.hyperTranslate(pos, v);
 		pos = pos.hyperTranslate(v);
 	}
 	

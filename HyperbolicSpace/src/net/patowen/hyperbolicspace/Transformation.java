@@ -12,28 +12,73 @@ public class Transformation
 	 * Internally, a transformation is represented as a rotation
 	 * followed by a hyperbolic translation.
 	 */
-	private Vector3 translation;
 	private Orientation rotation;
+	private Vector3 translation;
 	
 	/**
 	 * Constructs a {@code Transformation} object representing the identity transformation.
 	 */
 	public Transformation()
 	{
-		translation = new Vector3();
 		rotation = new Orientation();
+		translation = new Vector3();
 	}
 	
-	public Transformation(Vector3 translation, Orientation rotation)
+	/**
+	 * Constructs a {@code Transformation} object representing the given rotation followed
+	 * by the given translation.
+	 */
+	public Transformation(Orientation rotation, Vector3 translation)
 	{
-		this.translation = translation;
 		this.rotation = rotation;
+		this.translation = translation;
 	}
 	
+	/**
+	 * Returns the transformation that results from composing the transformation with
+	 * the argument's transformation such that the argument's transformation is done last.
+	 * @param t a transformation
+	 * @return the resulting transformation
+	 */
 	public Transformation composeAfter(Transformation t)
 	{
 		Vector3 trans = t.rotation.transform(translation);
+		Orientation rot = t.rotation.transform(rotation);
 		
-		return new Transformation(trans.hyperTranslate(t.translation), rotation);
+		return new Transformation(rot.hyperTranslate(trans, t.translation), trans.hyperTranslate(t.translation));
+	}
+	
+	/**
+	 * Returns the transformation that results from composing the transformation with
+	 * the argument's transformation such that the argument's transformation is done first.
+	 * @param t a transformation
+	 * @return the resulting transformation
+	 */
+	public Transformation composeBefore(Transformation t)
+	{
+		Vector3 trans = rotation.transform(t.translation);
+		Orientation rot = rotation.transform(t.rotation);
+		
+		return new Transformation(rot.hyperTranslate(trans, translation), trans.hyperTranslate(translation));
+	}
+	
+	/**
+	 * Returns the given vector transformed by the represented transformation.
+	 * @param v a vector
+	 * @return the transformed vector
+	 */
+	public Vector3 transform(Vector3 v)
+	{
+		return rotation.transform(v).hyperTranslate(translation);
+	}
+	
+	/**
+	 * Returns the given vector transformed by the inverse of the represented transformation.
+	 * @param v a vector
+	 * @return the transformed vector
+	 */
+	public Vector3 inverseTransform(Vector3 v)
+	{
+		return rotation.useAsBasis(v.hyperTranslate(translation.times(-1)));
 	}
 }
