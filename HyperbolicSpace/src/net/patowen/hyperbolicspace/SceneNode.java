@@ -4,9 +4,9 @@ import javax.media.opengl.GL3;
 
 public interface SceneNode
 {
-	public void setPosition(Vector3 pos);
+	public void setTransformation(Transformation t);
 	
-	public void reposition(Vector3 v);
+	public void reposition(Transformation t);
 	
 	public void renderInit(GL3 gl, MatrixHandler mh);
 	

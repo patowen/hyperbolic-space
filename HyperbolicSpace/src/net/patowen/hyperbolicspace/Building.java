@@ -140,14 +140,14 @@ public class Building implements SceneNode
 		sceneNode.setTexCoordBuffer(textureBuffer);
 	}
 	
-	public void setPosition(Vector3 pos)
+	public void setTransformation(Transformation t)
 	{
-		sceneNode.setPosition(pos);
+		sceneNode.setTransformation(t);
 	}
 	
-	public void reposition(Vector3 v)
+	public void reposition(Transformation t)
 	{
-		sceneNode.reposition(v);
+		sceneNode.reposition(t);
 	}
 	
 	public void renderInit(GL3 gl, MatrixHandler mh)

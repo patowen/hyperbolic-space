@@ -54,6 +54,15 @@ public class Orientation
 	}
 	
 	/**
+	 * Returns the orientation that when combined with the current one, will return the neutral orientation.
+	 * @return the inverse orientation
+	 */
+	public Orientation inverse()
+	{
+		return new Orientation(new Vector3(x.x, y.x, z.x), new Vector3(x.y, y.y, z.y), new Vector3(x.z, y.z, z.z));
+	}
+	
+	/**
 	 * Changes the columns of the underlying matrix to be orthonormal. The direction of the x-vector
 	 * is unchanged, while the direction of the y-vector is completely determined by the directions
 	 * of the x and z vectors before the call to this method. The purpose of this method is to prevent

@@ -12,11 +12,8 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 import com.jogamp.opengl.util.texture.Texture;
 
 public class SceneNodeImpl
-{
-	private boolean movable;
-	
-	private Vector3 pos;
-	private Orientation o;
+{	
+	private Transformation transformation;
 	
 	private Texture texture;
 	
@@ -37,9 +34,7 @@ public class SceneNodeImpl
 	
 	public SceneNodeImpl()
 	{
-		movable = false;
-		pos = new Vector3();
-		o = new Orientation();
+		transformation = new Transformation();
 	}
 	
 	public void setTexture(Texture texture)
@@ -56,15 +51,15 @@ public class SceneNodeImpl
 		texCoordBuffer = Buffers.newDirectFloatBuffer(2*vertices.size());
 	}
 	
-	public void setPosition(Vector3 pos)
+	public void setTransformation(Transformation t)
 	{
-		this.pos = pos;
+		this.transformation = t;
 	}
 	
-	public void reposition(Vector3 v)
+	public void reposition(Transformation t)
 	{
 		for (int i=0; i<vertices.size(); i++)
-			vertices.get(i).translate(v);
+			vertices.get(i).transform(t.composeBefore(transformation));
 		
 		for (int i=0; i<vertices.size(); i++)
 		{

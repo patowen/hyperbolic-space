@@ -85,6 +85,15 @@ public class Vertex
 	}
 	
 	/**
+	 * Stores the state of the vertex after the given transformation
+	 * @param v a vector of magnitude less than 1
+	 */
+	public void transform(Transformation t)
+	{
+		vt = t.transform(pos);
+	}
+	
+	/**
 	 * Places the vertex's x, y, and z coordinates into the given buffers.
 	 * @param vertexBuffer the FloatBuffer for the position vector
 	 * @param normalBuffer the FloatBuffer for the normal vector

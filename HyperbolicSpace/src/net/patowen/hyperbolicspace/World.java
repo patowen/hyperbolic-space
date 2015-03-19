@@ -9,8 +9,7 @@ public class World
 {
 	private InputHandler input;
 	
-	private Vector3 pos;
-	private Orientation o;
+	private Transformation t;
 	
 	private SceneNode building1;
 	private SceneNode building2;
@@ -19,19 +18,20 @@ public class World
 	{
 		input = inputHandler;
 		
-		pos = new Vector3(0, 0, 0);
-		o = new Orientation(new Vector3(0, 0, -1), new Vector3(1, 0, 0), new Vector3(0, 1, 0));
+		t = new Transformation();
 		
 		building1 = new Building();
-		building1.setPosition(new Vector3(0.3, 0, 0));
+		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
 		building2 = new Building();
 	}
 	
 	public void handleTurning()
 	{		
 		input.readMouse();
+		Orientation o = new Orientation();
 		o.rotate(o.z, -input.getMouseX()*45);
 		o.rotate(o.y, -input.getMouseY()*45);
+		t = t.composeBefore(new Transformation(o, new Vector3()));
 	}
 	
 	public void translate(double x, double y, double z)
@@ -41,16 +41,14 @@ public class World
 	
 	public void translate(Vector3 v)
 	{
-		Vector3 vv = pos;
-		pos = v.times(-1);
-		translateView(vv);
+		t = t.composeBefore(new Transformation(new Orientation(), v));
 	}
 	
-	public void translateView(Vector3 v)
-	{
-		o = o.hyperTranslate(pos, v);
-		pos = pos.hyperTranslate(v);
-	}
+//	public void translateView(Vector3 v)
+//	{
+//		o = o.hyperTranslate(pos, v);
+//		pos = pos.hyperTranslate(v);
+//	}
 	
 	public void handleMovement(double dt)
 	{
@@ -59,23 +57,24 @@ public class World
 			s = 0.001;
 		
 		if (input.getMouseButton(InputHandler.FORWARDS))
-			translate(o.x.times(s));
+			translate(new Vector3(s, 0, 0));
 		if (input.getMouseButton(InputHandler.BACKWARDS))
-			translate(o.x.times(-s));
+			translate(new Vector3(-s, 0, 0));
 		if (input.getKey(InputHandler.UP))
-			translate(o.z.times(s));
+			translate(new Vector3(0, 0, s));
 		if (input.getKey(InputHandler.DOWN))
-			translate(o.z.times(-s));
+			translate(new Vector3(0, 0, -s));
 		if (input.getKey(InputHandler.RIGHT))
-			translate(o.y.times(s));
+			translate(new Vector3(0, -s, 0));
 		if (input.getKey(InputHandler.LEFT))
-			translate(o.y.times(-s));
+			translate(new Vector3(0, s, 0));
 	}
 	
 	public void step(double dt)
-	{		
-		building1.reposition(pos);
-		building2.reposition(pos);
+	{
+		Transformation trans = t.inverse();
+		building1.reposition(trans);
+		building2.reposition(trans);
 		
 		handleTurning();
 		handleMovement(dt);
@@ -92,8 +91,8 @@ public class World
 	public void render(MatrixHandler mh, GL3 gl)
 	{
 		float[] result = new float[16], tmp = new float[16];
-		FloatUtil.makeLookAt(result, 0, new float[]{0, 0, 0}, 0, new float[] {(float)o.x.x, (float)o.x.y, (float)o.x.z},
-				0, new float[] {(float)o.z.x, (float)o.z.y, (float)o.z.z}, 0, tmp);
+		FloatUtil.makeLookAt(result, 0, new float[]{0, 0, 0}, 0, new float[] {1, 0, 0},
+				0, new float[] {0, 0, 1}, 0, tmp);
 		FloatUtil.multMatrix(mh.transformArray(), result);
 		
 		mh.update(gl);

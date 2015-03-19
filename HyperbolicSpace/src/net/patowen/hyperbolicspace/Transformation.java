@@ -35,6 +35,16 @@ public class Transformation
 	}
 	
 	/**
+	 * Returns the transform that when combined with the current one, will return the identity transformation.
+	 * @return the inverse transformation
+	 */
+	public Transformation inverse()
+	{
+		Orientation inverseRotation = rotation.inverse();
+		return new Transformation(inverseRotation, inverseRotation.transform(translation).times(-1));
+	}
+	
+	/**
 	 * Returns the transformation that results from composing the transformation with
 	 * the argument's transformation such that the argument's transformation is done last.
 	 * @param t a transformation
