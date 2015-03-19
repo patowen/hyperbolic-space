@@ -56,6 +56,11 @@ public class SceneNodeImpl
 		texCoordBuffer = Buffers.newDirectFloatBuffer(2*vertices.size());
 	}
 	
+	public void setPosition(Vector3 pos)
+	{
+		this.pos = pos;
+	}
+	
 	public void reposition(Vector3 v)
 	{
 		for (int i=0; i<vertices.size(); i++)

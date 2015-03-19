@@ -24,10 +24,10 @@ public class Dodecahedron implements SceneNode
 		double p = (1+Math.sqrt(5))/2;
 		double q = s/p; p = s*p;
 		
-		v.add(new Vertex( 0,  q,  p,  0,  p,  q)); v.add(new Vertex( s,  s,  s,  0,  p,  q)); v.add(new Vertex( q,  p,  0,  0,  p,  q)); v.add(new Vertex(-q,  p,  0,  0,  p,  q)); v.add(new Vertex(-s,  s,  s,  0,  p,  q));
-		v.add(new Vertex( 0,  q, -p,  0,  p, -q)); v.add(new Vertex(-s,  s, -s,  0,  p, -q)); v.add(new Vertex(-q,  p,  0,  0,  p, -q)); v.add(new Vertex( q,  p,  0,  0,  p, -q)); v.add(new Vertex( s,  s, -s,  0,  p, -q));
-		v.add(new Vertex( 0, -q,  p,  0, -p,  q)); v.add(new Vertex(-s, -s,  s,  0, -p,  q)); v.add(new Vertex(-q, -p,  0,  0, -p,  q)); v.add(new Vertex( q, -p,  0,  0, -p,  q)); v.add(new Vertex( s, -s,  s,  0, -p,  q));
-		v.add(new Vertex( 0, -q, -p,  0, -p, -q)); v.add(new Vertex( s, -s, -s,  0, -p, -q)); v.add(new Vertex( q, -p,  0,  0, -p, -q)); v.add(new Vertex(-q, -p,  0,  0, -p, -q)); v.add(new Vertex(-s, -s, -s,  0, -p, -q));
+		v.add(new Vertex( 0,  q,  p)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( q,  p,  0)); v.add(new Vertex(-q,  p,  0)); v.add(new Vertex(-s,  s,  s));
+		v.add(new Vertex( 0,  q, -p)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex(-q,  p,  0)); v.add(new Vertex( q,  p,  0)); v.add(new Vertex( s,  s, -s));
+		v.add(new Vertex( 0, -q,  p)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex(-q, -p,  0)); v.add(new Vertex( q, -p,  0)); v.add(new Vertex( s, -s,  s));
+		v.add(new Vertex( 0, -q, -p)); v.add(new Vertex( s, -s, -s)); v.add(new Vertex( q, -p,  0)); v.add(new Vertex(-q, -p,  0)); v.add(new Vertex(-s, -s, -s));
 		
 		v.add(new Vertex( p,  0,  q)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( 0,  q,  p)); v.add(new Vertex( 0, -q,  p)); v.add(new Vertex( s, -s,  s));
 		v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex( 0, -q,  p)); v.add(new Vertex( 0,  q,  p)); v.add(new Vertex(-s,  s,  s));
@@ -41,7 +41,7 @@ public class Dodecahedron implements SceneNode
 		
 		sceneNode = new SceneNodeImpl();
 		sceneNode.setVertices(v);
-		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(v.size()/5*3*3);
+		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(12*3*3);
 		
 		elementBuffer.put(new int[]
 		{
@@ -85,6 +85,11 @@ public class Dodecahedron implements SceneNode
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
+	}
+	
+	public void setPosition(Vector3 pos)
+	{
+		sceneNode.setPosition(pos);
 	}
 	
 	public void reposition(Vector3 v)

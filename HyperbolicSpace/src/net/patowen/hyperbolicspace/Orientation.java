@@ -86,9 +86,22 @@ public class Orientation
 	 * @param v a vector
 	 * @return a vector that represents the argument in the basis given by the orientation
 	 */
-	public Vector3 apply(Vector3 v)
+	public Vector3 useAsBasis(Vector3 v)
 	{
 		return new Vector3(x.dot(v), y.dot(v), z.dot(v));
+	}
+	
+	/**
+	 * Returns a vector that represents the argument transformed by the orientation.
+	 * @param v a vector
+	 * @return a vector that represents the argument transformed by the orientation
+	 */
+	public Vector3 transform(Vector3 v)
+	{
+		return new Vector3(
+				x.x*v.x+y.x*v.y+z.x*v.z,
+				x.y*v.x+y.y*v.y+z.y*v.z,
+				x.z*v.x+y.z*v.y+z.z*v.z);
 	}
 	
 	/**

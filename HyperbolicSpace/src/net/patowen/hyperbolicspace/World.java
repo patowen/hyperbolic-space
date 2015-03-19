@@ -12,7 +12,8 @@ public class World
 	private Vector3 pos;
 	private Orientation o;
 	
-	private SceneNode dodeca;
+	private SceneNode building1;
+	private SceneNode building2;
 	
 	public World(InputHandler inputHandler)
 	{
@@ -21,8 +22,9 @@ public class World
 		pos = new Vector3(0, 0, 0);
 		o = new Orientation(new Vector3(0, 0, -1), new Vector3(1, 0, 0), new Vector3(0, 1, 0));
 		
-		dodeca = new Dodecahedron();
-		dodeca.reposition(pos);
+		building1 = new Building();
+		building1.setPosition(new Vector3(0.3, 0, 0));
+		building2 = new Building();
 	}
 	
 	public void handleTurning()
@@ -72,7 +74,8 @@ public class World
 	
 	public void step(double dt)
 	{		
-		dodeca.reposition(pos);
+		building1.reposition(pos);
+		building2.reposition(pos);
 		
 		handleTurning();
 		handleMovement(dt);
@@ -82,7 +85,8 @@ public class World
 	
 	public void renderInit(GL3 gl, MatrixHandler mh)
 	{
-		dodeca.renderInit(gl, mh);
+		building1.renderInit(gl, mh);
+		building2.renderInit(gl, mh);
 	}
 	
 	public void render(MatrixHandler mh, GL3 gl)
@@ -94,6 +98,7 @@ public class World
 		
 		mh.update(gl);
 		
-		dodeca.render(gl);
+		building1.render(gl);
+		building2.render(gl);
 	}
 }

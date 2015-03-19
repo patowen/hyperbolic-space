@@ -41,6 +41,16 @@ public class Vertex
 	}
 	
 	/**
+	 * Constructs a {@code Vertex} object with the given vector for its position and no defined normal.
+	 * @param pos the position vector
+	 * @param norm the normal vector
+	 */
+	public Vertex(Vector3 pos)
+	{
+		this(pos, new Vector3());
+	}
+	
+	/**
 	 * Constructs a {@code Vertex} object with the given vectors for its position and normal.
 	 * @param pos the position vector
 	 * @param norm the normal vector
