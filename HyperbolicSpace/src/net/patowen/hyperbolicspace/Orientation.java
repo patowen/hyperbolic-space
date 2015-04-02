@@ -2,7 +2,7 @@ package net.patowen.hyperbolicspace;
 
 /**
  * The {@code Orientation} class holds a 3x3 matrix that represents the orientation of a given object
- * in the Poincaré ball. The component vectors are orthogonal and normalized, and they represent the
+ * in the PoincarÃ© ball. The component vectors are orthogonal and normalized, and they represent the
  * orientation the object would assume if directly translated to the origin.
  * @author Patrick Owen
  */
@@ -124,7 +124,7 @@ public class Orientation
 	}
 	
 	/**
-	 * Returns the orientation after a translation in the Poincaré ball model that directly moves the
+	 * Returns the orientation after a translation in the PoincarÃ© ball model that directly moves the
 	 * origin to the initial location of {@code v}.
 	 * @param pos the initial location of the object that the orientation describes
 	 * @param v a vector of magnitude less than 1

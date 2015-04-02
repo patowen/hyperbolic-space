@@ -4,7 +4,7 @@ import java.nio.FloatBuffer;
 
 /**
  * The {@code Vertex} class represents a vertex in hyperbolic space represented via the
- * Poincaré ball model.
+ * PoincarÃ© ball model.
  * @author Patrick Owen
  */
 public class Vertex
@@ -16,7 +16,7 @@ public class Vertex
 	private Vector3 nt;
 	
 	/**
-	 * Constructs a {@code Vertex} object in the Poincaré ball with no defined normal.
+	 * Constructs a {@code Vertex} object in the PoincarÃ© ball with no defined normal.
 	 * @param x the x-position
 	 * @param y the y-position
 	 * @param z the z-position
@@ -65,7 +65,7 @@ public class Vertex
 	}
 	
 	/**
-	 * Stores the state of the vertex after a translation in the Poincaré ball model that directly moves the
+	 * Stores the state of the vertex after a translation in the PoincarÃ© ball model that directly moves the
 	 * origin to the initial location of {@code v}.
 	 * @param v a vector of magnitude less than 1
 	 */
