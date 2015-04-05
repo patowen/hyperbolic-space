@@ -20,14 +20,15 @@ public class Building implements SceneNode
 	double baseRadius = 0.35;
 	
 	double totalHeight = 2;
-	int heightSteps = 40;
+	int heightStepsPerWrap = 10;
+	int numWraps = 4;
 	
 	public Building()
 	{
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
 		double dx = Math.tanh(baseRadius);
-		double dz = Math.tanh(totalHeight/heightSteps);
+		double dz = Math.tanh(totalHeight/heightStepsPerWrap/numWraps);
 		
 		Vector3 center = new Vector3(0, 0, 0);
 		Vector3[] corners = new Vector3[baseSides];
@@ -44,21 +45,24 @@ public class Building implements SceneNode
 			v.add(new Vertex(corners[j]));
 		
 		//Sides
-		int indexSides = v.size();
-		for (int i=0; ; i++)
+		int[] indexSides = new int[numWraps];
+		for (int wrap=0; wrap<numWraps; wrap++)
 		{
-			for (int j=0; j<baseSides; j++)
+			indexSides[wrap] = v.size();
+			for (int i=0; ; i++)
 			{
-				int j1 = j+1; if (j1 == baseSides) j1 = 0;
-				v.add(new Vertex(corners[j])); v.add(new Vertex(corners[j1]));
+				for (int j=0; j<baseSides; j++)
+				{
+					int j1 = j+1; if (j1 == baseSides) j1 = 0;
+					v.add(new Vertex(corners[j])); v.add(new Vertex(corners[j1]));
+				}
+				
+				if (i == heightStepsPerWrap) break;
+				
+				for (int j=0; j<baseSides; j++)
+					corners[j] = corners[j].hyperTranslate(new Vector3(0, 0, dz));
+				center = center.hyperTranslate(new Vector3(0, 0, dz));
 			}
-			
-			if (i == heightSteps) break;
-			
-			for (int j=0; j<baseSides; j++)
-				corners[j] = corners[j].hyperTranslate(new Vector3(0, 0, dz));
-			center = center.hyperTranslate(new Vector3(0, 0, dz));
-			
 		}
 		
 		//Top
@@ -69,7 +73,7 @@ public class Building implements SceneNode
 		
 		sceneNode = new SceneNodeImpl();
 		sceneNode.setVertices(v);
-		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(baseSides*(6+6*heightSteps));
+		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(baseSides*((6+6*heightStepsPerWrap)*numWraps));
 		
 		//Base
 		for (int i=0; i<baseSides; i++)
@@ -80,17 +84,20 @@ public class Building implements SceneNode
 		}
 		
 		//Sides
-		for (int i=0; i<heightSteps; i++)
+		for (int wrap=0; wrap<numWraps; wrap++)
 		{
-			for (int j=0; j<baseSides; j++)
+			for (int i=0; i<heightStepsPerWrap; i++)
 			{
-				elementBuffer.put(indexSides+i*2*baseSides+2*j);
-				elementBuffer.put(indexSides+i*2*baseSides+2*j+1);
-				elementBuffer.put(indexSides+(i+1)*2*baseSides+2*j+1);
-				
-				elementBuffer.put(indexSides+i*2*baseSides+2*j);
-				elementBuffer.put(indexSides+(i+1)*2*baseSides+2*j+1);
-				elementBuffer.put(indexSides+(i+1)*2*baseSides+2*j);
+				for (int j=0; j<baseSides; j++)
+				{
+					elementBuffer.put(indexSides[wrap]+i*2*baseSides+2*j);
+					elementBuffer.put(indexSides[wrap]+i*2*baseSides+2*j+1);
+					elementBuffer.put(indexSides[wrap]+(i+1)*2*baseSides+2*j+1);
+					
+					elementBuffer.put(indexSides[wrap]+i*2*baseSides+2*j);
+					elementBuffer.put(indexSides[wrap]+(i+1)*2*baseSides+2*j+1);
+					elementBuffer.put(indexSides[wrap]+(i+1)*2*baseSides+2*j);
+				}
 			}
 		}
 		
@@ -114,15 +121,18 @@ public class Building implements SceneNode
 			textureBuffer.put((float)(0.25+0.25*Math.sin(theta)));
 		}
 		
-		for (int i=0; i<=heightSteps; i++)
+		for (int wrap=0; wrap<numWraps; wrap++)
 		{
-			for (int j=0; j<baseSides; j++)
+			for (int i=0; i<=heightStepsPerWrap; i++)
 			{
-				textureBuffer.put((float)j / baseSides * 0.5f);
-				textureBuffer.put((float)i / heightSteps);
-				
-				textureBuffer.put((float)(j+1) / baseSides * 0.5f);
-				textureBuffer.put((float)i / heightSteps);
+				for (int j=0; j<baseSides; j++)
+				{
+					textureBuffer.put(0.0f);
+					textureBuffer.put((float)i / heightStepsPerWrap);
+					
+					textureBuffer.put(0.5f);
+					textureBuffer.put((float)i / heightStepsPerWrap);
+				}
 			}
 		}
 		
