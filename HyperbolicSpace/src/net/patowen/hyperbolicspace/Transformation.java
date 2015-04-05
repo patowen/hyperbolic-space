@@ -91,4 +91,22 @@ public class Transformation
 	{
 		return rotation.useAsBasis(v.hyperTranslate(translation.times(-1)));
 	}
+	
+	/**
+	 * Returns the initial rotation of the transformation.
+	 * @return the initial rotation of the transformation
+	 */
+	public Orientation getRotation()
+	{
+		return rotation;
+	}
+	
+	/**
+	 * Returns the final translation of the transformation.
+	 * @return the final translation of the transformation
+	 */
+	public Vector3 getTranslation()
+	{
+		return translation;
+	}
 }

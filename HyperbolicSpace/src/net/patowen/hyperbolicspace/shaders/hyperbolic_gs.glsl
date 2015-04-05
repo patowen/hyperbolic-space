@@ -3,7 +3,7 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-in vec4 apparent_position[];
+in vec3 apparent_position[];
 out vec2 interpolated_position;
 out vec3 f_interpolated_pos;
 out vec3 f_pos[3];
@@ -13,9 +13,9 @@ out vec2 f_texcoord[3];
 
 void main()
 {
-	f_pos[0] = apparent_position[0].xyz;
-	f_pos[1] = apparent_position[1].xyz;
-	f_pos[2] = apparent_position[2].xyz;
+	f_pos[0] = apparent_position[0];
+	f_pos[1] = apparent_position[1];
+	f_pos[2] = apparent_position[2];
 
 	f_texcoord[0] = tex_coord[0];
 	f_texcoord[1] = tex_coord[1];
@@ -23,17 +23,17 @@ void main()
 	
 	gl_Position = gl_in[0].gl_Position+vec4(.00001,0,0,0);
 	interpolated_position = tex_coord[0];
-	f_interpolated_pos = apparent_position[0].xyz;
+	f_interpolated_pos = apparent_position[0];
 	EmitVertex();
 	
 	gl_Position = gl_in[1].gl_Position+vec4(.00001,0,0,0);
 	interpolated_position = tex_coord[1];
-	f_interpolated_pos = apparent_position[1].xyz;
+	f_interpolated_pos = apparent_position[1];
 	EmitVertex();
 	
 	gl_Position = gl_in[2].gl_Position+vec4(.00001,0,0,0);
 	interpolated_position = tex_coord[2];
-	f_interpolated_pos = apparent_position[2].xyz;
+	f_interpolated_pos = apparent_position[2];
 	EmitVertex();
 	
 	EndPrimitive();

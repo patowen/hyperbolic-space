@@ -29,8 +29,8 @@ public class World
 	{		
 		input.readMouse();
 		Orientation o = new Orientation();
-		o.rotate(o.z, -input.getMouseX()*45);
-		o.rotate(o.y, -input.getMouseY()*45);
+		o.rotate(o.y, -input.getMouseX()*45);
+		o.rotate(o.x, -input.getMouseY()*45);
 		t = t.composeBefore(new Transformation(o, new Vector3()));
 	}
 	
@@ -44,12 +44,6 @@ public class World
 		t = t.composeBefore(new Transformation(new Orientation(), v));
 	}
 	
-//	public void translateView(Vector3 v)
-//	{
-//		o = o.hyperTranslate(pos, v);
-//		pos = pos.hyperTranslate(v);
-//	}
-	
 	public void handleMovement(double dt)
 	{
 		double s = 0.01; //speed
@@ -57,17 +51,17 @@ public class World
 			s = 0.001;
 		
 		if (input.getMouseButton(InputHandler.FORWARDS))
-			translate(new Vector3(s, 0, 0));
-		if (input.getMouseButton(InputHandler.BACKWARDS))
-			translate(new Vector3(-s, 0, 0));
-		if (input.getKey(InputHandler.UP))
-			translate(new Vector3(0, 0, s));
-		if (input.getKey(InputHandler.DOWN))
 			translate(new Vector3(0, 0, -s));
-		if (input.getKey(InputHandler.RIGHT))
-			translate(new Vector3(0, -s, 0));
-		if (input.getKey(InputHandler.LEFT))
+		if (input.getMouseButton(InputHandler.BACKWARDS))
+			translate(new Vector3(0, 0, s));
+		if (input.getKey(InputHandler.UP))
 			translate(new Vector3(0, s, 0));
+		if (input.getKey(InputHandler.DOWN))
+			translate(new Vector3(0, -s, 0));
+		if (input.getKey(InputHandler.RIGHT))
+			translate(new Vector3(s, 0, 0));
+		if (input.getKey(InputHandler.LEFT))
+			translate(new Vector3(-s, 0, 0));
 	}
 	
 	public void step(double dt)
@@ -90,11 +84,6 @@ public class World
 	
 	public void render(MatrixHandler mh, GL3 gl)
 	{
-		float[] result = new float[16], tmp = new float[16];
-		FloatUtil.makeLookAt(result, 0, new float[]{0, 0, 0}, 0, new float[] {1, 0, 0},
-				0, new float[] {0, 0, 1}, 0, tmp);
-		FloatUtil.multMatrix(mh.transformArray(), result);
-		
 		mh.update(gl);
 		
 		building1.render(gl);

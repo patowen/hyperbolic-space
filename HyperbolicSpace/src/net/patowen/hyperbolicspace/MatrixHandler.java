@@ -13,23 +13,25 @@ public class MatrixHandler
 {
 	private ShaderState shaderState;
 	
+	private Transformation transformation;
+	
 	private FloatBuffer perspectiveBuf;
 	private float[] perspectiveArray;
 	
-	private FloatBuffer transformBuf;
-	private float[] transformArray;
+	private FloatBuffer orientBuf;
+	private FloatBuffer translateBuf;
 	
 	public MatrixHandler(ShaderState shaderState)
 	{
 		this.shaderState = shaderState;
 		
-		transformArray = new float[16];
+		transformation = new Transformation();
 		perspectiveArray = new float[16];
 		
-		FloatUtil.makeIdentity(transformArray);
 		FloatUtil.makeIdentity(perspectiveArray);
 		
-		transformBuf = Buffers.newDirectFloatBuffer(transformArray);
+		orientBuf = Buffers.newDirectFloatBuffer(9);
+		translateBuf = Buffers.newDirectFloatBuffer(3);
 		perspectiveBuf = Buffers.newDirectFloatBuffer(perspectiveArray);
 	}
 	
@@ -38,19 +40,9 @@ public class MatrixHandler
 		return shaderState;
 	}
 	
-	public float[] transformArray()
-	{
-		return transformArray;
-	}
-	
-	public void add(float[] transform)
-	{
-		FloatUtil.multMatrix(transformArray, transform);
-	}
-	
 	public void reset()
 	{
-		FloatUtil.makeIdentity(transformArray);
+		transformation = new Transformation();
 	}
 	
 	public void setPerspective(float[] perspective)
@@ -60,9 +52,20 @@ public class MatrixHandler
 	
 	public void update(GL3 gl)
 	{
-		transformBuf.put(transformArray).rewind();
+		Orientation o = transformation.getRotation();
+		orientBuf.put(new float[] {
+				(float)o.x.x, (float)o.x.y, (float)o.x.z,
+				(float)o.y.x, (float)o.y.y, (float)o.y.z,
+				(float)o.z.x, (float)o.z.y, (float)o.z.z});
+		orientBuf.rewind();
+		
+		Vector3 v = transformation.getTranslation();
+		translateBuf.put(new float[] {(float)v.x, (float)v.y, (float)v.z});
+		translateBuf.rewind();
+		
 		perspectiveBuf.put(perspectiveArray).rewind();
-		shaderState.uniform(gl, new GLUniformData("transform", 4, 4, transformBuf));
+		shaderState.uniform(gl, new GLUniformData("transform", 3, 3, orientBuf));
 		shaderState.uniform(gl, new GLUniformData("perspective", 4, 4, perspectiveBuf));
+		shaderState.uniform(gl, new GLUniformData("translate", 3, translateBuf));
 	}
 }

@@ -1,13 +1,14 @@
 #version 150
 
-uniform mat4 transform;
+uniform mat3 transform;
+uniform vec3 translate;
 uniform mat4 perspective;
 
 in vec3 vertex_position;
 in vec3 normal_position;
 in vec2 tex_coord_in;
 
-out vec4 apparent_position;
+out vec3 apparent_position;
 out vec2 tex_coord;
 
 vec3 poincare_translate(vec3 point, vec3 trans)
@@ -26,7 +27,7 @@ void main()
 {
 	tex_coord = tex_coord_in;
 	
-	vec3 pos = (2*vertex_position)/(1+dot(vertex_position, vertex_position));
-	apparent_position = transform*vec4(pos, 1.0);
-	gl_Position = perspective*apparent_position;
+	vec3 pos = poincare_translate(transform*vertex_position, translate);
+	apparent_position = (2*vertex_position)/(1+dot(vertex_position, vertex_position));
+	gl_Position = perspective*vec4(apparent_position, 1.0);
 }
