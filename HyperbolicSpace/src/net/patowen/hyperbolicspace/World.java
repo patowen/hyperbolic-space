@@ -2,8 +2,6 @@ package net.patowen.hyperbolicspace;
 
 import javax.media.opengl.GL3;
 
-import com.jogamp.opengl.math.FloatUtil;
-
 
 public class World
 {
@@ -21,7 +19,7 @@ public class World
 		t = new Transformation();
 		
 		building1 = new Building();
-		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
+//		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
 		building2 = new Building();
 	}
 	
@@ -84,7 +82,7 @@ public class World
 	
 	public void render(MatrixHandler mh, GL3 gl)
 	{
-		mh.update(gl);
+		mh.addTransformation(t.inverse());
 		
 		building1.render(gl);
 		building2.render(gl);

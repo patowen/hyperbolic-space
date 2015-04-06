@@ -28,6 +28,6 @@ void main()
 	tex_coord = tex_coord_in;
 	
 	vec3 pos = poincare_translate(transform*vertex_position, translate);
-	apparent_position = (2*vertex_position)/(1+dot(vertex_position, vertex_position));
+	apparent_position = (2*pos)/(1+dot(pos, pos));
 	gl_Position = perspective*vec4(apparent_position, 1.0);
 }

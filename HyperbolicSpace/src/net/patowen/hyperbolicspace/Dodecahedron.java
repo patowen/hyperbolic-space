@@ -94,7 +94,7 @@ public class Dodecahedron implements SceneNode
 	
 	public void reposition(Transformation t)
 	{
-		sceneNode.reposition(t);
+		sceneNode.reposition();
 	}
 	
 	public void renderInit(GL3 gl, MatrixHandler mh)

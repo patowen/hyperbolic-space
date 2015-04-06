@@ -8,7 +8,6 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL3;
 
 import com.jogamp.common.nio.Buffers;
-import com.jogamp.opengl.util.glsl.ShaderState;
 import com.jogamp.opengl.util.texture.Texture;
 
 public class SceneNodeImpl
@@ -30,7 +29,7 @@ public class SceneNodeImpl
 	private IntBuffer elementBuffer;
 	int elementBufferPos;
 	
-	private ShaderState shaderState;
+	private MatrixHandler mh;
 	
 	public SceneNodeImpl()
 	{
@@ -45,6 +44,8 @@ public class SceneNodeImpl
 	public void setVertices(ArrayList<Vertex> vertices)
 	{
 		this.vertices = vertices;
+		for (int i=0; i<vertices.size(); i++)
+			vertices.get(i).transform(new Transformation());
 		
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*vertices.size());
 		normalBuffer = Buffers.newDirectFloatBuffer(3*vertices.size());
@@ -56,11 +57,8 @@ public class SceneNodeImpl
 		this.transformation = t;
 	}
 	
-	public void reposition(Transformation t)
+	public void reposition()
 	{
-		for (int i=0; i<vertices.size(); i++)
-			vertices.get(i).transform(t.composeBefore(transformation));
-		
 		for (int i=0; i<vertices.size(); i++)
 		{
 			vertices.get(i).use(vertexBuffer, normalBuffer);
@@ -88,7 +86,7 @@ public class SceneNodeImpl
 		texCoordBufferPos = tempBuffer.get(2);
 		elementBufferPos = tempBuffer.get(3);
 		
-		shaderState = mh.getShaderState();
+		this.mh = mh;
 	}
 	
 	public void render(GL3 gl)
@@ -112,6 +110,10 @@ public class SceneNodeImpl
 		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBuffer.capacity()*4, elementBuffer, GL3.GL_STATIC_DRAW);
 		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
 		
+		mh.pushTransformation();
+		mh.addTransformation(transformation);
+		mh.update(gl);
+		
 		gl.glEnableVertexAttribArray(0);
 		gl.glEnableVertexAttribArray(1);
 		gl.glEnableVertexAttribArray(2);
@@ -124,5 +126,7 @@ public class SceneNodeImpl
 		gl.glDisableVertexAttribArray(2);
 		gl.glDisableVertexAttribArray(1);
 		gl.glDisableVertexAttribArray(0);
+		
+		mh.popTransformation();
 	}
 }

@@ -148,6 +148,7 @@ public class Building implements SceneNode
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
+		sceneNode.reposition();
 	}
 	
 	public void setTransformation(Transformation t)
@@ -157,7 +158,7 @@ public class Building implements SceneNode
 	
 	public void reposition(Transformation t)
 	{
-		sceneNode.reposition(t);
+		sceneNode.reposition();
 	}
 	
 	public void renderInit(GL3 gl, MatrixHandler mh)

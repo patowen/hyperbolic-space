@@ -1,6 +1,7 @@
 package net.patowen.hyperbolicspace;
 
 import java.nio.FloatBuffer;
+import java.util.Stack;
 
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLUniformData;
@@ -14,6 +15,7 @@ public class MatrixHandler
 	private ShaderState shaderState;
 	
 	private Transformation transformation;
+	private Stack<Transformation> transformationStack;
 	
 	private FloatBuffer perspectiveBuf;
 	private float[] perspectiveArray;
@@ -26,6 +28,8 @@ public class MatrixHandler
 		this.shaderState = shaderState;
 		
 		transformation = new Transformation();
+		transformationStack = new Stack<Transformation>();
+		
 		perspectiveArray = new float[16];
 		
 		FloatUtil.makeIdentity(perspectiveArray);
@@ -43,6 +47,21 @@ public class MatrixHandler
 	public void reset()
 	{
 		transformation = new Transformation();
+	}
+	
+	public void addTransformation(Transformation t)
+	{
+		transformation = transformation.composeBefore(t);
+	}
+	
+	public void pushTransformation()
+	{
+		transformationStack.push(transformation);
+	}
+	
+	public void popTransformation()
+	{
+		transformation = transformationStack.pop();
 	}
 	
 	public void setPerspective(float[] perspective)
