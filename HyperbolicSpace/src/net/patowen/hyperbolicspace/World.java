@@ -2,29 +2,30 @@ package net.patowen.hyperbolicspace;
 
 import javax.media.opengl.GL3;
 
-
 public class World
 {
-	private InputHandler input;
+	private Controller c;
 	
 	private Transformation t;
 	
 	private SceneNode building1;
 	private SceneNode building2;
 	
-	public World(InputHandler inputHandler)
+	public World(Controller c)
 	{
-		input = inputHandler;
+		this.c = c;
 		
 		t = new Transformation();
 		
-		building1 = new Building();
-//		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
-		building2 = new Building();
+		building1 = new Building(c);
+		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
+		building2 = new Building(c);
 	}
 	
 	public void handleTurning()
-	{		
+	{
+		InputHandler input = c.getInputHandler();
+		
 		input.readMouse();
 		Orientation o = new Orientation();
 		o.rotate(o.y, -input.getMouseX()*45);
@@ -44,6 +45,8 @@ public class World
 	
 	public void handleMovement(double dt)
 	{
+		InputHandler input = c.getInputHandler();
+		
 		double s = 0.01; //speed
 		if (input.getKey(InputHandler.SLOW))
 			s = 0.001;
@@ -71,18 +74,18 @@ public class World
 		handleTurning();
 		handleMovement(dt);
 		
-		input.updatePressed();
+		c.getInputHandler().updatePressed();
 	}
 	
-	public void renderInit(GL3 gl, MatrixHandler mh)
+	public void renderInit(GL3 gl)
 	{
-		building1.renderInit(gl, mh);
-		building2.renderInit(gl, mh);
+		building1.renderInit(gl);
+		building2.renderInit(gl);
 	}
 	
-	public void render(MatrixHandler mh, GL3 gl)
+	public void render(GL3 gl)
 	{
-		mh.addTransformation(t.inverse());
+		c.getMatrixHandler().addTransformation(t.inverse());
 		
 		building1.render(gl);
 		building2.render(gl);

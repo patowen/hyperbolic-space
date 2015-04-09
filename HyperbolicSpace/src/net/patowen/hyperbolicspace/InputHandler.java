@@ -17,8 +17,8 @@ import com.jogamp.newt.opengl.GLWindow;
  */
 public class InputHandler implements KeyListener, MouseListener
 {
+	private Controller c;
 	private Robot robot;
-	private GLWindow win;
 	private boolean focused;
 	
 	//Mouse controls
@@ -66,9 +66,10 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Initializes the inputs and sets up a Robot that controls the mouse.
 	 * @param comp the component that reads keyboard events
 	 */
-	public InputHandler(GLWindow win)
+	public InputHandler(Controller c)
 	{
-		this.win = win;
+		this.c = c;
+		GLWindow win = c.getWindow();
 		
 		try
 		{
@@ -131,6 +132,8 @@ public class InputHandler implements KeyListener, MouseListener
 	 */
 	public void readMouse()
 	{
+		GLWindow win = c.getWindow();
+		
 		if (win.hasFocus() && focused)
 		{
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
@@ -280,6 +283,8 @@ public class InputHandler implements KeyListener, MouseListener
 	
 	private void setFocused(boolean focused)
 	{
+		GLWindow win = c.getWindow();
+		
 		this.focused = focused;
 		if (focused)
 		{
@@ -303,7 +308,7 @@ public class InputHandler implements KeyListener, MouseListener
 		
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 		{
-			win.destroy();
+			c.exit();
 		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)

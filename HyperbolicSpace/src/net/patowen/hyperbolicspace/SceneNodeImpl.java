@@ -11,7 +11,9 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 
 public class SceneNodeImpl
-{	
+{
+	private Controller c;
+	
 	private Transformation transformation;
 	
 	private Texture texture;
@@ -29,10 +31,9 @@ public class SceneNodeImpl
 	private IntBuffer elementBuffer;
 	int elementBufferPos;
 	
-	private MatrixHandler mh;
-	
-	public SceneNodeImpl()
+	public SceneNodeImpl(Controller c)
 	{
+		this.c = c;
 		transformation = new Transformation();
 	}
 	
@@ -44,8 +45,6 @@ public class SceneNodeImpl
 	public void setVertices(ArrayList<Vertex> vertices)
 	{
 		this.vertices = vertices;
-		for (int i=0; i<vertices.size(); i++)
-			vertices.get(i).transform(new Transformation());
 		
 		vertexBuffer = Buffers.newDirectFloatBuffer(3*vertices.size());
 		normalBuffer = Buffers.newDirectFloatBuffer(3*vertices.size());
@@ -77,7 +76,7 @@ public class SceneNodeImpl
 		this.elementBuffer = elementBuffer;
 	}
 	
-	public void renderInit(GL3 gl, MatrixHandler mh)
+	public void renderInit(GL3 gl)
 	{
 		IntBuffer tempBuffer = Buffers.newDirectIntBuffer(4);
 		gl.glGenBuffers(4, tempBuffer);
@@ -85,12 +84,12 @@ public class SceneNodeImpl
 		normalBufferPos = tempBuffer.get(1);
 		texCoordBufferPos = tempBuffer.get(2);
 		elementBufferPos = tempBuffer.get(3);
-		
-		this.mh = mh;
 	}
 	
 	public void render(GL3 gl)
 	{
+		MatrixHandler mh = c.getMatrixHandler();
+		
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vertexBufferPos);
 		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
 		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);

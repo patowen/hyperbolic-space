@@ -14,10 +14,13 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 public class Dodecahedron implements SceneNode
 {
-	SceneNodeImpl sceneNode;
+	private Controller c;
+	private SceneNodeImpl sceneNode;
 	
-	public Dodecahedron()
+	public Dodecahedron(Controller c)
 	{
+		this.c = c;
+		
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
 		double s = 0.3; //0.3
@@ -39,7 +42,7 @@ public class Dodecahedron implements SceneNode
 		v.add(new Vertex(-q,  p,  0)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-s,  s,  s));
 		v.add(new Vertex(-q, -p,  0)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-s, -s, -s));
 		
-		sceneNode = new SceneNodeImpl();
+		sceneNode = new SceneNodeImpl(this.c);
 		sceneNode.setVertices(v);
 		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(12*3*3);
 		
@@ -97,9 +100,9 @@ public class Dodecahedron implements SceneNode
 		sceneNode.reposition();
 	}
 	
-	public void renderInit(GL3 gl, MatrixHandler mh)
+	public void renderInit(GL3 gl)
 	{
-		sceneNode.renderInit(gl, mh);
+		sceneNode.renderInit(gl);
 		
 		try
 		{

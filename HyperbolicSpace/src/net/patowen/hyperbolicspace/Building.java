@@ -14,6 +14,8 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 public class Building implements SceneNode
 {
+	private Controller c;
+	
 	SceneNodeImpl sceneNode;
 	
 	int baseSides = 5;
@@ -23,8 +25,9 @@ public class Building implements SceneNode
 	int heightStepsPerWrap = 10;
 	int numWraps = 4;
 	
-	public Building()
+	public Building(Controller c)
 	{
+		this.c = c;
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
 		double dx = Math.tanh(baseRadius);
@@ -71,7 +74,7 @@ public class Building implements SceneNode
 		for (int j=0; j<baseSides; j++)
 			v.add(new Vertex(corners[j]));
 		
-		sceneNode = new SceneNodeImpl();
+		sceneNode = new SceneNodeImpl(this.c);
 		sceneNode.setVertices(v);
 		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(baseSides*((6+6*heightStepsPerWrap)*numWraps));
 		
@@ -161,9 +164,9 @@ public class Building implements SceneNode
 		sceneNode.reposition();
 	}
 	
-	public void renderInit(GL3 gl, MatrixHandler mh)
+	public void renderInit(GL3 gl)
 	{
-		sceneNode.renderInit(gl, mh);
+		sceneNode.renderInit(gl);
 		
 		try
 		{

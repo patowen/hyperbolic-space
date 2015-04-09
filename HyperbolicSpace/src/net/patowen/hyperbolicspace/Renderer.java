@@ -3,46 +3,43 @@ import javax.media.nativewindow.WindowClosingProtocol.WindowClosingMode;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLUniformData;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.math.FloatUtil;
-import com.jogamp.opengl.util.FPSAnimator;
-import com.jogamp.opengl.util.glsl.ShaderCode;
-import com.jogamp.opengl.util.glsl.ShaderProgram;
-import com.jogamp.opengl.util.glsl.ShaderState;
 
 
 public class Renderer
 {
-	private GLWindow win;
+	private Controller c;
+	
 	private World world;
-	private ShaderState shaderState;
-	private FPSAnimator anim;
 	
-	private MatrixHandler mh;
-	
-	public Renderer(GLWindow win)
+	public Renderer(Controller c)
 	{
-		this.win = win;
+		this.c = c;
+		
+		GLWindow win = c.getWindow();
 		win.setSize(1024, 768);
 		
 		win.setTitle("Hyperbolic space");
-		win.setDefaultCloseOperation(WindowClosingMode.DISPOSE_ON_CLOSE);
+		win.setDefaultCloseOperation(WindowClosingMode.DO_NOTHING_ON_CLOSE);
 		
 		win.addWindowListener(new WindowAdapter()
 		{
+			private Controller c = Renderer.this.c;
+			
 			public void windowDestroyNotify(WindowEvent e)
 			{
-				anim.stop();
+				c.exit();
 			}
 		});
 		
 		win.addGLEventListener(new GLEventListener()
 		{
+			private Controller c = Renderer.this.c;
+			
 			public void display(GLAutoDrawable drawable)
 			{
 				step(1.0/60);
@@ -60,54 +57,27 @@ public class Renderer
 				gl.glClearColor(0, 0, 0, 1);
 				gl.glEnable(GL3.GL_DEPTH_TEST);
 				
-				ShaderProgram prog = new ShaderProgram();
-				prog.init(gl);
+				c.initShaders(gl);
 				
-				ShaderCode vsCode = ShaderHandler.getShaderCode(GL3.GL_VERTEX_SHADER, "hyperbolic_vs");
-				vsCode.compile(gl);
-				prog.add(vsCode);
-				
-				ShaderCode gsCode = ShaderHandler.getShaderCode(GL3.GL_GEOMETRY_SHADER, "hyperbolic_gs");
-				gsCode.compile(gl);
-				prog.add(gsCode);
-				
-				ShaderCode fsCode = ShaderHandler.getShaderCode(GL3.GL_FRAGMENT_SHADER, "hyperbolic_fs");
-				fsCode.compile(gl);
-				prog.add(fsCode);
-				
-				shaderState = new ShaderState();
-				mh = new MatrixHandler(shaderState);
-				shaderState.attachShaderProgram(gl, prog, false);
-				shaderState.bindAttribLocation(gl, 0, "vertex_position");
-				shaderState.bindAttribLocation(gl, 1, "normal_position");
-				shaderState.bindAttribLocation(gl, 2, "tex_coord_in");
-				
-				prog.link(gl, System.err);
-				prog.validateProgram(gl, System.err);
-				shaderState.useProgram(gl, true);
-				
-				shaderState.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
-				
-				world.renderInit(gl, mh);
+				world.renderInit(gl);
 				
 			}
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 			{
 				float[] mat = new float[16];
-				mh.setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
+				c.getMatrixHandler().setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
 			}
 		});
 		
-		anim = new FPSAnimator(win, 60);
-		anim.start();
-		
 		initialize();
+		c.startAnimation();
 	}
 	
 	public void initialize()
 	{
-		world = new World(new InputHandler(win));
+		c.createInputHandler();
+		world = new World(c);
 	}
 	
 	public void step(double dt)
@@ -118,8 +88,8 @@ public class Renderer
 	public void render(GL3 gl)
 	{
 		gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
-		mh.reset();
+		c.getMatrixHandler().reset();
 		
-		world.render(mh, gl);
+		world.render(gl);
 	}
 }

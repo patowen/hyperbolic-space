@@ -8,7 +8,7 @@ public interface SceneNode
 	
 	public void reposition(Transformation t);
 	
-	public void renderInit(GL3 gl, MatrixHandler mh);
+	public void renderInit(GL3 gl);
 	
 	public void render(GL3 gl);
 }

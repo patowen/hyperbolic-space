@@ -4,19 +4,16 @@ import java.nio.FloatBuffer;
 
 /**
  * The {@code Vertex} class represents a vertex in hyperbolic space represented via the
- * Poincaré ball model.
+ * Poincare ball model.
  * @author Patrick Owen
  */
 public class Vertex
 {
 	private Vector3 pos;
-	private Vector3 vt;
-	
 	private Vector3 norm;
-	private Vector3 nt;
 	
 	/**
-	 * Constructs a {@code Vertex} object in the Poincaré ball with no defined normal.
+	 * Constructs a {@code Vertex} object in the Poincare ball with no defined normal.
 	 * @param x the x-position
 	 * @param y the y-position
 	 * @param z the z-position
@@ -58,39 +55,7 @@ public class Vertex
 	public Vertex(Vector3 pos, Vector3 norm)
 	{
 		this.pos = pos;
-		this.vt = new Vector3(pos);
-		
 		this.norm = norm;
-		this.nt = new Vector3(norm);
-	}
-	
-	/**
-	 * Stores the state of the vertex after a translation in the Poincaré ball model that directly moves the
-	 * origin to the initial location of {@code v}.
-	 * @param v a vector of magnitude less than 1
-	 */
-	public void translate(Vector3 v)
-	{
-		double denom = (v.dot(v))*(pos.dot(pos)) + 2*(v.dot(pos)) + 1;
-		double vFactor = 1 + pos.dot(pos) + 2*(v.dot(pos));
-		double vPosFactor = 1 - v.dot(v);
-		
-		double denomN = 2*(v.dot(v)*pos.dot(norm) + v.dot(norm));
-		double vFactorN = 2*(pos.dot(norm) + v.dot(norm));
-		
-		nt = (norm.times(vPosFactor).plus(v.times(vFactorN)).times(denom))
-				.minus(pos.times(vPosFactor).plus(v.times(vFactor)).times(denomN));
-		nt.normalize();
-		vt = pos.hyperTranslate(v);
-	}
-	
-	/**
-	 * Stores the state of the vertex after the given transformation
-	 * @param v a vector of magnitude less than 1
-	 */
-	public void transform(Transformation t)
-	{
-		vt = t.transform(pos);
 	}
 	
 	/**
@@ -100,12 +65,12 @@ public class Vertex
 	 */
 	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer)
 	{
-		vertexBuffer.put((float)vt.x);
-		vertexBuffer.put((float)vt.y);
-		vertexBuffer.put((float)vt.z);
+		vertexBuffer.put((float)pos.x);
+		vertexBuffer.put((float)pos.y);
+		vertexBuffer.put((float)pos.z);
 		
-		normalBuffer.put((float)nt.x);
-		normalBuffer.put((float)nt.y);
-		normalBuffer.put((float)nt.z);
+		normalBuffer.put((float)norm.x);
+		normalBuffer.put((float)norm.y);
+		normalBuffer.put((float)norm.z);
 	}
 }
