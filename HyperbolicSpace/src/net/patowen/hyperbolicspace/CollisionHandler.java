@@ -2,6 +2,7 @@ package net.patowen.hyperbolicspace;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public class CollisionHandler
 {
 	private static class Wall
