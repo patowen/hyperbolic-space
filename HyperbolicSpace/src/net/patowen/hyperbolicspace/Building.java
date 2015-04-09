@@ -15,15 +15,14 @@ import com.jogamp.opengl.util.texture.TextureIO;
 public class Building implements SceneNode
 {
 	private Controller c;
+	private SceneNodeImpl sceneNode;
 	
-	SceneNodeImpl sceneNode;
+	private int baseSides = 5;
+	private double baseRadius = 0.35;
 	
-	int baseSides = 5;
-	double baseRadius = 0.35;
-	
-	double totalHeight = 2;
-	int heightStepsPerWrap = 10;
-	int numWraps = 4;
+	private double totalHeight = 2;
+	private int heightStepsPerWrap = 10;
+	private int numWraps = 4;
 	
 	public Building(Controller c)
 	{
