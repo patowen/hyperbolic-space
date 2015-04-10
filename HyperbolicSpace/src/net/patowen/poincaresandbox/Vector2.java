@@ -218,4 +218,14 @@ public class Vector2
 		
 		return (times(factor).plusMultiple(v, vFactor)).times(1/denom);
 	}
+	
+	public Vector2 horoRotate(Vector2 q, Vector2 r, double v)
+	{
+		double zmqs = this.minus(q).squared();
+		double denom = v*v*zmqs + 2*v*this.dot(r) + 1;
+		double rFactor = v*zmqs + this.dot(r);
+		double qFactor = v*v*zmqs + 2*v*this.dot(r) + this.dot(q);
+		
+		return r.times(rFactor).plusMultiple(q, qFactor).times(1/denom);
+	}
 }

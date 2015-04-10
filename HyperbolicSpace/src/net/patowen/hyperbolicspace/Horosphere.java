@@ -12,6 +12,7 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
+@SuppressWarnings("unused")
 public class Horosphere implements SceneNode
 {
 	private Controller c;

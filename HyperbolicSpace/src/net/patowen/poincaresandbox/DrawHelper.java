@@ -20,10 +20,10 @@ public class DrawHelper
 	public void drawEuclideanCircle(Graphics2D g, Vector2 center, double radius, boolean fill)
 	{
 		if (fill)
-			g.fill(new Ellipse2D.Double(getI(center.x - radius), getJ(center.y - radius),
+			g.fill(new Ellipse2D.Double(getI(center.x - radius), getJ(center.y + radius),
 					radius*scale*2, radius*scale*2));
 		else
-			g.draw(new Ellipse2D.Double(getI(center.x - radius), getJ(center.y - radius),
+			g.draw(new Ellipse2D.Double(getI(center.x - radius), getJ(center.y + radius),
 					radius*scale*2, radius*scale*2));
 	}
 	
@@ -71,7 +71,7 @@ public class DrawHelper
 	
 	public double getJ(double y)
 	{
-		return y*scale + originY;
+		return -y*scale + originY;
 	}
 	
 	public double getX(double i)
@@ -81,6 +81,6 @@ public class DrawHelper
 	
 	public double getY(double j)
 	{
-		return (j-originY) / scale;
+		return - (j-originY) / scale;
 	}
 }

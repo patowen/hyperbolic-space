@@ -42,7 +42,6 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		
 		nodes = new ArrayList<Node>();
 		nodes.add(new Node(new Vector2(-0.5, 0)));
-		nodes.add(new Node(new Vector2(0.5, 0)));
 		activeNode = null;
 		
 		addMouseListener(this);
@@ -70,7 +69,8 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		for (int i=0; i<nodes.size(); i++)
 			helper.drawEuclideanCircle(g, nodes.get(i).v, 0.05, false);
 		
-		helper.drawLineSegment(g, nodes.get(0).v, nodes.get(1).v);
+		for (int i=-100; i<=100; i++)
+			helper.drawCircle(g, nodes.get(0).v.horoRotate(new Vector2(0,-1), new Vector2(1,0), i*0.1), 0.02, true);
 	}
 
 	@Override
