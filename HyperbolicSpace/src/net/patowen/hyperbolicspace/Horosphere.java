@@ -12,14 +12,14 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-@SuppressWarnings("unused")
 public class Horosphere implements SceneNode
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
 	private int textureStepsPerWrap = 1;
-	int numWraps = 3;
+	private int numWraps = 100;
+	private double size = 5;
 	
 	public Horosphere(Controller c)
 	{
@@ -27,52 +27,71 @@ public class Horosphere implements SceneNode
 		
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
-		double s = 0.3; //0.3
+		int numSteps = textureStepsPerWrap*numWraps;
+		int[][][][] vertices = new int[numWraps][numWraps][textureStepsPerWrap+1][textureStepsPerWrap+1];
 		
-		int[][] vertices = new int[textureStepsPerWrap*numWraps+1][textureStepsPerWrap*numWraps+1];
+		
+		for (int xx=0; xx<numWraps; xx++)
+		{
+			for (int yy=0; yy<numWraps; yy++)
+			{
+				for (int i=0; i<=textureStepsPerWrap; i++)
+				{
+					for (int j=0; j<=textureStepsPerWrap; j++)
+					{
+						int ii = xx*textureStepsPerWrap+i;
+						int jj = yy*textureStepsPerWrap+j;
+						
+						vertices[xx][yy][i][j] = v.size();
+						Vector3 vertex = new Vector3();
+						vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(1,0,0), ((double)ii/numSteps-0.5)*size);
+						vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(0,1,0), ((double)jj/numSteps-0.5)*size);
+//						vertex = vertex.hyperTranslate(new Vector3(0.02*ii, 0.02*jj, 0));
+						v.add(new Vertex(vertex));
+					}
+				}
+			}
+		}
 		
 		sceneNode = new SceneNodeImpl(this.c);
 		sceneNode.setVertices(v);
-		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(12*3*3);
+		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(6*numWraps*numWraps*textureStepsPerWrap*textureStepsPerWrap);
 		
-		elementBuffer.put(new int[]
+		for (int xx=0; xx<numWraps; xx++)
 		{
-			 0*5+0,  0*5+1,  0*5+2,  0*5+0,  0*5+2,  0*5+3,  0*5+0,  0*5+3,  0*5+4,
-			 1*5+0,  1*5+1,  1*5+2,  1*5+0,  1*5+2,  1*5+3,  1*5+0,  1*5+3,  1*5+4,
-			 2*5+0,  2*5+1,  2*5+2,  2*5+0,  2*5+2,  2*5+3,  2*5+0,  2*5+3,  2*5+4,
-			 3*5+0,  3*5+1,  3*5+2,  3*5+0,  3*5+2,  3*5+3,  3*5+0,  3*5+3,  3*5+4,
-			
-			 4*5+0,  4*5+1,  4*5+2,  4*5+0,  4*5+2,  4*5+3,  4*5+0,  4*5+3,  4*5+4,
-			 5*5+0,  5*5+1,  5*5+2,  5*5+0,  5*5+2,  5*5+3,  5*5+0,  5*5+3,  5*5+4,
-			 6*5+0,  6*5+1,  6*5+2,  6*5+0,  6*5+2,  6*5+3,  6*5+0,  6*5+3,  6*5+4,
-			 7*5+0,  7*5+1,  7*5+2,  7*5+0,  7*5+2,  7*5+3,  7*5+0,  7*5+3,  7*5+4,
-			
-			 8*5+0,  8*5+1,  8*5+2,  8*5+0,  8*5+2,  8*5+3,  8*5+0,  8*5+3,  8*5+4,
-			 9*5+0,  9*5+1,  9*5+2,  9*5+0,  9*5+2,  9*5+3,  9*5+0,  9*5+3,  9*5+4,
-			10*5+0, 10*5+1, 10*5+2, 10*5+0, 10*5+2, 10*5+3, 10*5+0, 10*5+3, 10*5+4,
-			11*5+0, 11*5+1, 11*5+2, 11*5+0, 11*5+2, 11*5+3, 11*5+0, 11*5+3, 11*5+4,
-		});
+			for (int yy=0; yy<numWraps; yy++)
+			{
+				int[][] section = vertices[xx][yy];
+				for (int i=0; i<textureStepsPerWrap; i++)
+				{
+					for (int j=0; j<textureStepsPerWrap; j++)
+					{
+						elementBuffer.put(new int[] {section[i][j], section[i+1][j], section[i+1][j+1]});
+						elementBuffer.put(new int[] {section[i][j], section[i+1][j+1], section[i][j+1]});
+					}
+				}
+			}
+		}
+		
 		elementBuffer.rewind();
 		
 		FloatBuffer textureBuffer = Buffers.newDirectFloatBuffer(v.size()*2);
 		
-		textureBuffer.put(new float[]
+		for (int xx=0; xx<numWraps; xx++)
 		{
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-			0.5f, 0.5f, 0.8f, 0.5f, 0.8f, 0.6f, 0.6f, 0.8f, 0.5f, 0.8f,
-		});
+			for (int yy=0; yy<numWraps; yy++)
+			{
+				for (int i=0; i<=textureStepsPerWrap; i++)
+				{
+					for (int j=0; j<=textureStepsPerWrap; j++)
+					{
+						textureBuffer.put((float)i/textureStepsPerWrap);
+						textureBuffer.put((float)j/textureStepsPerWrap);
+					}
+				}
+			}
+		}
+		
 		textureBuffer.rewind();
 		
 		sceneNode.setElementBuffer(elementBuffer);

@@ -17,9 +17,9 @@ public class World
 		
 		t = new Transformation();
 		
-		building1 = new Building(c);
-		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
-		building2 = new Building(c);
+		building1 = new Horosphere(c);
+//		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
+//		building2 = new Building(c);
 	}
 	
 	public void handleTurning()
@@ -69,7 +69,7 @@ public class World
 	{
 		Transformation trans = t.inverse();
 		building1.reposition(trans);
-		building2.reposition(trans);
+//		building2.reposition(trans);
 		
 		handleTurning();
 		handleMovement(dt);
@@ -80,7 +80,7 @@ public class World
 	public void renderInit(GL3 gl)
 	{
 		building1.renderInit(gl);
-		building2.renderInit(gl);
+//		building2.renderInit(gl);
 	}
 	
 	public void render(GL3 gl)
@@ -88,6 +88,6 @@ public class World
 		c.getMatrixHandler().addTransformation(t.inverse());
 		
 		building1.render(gl);
-		building2.render(gl);
+//		building2.render(gl);
 	}
 }

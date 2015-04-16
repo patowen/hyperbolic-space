@@ -1,6 +1,7 @@
 package net.patowen.hyperbolicspace;
 
 
+
 /**
  * The {@code Vector3} class represents a given vector in 3-dimensional Euclidean space.
  * @author Patrick Owen
@@ -230,5 +231,16 @@ public class Vector3
 		double factor = 1 - v.squared();
 		
 		return (times(factor).plusMultiple(v, vFactor)).times(1/denom);
+	}
+	
+	public Vector3 horoRotate(Vector3 q, Vector3 r, double v)
+	{
+		double zmqs = this.minus(q).squared();
+		double denom = v*v*zmqs + 2*v*this.dot(r) + 1;
+		double rFactor = v*zmqs;
+		double qFactor = v*v*zmqs + 2*v*this.dot(r);
+		double factor = 1;
+		
+		return times(factor).plusMultiple(r,rFactor).plusMultiple(q, qFactor).times(1/denom);
 	}
 }

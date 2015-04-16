@@ -223,9 +223,10 @@ public class Vector2
 	{
 		double zmqs = this.minus(q).squared();
 		double denom = v*v*zmqs + 2*v*this.dot(r) + 1;
-		double rFactor = v*zmqs + this.dot(r);
-		double qFactor = v*v*zmqs + 2*v*this.dot(r) + this.dot(q);
+		double rFactor = v*zmqs;
+		double qFactor = v*v*zmqs + 2*v*this.dot(r);
+		double factor = 1;
 		
-		return r.times(rFactor).plusMultiple(q, qFactor).times(1/denom);
+		return times(factor).plusMultiple(r,rFactor).plusMultiple(q, qFactor).times(1/denom);
 	}
 }
