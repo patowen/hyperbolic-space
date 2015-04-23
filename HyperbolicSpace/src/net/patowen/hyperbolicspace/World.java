@@ -1,5 +1,7 @@
 package net.patowen.hyperbolicspace;
 
+import java.util.ArrayList;
+
 import javax.media.opengl.GL3;
 
 public class World
@@ -8,8 +10,7 @@ public class World
 	
 	private Transformation t;
 	
-	private SceneNode building1;
-	private SceneNode building2;
+	private ArrayList<SceneNode> nodes;
 	
 	public World(Controller c)
 	{
@@ -17,9 +18,17 @@ public class World
 		
 		t = new Transformation();
 		
-		building1 = new Horosphere(c);
-//		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
-//		building2 = new Building(c);
+		nodes = new ArrayList<SceneNode>();
+		
+		SceneNode building1 = new Horosphere(c);
+		building1.setTransformation(new Transformation(new Orientation(), new Vector3(0.65, 0, 0)));
+		SceneNode building2 = new Building(c);
+		SceneNode dodec = new Dodecahedron(c);
+		dodec.setTransformation(new Transformation(new Orientation(), new Vector3(0, 0.8, 0)));
+		
+		nodes.add(building1);
+		nodes.add(building2);
+		nodes.add(dodec);
 	}
 	
 	public void handleTurning()
@@ -68,7 +77,8 @@ public class World
 	public void step(double dt)
 	{
 		Transformation trans = t.inverse();
-		building1.reposition(trans);
+		for (SceneNode node : nodes)
+			node.reposition(trans);
 //		building2.reposition(trans);
 		
 		handleTurning();
@@ -79,7 +89,8 @@ public class World
 	
 	public void renderInit(GL3 gl)
 	{
-		building1.renderInit(gl);
+		for (SceneNode node : nodes)
+			node.renderInit(gl);
 //		building2.renderInit(gl);
 	}
 	
@@ -87,7 +98,8 @@ public class World
 	{
 		c.getMatrixHandler().addTransformation(t.inverse());
 		
-		building1.render(gl);
+		for (SceneNode node : nodes)
+			node.render(gl);
 //		building2.render(gl);
 	}
 }

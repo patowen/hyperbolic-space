@@ -23,7 +23,7 @@ public class Renderer
 		GLWindow win = c.getWindow();
 		win.setSize(1024, 768);
 		
-		win.setTitle("Hyperbolic space");
+		win.setTitle("Hyperworld");
 		win.setDefaultCloseOperation(WindowClosingMode.DO_NOTHING_ON_CLOSE);
 		
 		win.addWindowListener(new WindowAdapter()
