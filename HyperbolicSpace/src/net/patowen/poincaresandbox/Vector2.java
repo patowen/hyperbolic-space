@@ -219,6 +219,13 @@ public class Vector2
 		return (times(factor).plusMultiple(v, vFactor)).times(1/denom);
 	}
 	
+	public Vector2 dir(Vector2 x)
+	{
+		Vector2 v = this;
+		Vector2 diff = x.minus(v);
+		return diff.times(2*diff.dot(x)/diff.squared()).minus(x);
+	}
+	
 	public Vector2 horoRotate(Vector2 q, Vector2 r, double v)
 	{
 		double zmqs = this.minus(q).squared();
