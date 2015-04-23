@@ -70,7 +70,7 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 			helper.drawEuclideanCircle(g, nodes.get(i).v, 0.05, false);
 		
 		for (int i=-100; i<=100; i++)
-			helper.drawCircle(g, nodes.get(0).v.horoRotate(new Vector2(0,-1), new Vector2(1,0), i*0.1), 0.02, true);
+			helper.drawCircle(g, nodes.get(0).v.horoRotate(new Vector2(0,-1), new Vector2(1,0), i*0.1), 0.085, true);
 	}
 
 	@Override

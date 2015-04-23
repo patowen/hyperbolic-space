@@ -12,7 +12,7 @@ out vec4 fragColor;
 
 vec3 klein_to_poincare(vec3 klein)
 {
-	return klein / (1 + sqrt(1-dot(klein, klein)));
+	return klein / (1 + sqrt(max(0, 1-dot(klein, klein))));
 }
 
 vec3 poincare_to_klein(vec3 poincare)
@@ -45,9 +45,5 @@ void main()
 	
 	mat3 transform1 = inverse(mat3(pos[1], pos[2], cross(pos[1],pos[2])));
 	mat3 transform2 = mat3(f_texcoord[1]-f_texcoord[0], 0, f_texcoord[2]-f_texcoord[0], 0, 0, 0, 0);
-	//fragColor = texture(texture_sampler, 0.2*vec2(dot(pos[1],pos[1]), 0.5));
 	fragColor = texture(texture_sampler, (transform2*transform1*center).st + f_texcoord[0]);
-	//fragColor = texture(texture_sampler, vec2(0.1*(1+1.5*f_interpolated_pos.z), 0.5));
-	//float norm_sqr = dot(pos[0], pos[0]);
-	//fragColor = vec4(vec3(1,1,1)*(1-norm_sqr), 1);
 }
