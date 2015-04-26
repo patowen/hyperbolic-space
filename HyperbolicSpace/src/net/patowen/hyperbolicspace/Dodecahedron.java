@@ -106,7 +106,8 @@ public class Dodecahedron implements SceneNode
 		
 		try
 		{
-			Texture tex = TextureIO.newTexture(new File("flat_clouds.png"), false);
+			Texture tex = TextureIO.newTexture(new File("flat_clouds.png"), true);
+			gl.glGenerateMipmap(tex.getTarget());
 			sceneNode.setTexture(tex);
 		}
 		catch (IOException e)
