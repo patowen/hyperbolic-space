@@ -64,6 +64,30 @@ public class DrawHelper
 		g.draw(path);
 	}
 	
+	public void drawGraph(Graphics2D g, Vector2 x, Vector2 y, Vector2 v, int width)
+	{
+		Path2D path = new Path2D.Double();
+		boolean first = true;
+		
+		for (int i=0; i<width; i++)
+		{
+			double dist = getX(i);
+			Vector2 w = v.times(Math.tanh(dist));
+			Vector2 a = w.dir(x);
+			Vector2 b = w.dir(y);
+			
+			double result = a.dot(b);
+			
+			if (first)
+				path.moveTo(i, getJ(result));
+			else
+				path.lineTo(i, getJ(result));
+			first = false;
+		}
+		
+		g.draw(path);
+	}
+	
 	public double getI(double x)
 	{
 		return x*scale + originX;

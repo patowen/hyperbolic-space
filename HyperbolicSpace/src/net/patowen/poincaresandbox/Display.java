@@ -41,8 +41,9 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		helper = new DrawHelper();
 		
 		nodes = new ArrayList<Node>();
-		nodes.add(new Node(new Vector2(-0.5, 0)));
+		nodes.add(new Node(new Vector2(-1, 0)));
 		nodes.add(new Node(new Vector2(0, 1)));
+		nodes.add(new Node(new Vector2(0.5, 0)));
 		activeNode = null;
 		
 		addMouseListener(this);
@@ -72,9 +73,10 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		
 		helper.drawLineSegment(g, nodes.get(0).v, nodes.get(1).v);
 		
-		Vector2 result = nodes.get(0).v.dir(nodes.get(1).v);
+		Vector2 v2 = nodes.get(2).v.times(1/nodes.get(2).v.magnitude());
+		helper.drawEuclideanLine(g, v2, v2.times(-1));
 		
-		helper.drawEuclideanLine(g, new Vector2(), result);
+		helper.drawGraph(g, nodes.get(0).v, nodes.get(1).v, v2, getWidth());
 	}
 
 	@Override
