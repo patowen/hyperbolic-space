@@ -12,6 +12,11 @@ public class MathHelper
 		return Math.log(x + Math.sqrt(x*x-1));
 	}
 	
+	public static double atanh(double x)
+	{
+		return 0.5 * (Math.log1p(x) - Math.log1p(-x));
+	}
+	
 	public static double sqr(double x)
 	{
 		return x*x;
