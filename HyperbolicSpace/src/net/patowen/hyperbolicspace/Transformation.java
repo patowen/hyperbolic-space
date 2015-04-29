@@ -35,6 +35,15 @@ public class Transformation
 	}
 	
 	/**
+	 * Copy constructor. Completes a shallow copy of the given transformation object
+	 */
+	public Transformation(Transformation t)
+	{
+		rotation = t.rotation;
+		translation = t.translation;
+	}
+	
+	/**
 	 * Returns the transform that when combined with the current one, will return the identity transformation.
 	 * @return the inverse transformation
 	 */

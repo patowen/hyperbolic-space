@@ -54,13 +54,11 @@ public class Renderer
 			public void init(GLAutoDrawable drawable)
 			{
 				GL3 gl = drawable.getGL().getGL3();
+				c.renderInit(gl);
 				gl.glClearColor(0, 0, 0, 1);
 				gl.glEnable(GL3.GL_DEPTH_TEST);
 				
 				c.initShaders(gl);
-				
-				world.renderInit(gl);
-				
 			}
 			
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)

@@ -3,13 +3,15 @@ package net.patowen.hyperbolicspace;
 public class Player
 {
 	private Controller c;
+	private World w;
 	
 	private Transformation pos;
 	private Vector3 vel;
 	
-	public Player(Controller c)
+	public Player(Controller c, World w)
 	{
 		this.c = c;
+		this.w = w;
 		
 		pos = new Transformation();
 		vel = new Vector3();
@@ -21,24 +23,78 @@ public class Player
 		handleAcceleration(dt);
 		
 		handleMovement(dt);
+		
+		handleSpawning();
+	}
+	
+	public void handleSpawning()
+	{
+		InputHandler inputHandler = c.getInputHandler();
+		if (inputHandler.getKeyPressed(InputHandler.SPAWN_1))
+		{
+			spawnNode(new SceneNode(c.dodecahedron));
+		}
+		if (inputHandler.getKeyPressed(InputHandler.SPAWN_2))
+		{
+			spawnNode(new SceneNode(c.building));
+		}
+		if (inputHandler.getKeyPressed(InputHandler.SPAWN_3))
+		{
+			spawnNode(new SceneNode(c.horosphere));
+		}
+	}
+	
+	public void spawnNode(SceneNode sceneNode)
+	{
+		sceneNode.setTransformation(new Transformation(pos));
+		w.addNode(sceneNode);
 	}
 	
 	public void handleAcceleration(double dt)
 	{
 		InputHandler inputHandler = c.getInputHandler();
+		double maxChange, maxVel;
 		
+		if (inputHandler.getKey(InputHandler.SLOW))
+		{
+			maxChange = 2*dt;
+			maxVel = 1;
+		}
+		else
+		{
+			maxChange = 20*dt;
+			maxVel = 10;
+		}
+		double dx=0, dy=0, dz=0;
 		if (inputHandler.getMouseButton(InputHandler.FORWARDS))
-			vel.addMultiple(pos.getRotation().z, -dt);
+			dz -= 1;
 		if (inputHandler.getMouseButton(InputHandler.BACKWARDS))
-			vel.addMultiple(pos.getRotation().z, dt);
+			dz += 1;
 		if (inputHandler.getKey(InputHandler.UP))
-			vel.addMultiple(pos.getRotation().y, dt);
+			dy += 1;
 		if (inputHandler.getKey(InputHandler.DOWN))
-			vel.addMultiple(pos.getRotation().y, -dt);
+			dy -= 1;
 		if (inputHandler.getKey(InputHandler.RIGHT))
-			vel.addMultiple(pos.getRotation().x, dt);
+			dx += 1;
 		if (inputHandler.getKey(InputHandler.LEFT))
-			vel.addMultiple(pos.getRotation().x, -dt);
+			dx -= 1;
+		
+		Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
+		approachVelocity(goalVel, maxChange);
+	}
+	
+	public void approachVelocity(Vector3 goalVel, double maxChange)
+	{
+		double dist = goalVel.minus(vel).magnitude();
+		if (dist <= maxChange)
+		{
+			vel = goalVel;
+		}
+		else
+		{
+			double progress = maxChange/dist;
+			vel = vel.times(1-progress).plus(goalVel.times(progress));
+		}
 	}
 	
 	public void handleMovement(double dt)

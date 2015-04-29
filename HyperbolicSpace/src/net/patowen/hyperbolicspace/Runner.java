@@ -9,6 +9,7 @@ public class Runner
 	public static void main(String[] args)
 	{
 		c = new Controller();
+		c.init();
 		c.createWindow();
 		
 		new Renderer(c);

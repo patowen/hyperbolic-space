@@ -12,7 +12,7 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class Building implements SceneNode
+public class Building implements SceneNodeType
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
@@ -21,8 +21,8 @@ public class Building implements SceneNode
 	private double baseRadius = 0.35;
 	
 	private double totalHeight = 2;
-	private int heightStepsPerWrap = 10;
-	private int numWraps = 4;
+	private int heightStepsPerWrap = 6;
+	private int numWraps = 7;
 	
 	public Building(Controller c)
 	{
@@ -153,23 +153,13 @@ public class Building implements SceneNode
 		sceneNode.reposition();
 	}
 	
-	public void setTransformation(Transformation t)
-	{
-		sceneNode.setTransformation(t);
-	}
-	
-	public void reposition(Transformation t)
-	{
-		sceneNode.reposition();
-	}
-	
 	public void renderInit(GL3 gl)
 	{
 		sceneNode.renderInit(gl);
 		
 		try
 		{
-			Texture tex = TextureIO.newTexture(new File("flat_clouds.png"), true);
+			Texture tex = TextureIO.newTexture(new File("metal.png"), true);
 			gl.glGenerateMipmap(tex.getTarget());
 			sceneNode.setTexture(tex);
 		}
@@ -179,8 +169,9 @@ public class Building implements SceneNode
 		}
 	}
 	
-	public void render(GL3 gl)
+	public void render(GL3 gl, Transformation t)
 	{
+		sceneNode.setTransformation(t);
 		sceneNode.render(gl);
 	}
 }

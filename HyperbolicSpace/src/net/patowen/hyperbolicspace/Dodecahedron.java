@@ -12,7 +12,7 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class Dodecahedron implements SceneNode
+public class Dodecahedron implements SceneNodeType
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
@@ -20,7 +20,6 @@ public class Dodecahedron implements SceneNode
 	public Dodecahedron(Controller c)
 	{
 		this.c = c;
-		
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
 		double s = 0.3; //0.3
@@ -88,15 +87,6 @@ public class Dodecahedron implements SceneNode
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
-	}
-	
-	public void setTransformation(Transformation t)
-	{
-		sceneNode.setTransformation(t);
-	}
-	
-	public void reposition(Transformation t)
-	{
 		sceneNode.reposition();
 	}
 	
@@ -116,8 +106,9 @@ public class Dodecahedron implements SceneNode
 		}
 	}
 	
-	public void render(GL3 gl)
+	public void render(GL3 gl, Transformation t)
 	{
+		sceneNode.setTransformation(t);
 		sceneNode.render(gl);
 	}
 }

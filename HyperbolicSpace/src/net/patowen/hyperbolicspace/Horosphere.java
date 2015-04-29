@@ -12,13 +12,13 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class Horosphere implements SceneNode
+public class Horosphere implements SceneNodeType
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
-	private int textureStepsPerWrap = 1;
-	private int numWraps = 100;
+	private int textureStepsPerWrap = 10;
+	private int numWraps = 10;
 	private double size = 5;
 	
 	public Horosphere(Controller c)
@@ -96,15 +96,6 @@ public class Horosphere implements SceneNode
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
-	}
-	
-	public void setTransformation(Transformation t)
-	{
-		sceneNode.setTransformation(t);
-	}
-	
-	public void reposition(Transformation t)
-	{
 		sceneNode.reposition();
 	}
 	
@@ -114,7 +105,7 @@ public class Horosphere implements SceneNode
 		
 		try
 		{
-			Texture tex = TextureIO.newTexture(new File("flat_clouds.png"), true);
+			Texture tex = TextureIO.newTexture(new File("stone.jpg"), true);
 			gl.glGenerateMipmap(tex.getTarget());
 			sceneNode.setTexture(tex);
 		}
@@ -124,8 +115,9 @@ public class Horosphere implements SceneNode
 		}
 	}
 	
-	public void render(GL3 gl)
+	public void render(GL3 gl, Transformation t)
 	{
+		sceneNode.setTransformation(t);
 		sceneNode.render(gl);
 	}
 }

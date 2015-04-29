@@ -2,13 +2,24 @@ package net.patowen.hyperbolicspace;
 
 import javax.media.opengl.GL3;
 
-public interface SceneNode
+public class SceneNode
 {
-	public void setTransformation(Transformation t);
+	private SceneNodeType type;
+	private Transformation t;
 	
-	public void reposition(Transformation t);
+	public SceneNode(SceneNodeType type)
+	{
+		this.type = type;
+		t = new Transformation();
+	}
 	
-	public void renderInit(GL3 gl);
+	public void setTransformation(Transformation t)
+	{
+		this.t = t;
+	}
 	
-	public void render(GL3 gl);
+	public void render(GL3 gl)
+	{
+		type.render(gl, t);
+	}
 }

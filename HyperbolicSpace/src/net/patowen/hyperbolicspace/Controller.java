@@ -26,6 +26,22 @@ public class Controller
 	private InputHandler inputHandler;
 	private GLWindow win;
 	
+	public SceneNodeType dodecahedron, building, horosphere;
+	
+	public void init()
+	{
+		dodecahedron = new Dodecahedron(this);
+		building = new Building(this);
+		horosphere = new Horosphere(this);
+	}
+	
+	public void renderInit(GL3 gl)
+	{
+		dodecahedron.renderInit(gl);
+		building.renderInit(gl);
+		horosphere.renderInit(gl);
+	}
+	
 	public void exit()
 	{
 		anim.stop();
