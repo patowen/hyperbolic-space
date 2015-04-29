@@ -104,7 +104,7 @@ public class Player
 	{
 		Vector3 loc = pos.getTranslation();
 		
-		Vector3 velPos = convertToPosition(vel);
+		Vector3 velPos = convertToPosition(vel.times(0.01));
 		Vector3 dPos = convertToPosition(vel.times(0.1*dt));
 		pos = new Transformation(pos.getRotation(), new Vector3());
 		
@@ -114,7 +114,13 @@ public class Player
 		pos = pos.composeAfter(new Transformation(new Orientation(), loc));
 		velPos = velPos.hyperTranslate(loc).hyperTranslate(pos.getTranslation().times(-1));
 		
-		vel = convertToVelocity(velPos);
+		vel = convertToVelocity(velPos).times(100);
+		
+		//Spherical precision frontier
+		double mag = pos.getTranslation().magnitude();
+		double maxMag = 0.9998;
+		if (mag > maxMag)
+			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
 	}
 	
 	public void handleTurning(double dt)
