@@ -54,6 +54,11 @@ public class Controller
 		anim.start();
 	}
 	
+	public void toggleFullscreen()
+	{
+		win.setFullscreen(!win.isFullscreen());
+	}
+	
 	public void createWindow()
 	{
 		GLCapabilities caps;

@@ -26,9 +26,9 @@ public class InputHandler implements KeyListener, MouseListener
 	private double mouseSensitivity;
 	
 	//Variables used outside to choose which control is being inspected
-	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, SLOW = 4,
-			SPAWN_1 = 5, SPAWN_2 = 6, SPAWN_3 = 7; //Keyboard
-	public static final int NUM_KEYS = 8;
+	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, SLOW = 4, TILT_LEFT = 5, TILT_RIGHT = 6,
+			SPAWN_1 = 7, SPAWN_2 = 8, SPAWN_3 = 9; //Keyboard
+	public static final int NUM_KEYS = 10;
 	
 	public static final int FORWARDS = 0, BACKWARDS = 1; //Mouse
 	public static final int NUM_MOUSE_BUTTONS = 2;
@@ -94,9 +94,11 @@ public class InputHandler implements KeyListener, MouseListener
 		keyCode[2] = KeyEvent.VK_A;
 		keyCode[3] = KeyEvent.VK_D;
 		keyCode[4] = KeyEvent.VK_SHIFT;
-		keyCode[5] = KeyEvent.VK_1;
-		keyCode[6] = KeyEvent.VK_2;
-		keyCode[7] = KeyEvent.VK_3;
+		keyCode[5] = KeyEvent.VK_Q;
+		keyCode[6] = KeyEvent.VK_E;
+		keyCode[7] = KeyEvent.VK_1;
+		keyCode[8] = KeyEvent.VK_2;
+		keyCode[9] = KeyEvent.VK_3;
 		
 		mouseButton = new int[NUM_MOUSE_BUTTONS];
 		mouseButton[0] = MouseEvent.BUTTON1;
@@ -319,6 +321,10 @@ public class InputHandler implements KeyListener, MouseListener
 		{
 			if (focused)
 				setFocused(false);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_F11)
+		{
+			c.toggleFullscreen();
 		}
 		
 		//Handle keys

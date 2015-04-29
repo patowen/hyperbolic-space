@@ -19,7 +19,7 @@ public class Player
 	
 	public void step(double dt)
 	{
-		handleTurning();
+		handleTurning(dt);
 		handleAcceleration(dt);
 		
 		handleMovement(dt);
@@ -32,21 +32,24 @@ public class Player
 		InputHandler inputHandler = c.getInputHandler();
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_1))
 		{
-			spawnNode(new SceneNode(c.dodecahedron));
+			spawnNode(new SceneNode(c.dodecahedron), new Transformation(
+					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.7)));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_2))
 		{
-			spawnNode(new SceneNode(c.building));
+			spawnNode(new SceneNode(c.building), new Transformation(
+					new Orientation(new Vector3(-1,0,0), new Vector3(0,0,1), new Vector3(0,1,0)), new Vector3(0,0,-0.4)));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_3))
 		{
-			spawnNode(new SceneNode(c.horosphere));
+			spawnNode(new SceneNode(c.horosphere), new Transformation(
+					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
 		}
 	}
 	
-	public void spawnNode(SceneNode sceneNode)
+	public void spawnNode(SceneNode sceneNode, Transformation t)
 	{
-		sceneNode.setTransformation(new Transformation(pos));
+		sceneNode.setTransformation((new Transformation(pos)).composeBefore(t));
 		w.addNode(sceneNode);
 	}
 	
@@ -114,14 +117,20 @@ public class Player
 		vel = convertToVelocity(velPos);
 	}
 	
-	public void handleTurning()
+	public void handleTurning(double dt)
 	{
-		InputHandler input = c.getInputHandler();
+		InputHandler inputHandler = c.getInputHandler();
 		
-		input.readMouse();
+		inputHandler.readMouse();
 		Orientation o = new Orientation();
-		o.rotate(o.y, -input.getMouseX()*45);
-		o.rotate(o.x, -input.getMouseY()*45);
+		o.rotate(o.y, -inputHandler.getMouseX()*45);
+		o.rotate(o.x, -inputHandler.getMouseY()*45);
+		double tilt = 0;
+		if (inputHandler.getKey(InputHandler.TILT_LEFT))
+			tilt -= 1;
+		if (inputHandler.getKey(InputHandler.TILT_RIGHT))
+			tilt += 1;
+		o.rotate(o.z, -tilt*dt);
 		pos = pos.composeBefore(new Transformation(o, new Vector3()));
 	}
 	
