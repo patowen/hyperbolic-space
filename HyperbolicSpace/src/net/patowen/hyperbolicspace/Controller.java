@@ -26,20 +26,28 @@ public class Controller
 	private InputHandler inputHandler;
 	private GLWindow win;
 	
-	public SceneNodeType dodecahedron, building, horosphere;
+	private TextureBank textureBank;
+	
+	public SceneNodeType dodecahedron, building, horosphere, plane;
 	
 	public void init()
 	{
 		dodecahedron = new Dodecahedron(this);
 		building = new Building(this);
 		horosphere = new Horosphere(this);
+		plane = new Plane(this);
+		
+		textureBank = new TextureBank();
 	}
 	
 	public void renderInit(GL3 gl)
 	{
+		textureBank.initTextures(gl);
+		
 		dodecahedron.renderInit(gl);
 		building.renderInit(gl);
 		horosphere.renderInit(gl);
+		plane.renderInit(gl);
 	}
 	
 	public void exit()
@@ -125,5 +133,10 @@ public class Controller
 	public GLWindow getWindow()
 	{
 		return win;
+	}
+	
+	public TextureBank getTextureBank()
+	{
+		return textureBank;
 	}
 }

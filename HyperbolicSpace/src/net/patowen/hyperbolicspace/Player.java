@@ -45,6 +45,11 @@ public class Player
 			spawnNode(new SceneNode(c.horosphere), new Transformation(
 					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
 		}
+		if (inputHandler.getKeyPressed(InputHandler.SPAWN_4))
+		{
+			spawnNode(new SceneNode(c.plane), new Transformation(
+					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
+		}
 	}
 	
 	public void spawnNode(SceneNode sceneNode, Transformation t)

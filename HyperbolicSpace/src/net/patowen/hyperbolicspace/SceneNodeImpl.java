@@ -116,12 +116,10 @@ public class SceneNodeImpl
 		gl.glEnableVertexAttribArray(0);
 		gl.glEnableVertexAttribArray(1);
 		gl.glEnableVertexAttribArray(2);
-		texture.enable(gl);
 		texture.bind(gl);
 		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
 		gl.glDrawElements(GL3.GL_TRIANGLES, elementBuffer.capacity(), GL3.GL_UNSIGNED_INT, 0);
 		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
-		texture.disable(gl);
 		gl.glDisableVertexAttribArray(2);
 		gl.glDisableVertexAttribArray(1);
 		gl.glDisableVertexAttribArray(0);

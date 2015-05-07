@@ -1,7 +1,5 @@
 package net.patowen.hyperbolicspace;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -9,8 +7,6 @@ import java.util.ArrayList;
 import javax.media.opengl.GL3;
 
 import com.jogamp.common.nio.Buffers;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
 
 public class Building implements SceneNodeType
 {
@@ -156,17 +152,7 @@ public class Building implements SceneNodeType
 	public void renderInit(GL3 gl)
 	{
 		sceneNode.renderInit(gl);
-		
-		try
-		{
-			Texture tex = TextureIO.newTexture(new File("metal.png"), true);
-			gl.glGenerateMipmap(tex.getTarget());
-			sceneNode.setTexture(tex);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		sceneNode.setTexture(c.getTextureBank().metal);
 	}
 	
 	public void render(GL3 gl, Transformation t)

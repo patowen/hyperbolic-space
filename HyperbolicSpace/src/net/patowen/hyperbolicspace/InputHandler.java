@@ -27,8 +27,8 @@ public class InputHandler implements KeyListener, MouseListener
 	
 	//Variables used outside to choose which control is being inspected
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, SLOW = 4, TILT_LEFT = 5, TILT_RIGHT = 6,
-			SPAWN_1 = 7, SPAWN_2 = 8, SPAWN_3 = 9; //Keyboard
-	public static final int NUM_KEYS = 10;
+			SPAWN_1 = 7, SPAWN_2 = 8, SPAWN_3 = 9, SPAWN_4 = 10; //Keyboard
+	public static final int NUM_KEYS = 11;
 	
 	public static final int FORWARDS = 0, BACKWARDS = 1; //Mouse
 	public static final int NUM_MOUSE_BUTTONS = 2;
@@ -99,6 +99,7 @@ public class InputHandler implements KeyListener, MouseListener
 		keyCode[7] = KeyEvent.VK_1;
 		keyCode[8] = KeyEvent.VK_2;
 		keyCode[9] = KeyEvent.VK_3;
+		keyCode[10] = KeyEvent.VK_4;
 		
 		mouseButton = new int[NUM_MOUSE_BUTTONS];
 		mouseButton[0] = MouseEvent.BUTTON1;
