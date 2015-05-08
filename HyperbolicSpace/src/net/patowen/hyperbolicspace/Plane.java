@@ -30,14 +30,6 @@ public class Plane implements SceneNodeType
 			v.add(new Vertex(f.vertices[4].getPosition()));
 		}
 		
-//		double s = 0.4858682717566457; //phi^(3/2)?
-//		Transformation t = new Transformation();
-//		for (int i=0; i<5; i++)
-//		{
-//			v.add(new Vertex(t.getTranslation()));
-//			t = t.composeAfter(new Transformation(new Orientation(new Vector3(0,1,0), new Vector3(-1,0,0), new Vector3(0,0,1)), new Vector3(s, 0, 0)));
-//		}
-		
 		sceneNode = new SceneNodeImpl(this.c);
 		sceneNode.setVertices(v);
 		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(3*3*tFace.size());
@@ -72,17 +64,21 @@ public class Plane implements SceneNodeType
 	{
 		int numComplete = 0;
 		tVert.add(new TessellatorVertex()); //Seed
-		tVert.get(0).setGlobalIndex(0);
 		
-		ArrayList<TessellatorVertex> newVert = new ArrayList<TessellatorVertex>();
-		ArrayList<TessellatorFace> newFace = new ArrayList<TessellatorFace>();
-		tVert.get(0).expand(newVert, newFace);
-		
-		tVert.addAll(newVert);
-		tFace.addAll(newFace);
-		
-		for (int i=0; i<tVert.size(); i++)
-			tVert.get(i).setGlobalIndex(i);
+		for (int i=0; i<5; i++)
+		{
+			ArrayList<TessellatorVertex> newVert = new ArrayList<TessellatorVertex>();
+			ArrayList<TessellatorFace> newFace = new ArrayList<TessellatorFace>();
+			
+			for (int j=numComplete; j<tVert.size(); j++)
+			{
+				tVert.get(j).expand(newVert, newFace);
+			}
+			
+			numComplete = tVert.size();
+			tVert.addAll(newVert);
+			tFace.addAll(newFace);
+		}
 		
 		System.out.println(tVert.size());
 	}
@@ -118,7 +114,6 @@ public class Plane implements SceneNodeType
 		private int[] neighborIndices;
 		private boolean[] faces;
 		private Transformation position;
-		private int globalIndex;
 		
 		public TessellatorVertex()
 		{
@@ -136,16 +131,6 @@ public class Plane implements SceneNodeType
 			neighbors[2] = neighbor;
 			neighborIndices[2] = neighborIndex;
 			this.position = position;
-		}
-		
-		public void setGlobalIndex(int index)
-		{
-			globalIndex = index;
-		}
-		
-		public int getGlobalIndex()
-		{
-			return globalIndex;
 		}
 		
 		public Vector3 getPosition()
@@ -199,7 +184,7 @@ public class Plane implements SceneNodeType
 		public void expand(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput)
 		{
 			for (int i=0; i<4; i++)
-				addFace(vOutput, fOutput, i);
+				if (!faces[i]) addFace(vOutput, fOutput, i);
 		}
 		
 		public void addFace(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput, int faceIndex)

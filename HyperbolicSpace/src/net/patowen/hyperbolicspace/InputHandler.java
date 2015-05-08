@@ -326,6 +326,13 @@ public class InputHandler implements KeyListener, MouseListener
 		if (e.getKeyCode() == KeyEvent.VK_F11)
 		{
 			c.toggleFullscreen();
+			if (focused)
+			{
+				GLWindow win = c.getWindow();
+				int centerX = win.getX() + win.getWidth()/2;
+				int centerY = win.getY() + win.getHeight()/2;			
+				robot.mouseMove(centerX, centerY);
+			}
 		}
 		
 		//Handle keys
