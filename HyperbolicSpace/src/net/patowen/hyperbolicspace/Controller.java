@@ -4,10 +4,8 @@ import javax.media.opengl.GL3;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLException;
 import javax.media.opengl.GLProfile;
-import javax.media.opengl.GLUniformData;
 import javax.swing.JOptionPane;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.glsl.ShaderCode;
@@ -15,8 +13,8 @@ import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
 /**
- * Controller acts as a context in which all other classes can access shared
- * data without having to pass things around randomly.
+ * {@code Controller} acts as a context in which all other classes can access shared
+ * data without having to pass things around arbitrary.
  * @author Patrick Owen
  */
 public class Controller
@@ -28,20 +26,27 @@ public class Controller
 	
 	private TextureBank textureBank;
 	
+	/** A renderable scene node */
 	public SceneNodeType dodecahedron, building, horosphere, plane;
 	
+	/**
+	 * Constructs all meshes
+	 */
 	public void init()
 	{
 		dodecahedron = new Dodecahedron(this);
 		building = new Building(this);
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
-		
-		textureBank = new TextureBank();
 	}
 	
+	/**
+	 * Initializes all textures and prepares all meshes for rendering
+	 * @param gl
+	 */
 	public void renderInit(GL3 gl)
 	{
+		textureBank = new TextureBank();
 		textureBank.initTextures(gl);
 		
 		dodecahedron.renderInit(gl);
@@ -50,23 +55,34 @@ public class Controller
 		plane.renderInit(gl);
 	}
 	
+	/**
+	 * Gracefully quits the application
+	 */
 	public void exit()
 	{
 		anim.stop();
 	}
 	
-	
+	/**
+	 * Begins the render loop
+	 */
 	public void startAnimation()
 	{
 		anim = new FPSAnimator(win, 60);
 		anim.start();
 	}
 	
+	/**
+	 * Toggles whether the window is fullscreen
+	 */
 	public void toggleFullscreen()
 	{
 		win.setFullscreen(!win.isFullscreen());
 	}
 	
+	/**
+	 * Initializes OpenGL and creates a window with the OpenGL3 context
+	 */
 	public void createWindow()
 	{
 		GLCapabilities caps;
@@ -84,11 +100,18 @@ public class Controller
 		win = GLWindow.create(caps);
 	}
 	
+	/**
+	 * Initializes the listener for input
+	 */
 	public void createInputHandler()
 	{
 		inputHandler = new InputHandler(this);
 	}
 	
+	/**
+	 * Loads the shader resources and compiles all the shaders
+	 * @param gl
+	 */
 	public void initShaders(GL3 gl)
 	{
 		ShaderProgram prog = new ShaderProgram();
@@ -116,25 +139,39 @@ public class Controller
 		prog.link(gl, System.err);
 		prog.validateProgram(gl, System.err);
 		shaderState.useProgram(gl, true);
-		
-		shaderState.uniform(gl, new GLUniformData("inputColor", 4, Buffers.newDirectFloatBuffer(new float[] {1, 1, 1, 1})));
 	}
 	
+	/**
+	 * Returns the main {@code MatrixHandler} object
+	 * @return a reference to the main {@code MatrixHandler} object
+	 */
 	public MatrixHandler getMatrixHandler()
 	{
 		return matrixHandler;
 	}
 	
+	/**
+	 * Returns the main {@code InputHandler} object
+	 * @return a reference to the main {@code InputHandler} object
+	 */
 	public InputHandler getInputHandler()
 	{
 		return inputHandler;
 	}
 	
+	/**
+	 * Returns the main window
+	 * @return a reference to the main window
+	 */
 	public GLWindow getWindow()
 	{
 		return win;
 	}
 	
+	/**
+	 * Returns the main {@code TextureBank} object
+	 * @return a reference to the main {@code TextureBank} object
+	 */
 	public TextureBank getTextureBank()
 	{
 		return textureBank;

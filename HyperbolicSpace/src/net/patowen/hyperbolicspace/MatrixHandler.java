@@ -20,6 +20,9 @@ public class MatrixHandler
 	private FloatBuffer perspectiveBuf;
 	private float[] perspectiveArray;
 	
+	private FloatBuffer colorBuf;
+	private float[] colorArray;
+	
 	private FloatBuffer orientBuf;
 	private FloatBuffer translateBuf;
 	
@@ -31,12 +34,14 @@ public class MatrixHandler
 		transformationStack = new Stack<Transformation>();
 		
 		perspectiveArray = new float[16];
+		colorArray = new float[] {1, 1, 1, 1};
 		
 		FloatUtil.makeIdentity(perspectiveArray);
 		
 		orientBuf = Buffers.newDirectFloatBuffer(9);
 		translateBuf = Buffers.newDirectFloatBuffer(3);
 		perspectiveBuf = Buffers.newDirectFloatBuffer(perspectiveArray);
+		colorBuf = Buffers.newDirectFloatBuffer(colorArray);
 	}
 	
 	public ShaderState getShaderState()
@@ -66,7 +71,12 @@ public class MatrixHandler
 	
 	public void setPerspective(float[] perspective)
 	{
-		perspectiveArray = perspective;
+		perspectiveArray = perspective.clone();
+	}
+	
+	public void setColor(float[] color)
+	{
+		colorArray = color.clone();
 	}
 	
 	public void update(GL3 gl)
@@ -83,8 +93,12 @@ public class MatrixHandler
 		translateBuf.rewind();
 		
 		perspectiveBuf.put(perspectiveArray).rewind();
+		
+		colorBuf.put(colorArray).rewind();
+		
 		shaderState.uniform(gl, new GLUniformData("transform", 3, 3, orientBuf));
 		shaderState.uniform(gl, new GLUniformData("perspective", 4, 4, perspectiveBuf));
 		shaderState.uniform(gl, new GLUniformData("translate", 3, translateBuf));
+		shaderState.uniform(gl, new GLUniformData("color", 4, colorBuf));
 	}
 }

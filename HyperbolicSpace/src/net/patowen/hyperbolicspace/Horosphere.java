@@ -8,6 +8,11 @@ import javax.media.opengl.GL3;
 
 import com.jogamp.common.nio.Buffers;
 
+/**
+ * Represents a section of a horosphere. A horosphere is the limit shape of continually expanding a sphere
+ * in hyperbolic space.
+ * @author Patrick Owen
+ */
 public class Horosphere implements SceneNodeType
 {
 	private Controller c;

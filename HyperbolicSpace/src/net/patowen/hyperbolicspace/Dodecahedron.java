@@ -8,17 +8,26 @@ import javax.media.opengl.GL3;
 
 import com.jogamp.common.nio.Buffers;
 
+/**
+ * Represents a regular dodecahedron with right angles on every vertex. Such a shape
+ * can be tiled throughout hyperbolic space, although this has not yet been implemented.
+ * @author Patrick Owen
+ */
 public class Dodecahedron implements SceneNodeType
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
+	/**
+	 * Initializes the {@code Dodecahedron} mesh.
+	 * @param c
+	 */
 	public Dodecahedron(Controller c)
 	{
 		this.c = c;
 		ArrayList<Vertex> v = new ArrayList<Vertex>();
 		
-		double s = 0.3; //0.3
+		double s = 0.31546169558954995; //(1/6)*(2-3r2+r10)*(phi^(3/2))? r means square root
 		double p = (1+Math.sqrt(5))/2;
 		double q = s/p; p = s*p;
 		

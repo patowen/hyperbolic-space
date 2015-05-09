@@ -24,22 +24,30 @@ public class SceneNodeImpl
 	private FloatBuffer normalBuffer;
 	private FloatBuffer texCoordBuffer;
 	
-	int vertexBufferPos;
-	int normalBufferPos;
-	int texCoordBufferPos;
+	private int vertexBufferPos;
+	private int normalBufferPos;
+	private int texCoordBufferPos;
 	
 	private IntBuffer elementBuffer;
-	int elementBufferPos;
+	private int elementBufferPos;
+	
+	private float[] color;
 	
 	public SceneNodeImpl(Controller c)
 	{
 		this.c = c;
 		transformation = new Transformation();
+		color = new float[] {1, 1, 1, 1};
 	}
 	
 	public void setTexture(Texture texture)
 	{
 		this.texture = texture;
+	}
+	
+	public void setColor(float[] color)
+	{
+		this.color = color.clone();
 	}
 	
 	public void setVertices(ArrayList<Vertex> vertices)
@@ -111,6 +119,7 @@ public class SceneNodeImpl
 		
 		mh.pushTransformation();
 		mh.addTransformation(transformation);
+		mh.setColor(color);
 		mh.update(gl);
 		
 		gl.glEnableVertexAttribArray(0);

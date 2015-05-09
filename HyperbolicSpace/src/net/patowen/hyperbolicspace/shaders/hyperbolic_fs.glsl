@@ -3,7 +3,8 @@
 uniform sampler2D texture_sampler;
 in vec2 f_texcoord[3];
 
-uniform vec4 inputColor;
+uniform vec4 color;
+
 in vec2 interpolated_position;
 in vec3 f_interpolated_pos;
 in vec3 f_pos[3];
@@ -45,5 +46,5 @@ void main()
 	
 	mat3 transform1 = inverse(mat3(pos[1], pos[2], cross(pos[1],pos[2])));
 	mat3 transform2 = mat3(f_texcoord[1]-f_texcoord[0], 0, f_texcoord[2]-f_texcoord[0], 0, 0, 0, 0);
-	fragColor = texture(texture_sampler, (transform2*transform1*center).st + f_texcoord[0]);
+	fragColor = color * texture(texture_sampler, (transform2*transform1*center).st + f_texcoord[0]);
 }

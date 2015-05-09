@@ -79,8 +79,6 @@ public class Plane implements SceneNodeType
 			tVert.addAll(newVert);
 			tFace.addAll(newFace);
 		}
-		
-		System.out.println(tVert.size());
 	}
 	
 	private class TessellatorFace
@@ -145,7 +143,7 @@ public class Plane implements SceneNodeType
 		
 		public TessellatorVertex addNeighbor(int index)
 		{
-			double s = 0.4858682717566457;
+			double s = 0.4858682717566457; //phi^(3/2)?
 			
 			Transformation nextTransform;
 			switch (index)
@@ -255,6 +253,7 @@ public class Plane implements SceneNodeType
 	{
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().clouds);
+		sceneNode.setColor(new float[] {0.42f, 0.54f, 0.14f, 1});
 	}
 	
 	public void render(GL3 gl, Transformation t)
