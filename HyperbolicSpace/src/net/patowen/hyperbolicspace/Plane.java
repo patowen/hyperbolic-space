@@ -8,11 +8,24 @@ import javax.media.opengl.GL3;
 
 import com.jogamp.common.nio.Buffers;
 
+/**
+ * Represents a hyperbolic plane aligned to the x and y vectors at the origin. The mesh
+ * is a {5,4} pentagonal tessellation. To produce the plane, an iterative process starting
+ * with a single vertex is used. In each iteration, every vertex has all of its neighbor faces
+ * added, creating any necessary vertices for this process to work. This iterative process is
+ * repeated five times to produce a plane up to (and slightly past) the floating point precision
+ * limit.
+ * @author Patrick Owen
+ */
 public class Plane implements SceneNodeType
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
+	/**
+	 * Initializes the {@code Plane} mesh.
+	 * @param c
+	 */
 	public Plane(Controller c)
 	{
 		this.c = c;
@@ -57,16 +70,23 @@ public class Plane implements SceneNodeType
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
-		sceneNode.reposition();
+		sceneNode.prepare();
 	}
 	
-	public void tessellate(ArrayList<TessellatorVertex> tVert, ArrayList<TessellatorFace> tFace)
+	/**
+	 * Populates the initially-empty tVert and tFace lists with a 5-iteration tessellation
+	 * @param tVert The list of vertices to fill
+	 * @param tFace The list of faces to fill
+	 */
+	private void tessellate(ArrayList<TessellatorVertex> tVert, ArrayList<TessellatorFace> tFace)
 	{
 		int numComplete = 0;
 		tVert.add(new TessellatorVertex()); //Seed
 		
 		for (int i=0; i<5; i++)
 		{
+			//Each iteration
+			
 			ArrayList<TessellatorVertex> newVert = new ArrayList<TessellatorVertex>();
 			ArrayList<TessellatorFace> newFace = new ArrayList<TessellatorFace>();
 			
@@ -81,17 +101,34 @@ public class Plane implements SceneNodeType
 		}
 	}
 	
+	//TODO Abstract to other kinds of tessellations and abstract
+	//TODO Make seamless
+	
+	/**
+	 * Represents a face in the tessellation and holds references
+	 * to its vertices in counter-clockwise order
+	 * @author Patrick Owen
+	 */
 	private class TessellatorFace
 	{
 		public TessellatorVertex[] vertices;
 		private int numVertices;
 		
+		/**
+		 * Initializes an incomplete face. {@code addBefore} and
+		 * {@code addAfter} should be called a sum total of five
+		 * times before this class is used.
+		 */
 		public TessellatorFace()
 		{
 			vertices = new TessellatorVertex[5];
 			numVertices = 0;
 		}
 		
+		/**
+		 * Adds the given vertex before the first vertex in the face.
+		 * @param vertex the vertex to add
+		 */
 		public void addBefore(TessellatorVertex vertex)
 		{
 			for (int i=numVertices; i>0; i--)
@@ -100,19 +137,31 @@ public class Plane implements SceneNodeType
 			numVertices++;
 		}
 		
+		/**
+		 * Adds the given vertex after the last vertex in the face.
+		 * @param vertex the vertex to add
+		 */
 		public void addAfter(TessellatorVertex vertex)
 		{
 			vertices[numVertices++] = vertex;
 		}
 	}
 	
+	/**
+	 * Represents a vertex in the tessellation and holds references
+	 * to its neighbor vertices in counter-clockwise order and its location
+	 * @author Patrick Owen
+	 */
 	private class TessellatorVertex
 	{
-		private TessellatorVertex[] neighbors;
-		private int[] neighborIndices;
-		private boolean[] faces;
-		private Transformation position;
+		private TessellatorVertex[] neighbors; //All four neighbors of the vertex
+		private int[] neighborIndices; //The index in the neighbors array of each neighbor representing this
+		private boolean[] faces; //Whether the given face (between neighbors[i] and neighbors[i+1]) has been added
+		private Transformation position; //Location and orientation if neighbors[0] is in the forward direction
 		
+		/**
+		 * Initializes the seed vertex
+		 */
 		public TessellatorVertex()
 		{
 			neighbors = new TessellatorVertex[4];
@@ -121,7 +170,13 @@ public class Plane implements SceneNodeType
 			position = new Transformation();
 		}
 		
-		public TessellatorVertex(TessellatorVertex neighbor, int neighborIndex, Transformation position)
+		/**
+		 * Initializes a branching vertex
+		 * @param neighbor The neighbor the vertex came from
+		 * @param neighborIndex The index of this vertex in the perspective of the neighbor
+		 * @param position The location of the vertex
+		 */
+		private TessellatorVertex(TessellatorVertex neighbor, int neighborIndex, Transformation position)
 		{
 			neighbors = new TessellatorVertex[4];
 			neighborIndices = new int[4];
@@ -131,17 +186,31 @@ public class Plane implements SceneNodeType
 			this.position = position;
 		}
 		
+		/**
+		 * Returns the location of the vertex without the orientation
+		 */
 		public Vector3 getPosition()
 		{
 			return position.getTranslation();
 		}
 		
-		public int wrapIndex(int index)
+		/**
+		 * Returns index modulo 4 such that the value returned is 0, 1, 2, or 3
+		 * @param index the index to wrap
+		 * @return the index wrapped to be a valid value for an array index
+		 */
+		private int wrapIndex(int index)
 		{
 			return ((index%4)+4)%4;
 		}
 		
-		public TessellatorVertex addNeighbor(int index)
+		/**
+		 * Adds a vertex to the specified array index of the neighbors array
+		 * in the proper location for a pentagonal tessellation
+		 * @param index the location of the vertex in the neighbors array
+		 * @return the newly-added vertex
+		 */
+		private TessellatorVertex addNeighbor(int index)
 		{
 			double s = 0.4858682717566457; //phi^(3/2)?
 			
@@ -170,7 +239,14 @@ public class Plane implements SceneNodeType
 			return neighbors[index];
 		}
 		
-		public TessellatorVertex setNeighbor(int index, TessellatorVertex neighbor, int neighborIndex)
+		/**
+		 * Sets a neighbor in the neighbor array to a preexisting vertex
+		 * @param index the location of the vertex in the neighbors array
+		 * @param neighbor the preexisting vertex to add as a neighbor
+		 * @param neighborIndex the index of this in the neighbor's neighbors array
+		 * @return the newly-attached vertex
+		 */
+		private TessellatorVertex setNeighbor(int index, TessellatorVertex neighbor, int neighborIndex)
 		{
 			neighbors[index] = neighbor;
 			neighbor.neighbors[neighborIndex] = this;
@@ -179,13 +255,26 @@ public class Plane implements SceneNodeType
 			return neighbor;
 		}
 		
+		/**
+		 * Fully branches out the vertex such that it has four neighboring faces. Does not override preexisting
+		 * faces. Stores newly-added faces and vertices in the given lists
+		 * @param vOutput the list of vertices to fill
+		 * @param fOutput the list of faces to fill
+		 */
 		public void expand(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput)
 		{
 			for (int i=0; i<4; i++)
 				if (!faces[i]) addFace(vOutput, fOutput, i);
 		}
 		
-		public void addFace(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput, int faceIndex)
+		/**
+		 * Adds a face given by the specified index. Does not override preexisting vertices
+		 * @param vOutput the list of vertices to fill
+		 * @param fOutput the list of faces to fill
+		 * @param faceIndex which face to add. The face is added between the neighbors given by the indices
+		 * faceIndex and faceIndex+1, wrapped if necessary.
+		 */
+		private void addFace(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput, int faceIndex)
 		{
 			int edgesLeft = 5;
 			

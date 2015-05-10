@@ -1,14 +1,18 @@
 package net.patowen.hyperbolicspace;
 
-
-
+/**
+ * This class is the entry point of the application.
+ * @author Patrick Owen
+ */
 public class Runner
 {
-	private static Controller c;
-	
+	/**
+	 * Entry point of the application
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
-		c = new Controller();
+		Controller c = new Controller();
 		c.init();
 		c.createWindow();
 		

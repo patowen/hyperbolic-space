@@ -156,7 +156,7 @@ public class Building implements SceneNodeType
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
-		sceneNode.reposition();
+		sceneNode.prepare();
 	}
 	
 	public void renderInit(GL3 gl)

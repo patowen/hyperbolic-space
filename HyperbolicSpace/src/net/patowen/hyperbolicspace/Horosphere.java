@@ -10,7 +10,8 @@ import com.jogamp.common.nio.Buffers;
 
 /**
  * Represents a section of a horosphere. A horosphere is the limit shape of continually expanding a sphere
- * in hyperbolic space.
+ * in hyperbolic space. Its surface has the equivalent curvature of a Euclidean plane, and the section of the
+ * horosphere represented is equivalent to a large square in Euclidean geometry.
  * @author Patrick Owen
  */
 public class Horosphere implements SceneNodeType
@@ -22,6 +23,10 @@ public class Horosphere implements SceneNodeType
 	private int numWraps = 10;
 	private double size = 5;
 	
+	/**
+	 * Initializes the {@code Horosphere} mesh.
+	 * @param c
+	 */
 	public Horosphere(Controller c)
 	{
 		this.c = c;
@@ -97,7 +102,7 @@ public class Horosphere implements SceneNodeType
 		
 		sceneNode.setElementBuffer(elementBuffer);
 		sceneNode.setTexCoordBuffer(textureBuffer);
-		sceneNode.reposition();
+		sceneNode.prepare();
 	}
 	
 	public void renderInit(GL3 gl)

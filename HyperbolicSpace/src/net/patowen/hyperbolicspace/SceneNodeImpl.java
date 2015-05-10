@@ -10,6 +10,10 @@ import javax.media.opengl.GL3;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 
+/**
+ * Holds the logic common to all {@code SceneNodeType}s
+ * @author Patrick Owen
+ */
 public class SceneNodeImpl
 {
 	private Controller c;
@@ -33,6 +37,10 @@ public class SceneNodeImpl
 	
 	private float[] color;
 	
+	/**
+	 * Initializes the scene node type with defaults
+	 * @param c
+	 */
 	public SceneNodeImpl(Controller c)
 	{
 		this.c = c;
@@ -40,16 +48,29 @@ public class SceneNodeImpl
 		color = new float[] {1, 1, 1, 1};
 	}
 	
+	/**
+	 * Sets the texture with which to render the scene node
+	 * @param texture a reference to the texture with which to render the scene node
+	 */
 	public void setTexture(Texture texture)
 	{
 		this.texture = texture;
 	}
 	
+	/**
+	 * Sets the color with which to render the scene node
+	 * @param color a 4-element array representing the color with which to render the scene node
+	 */
 	public void setColor(float[] color)
 	{
-		this.color = color.clone();
+		System.arraycopy(color, 0, this.color, 0, 4);
 	}
 	
+	/**
+	 * Sets the list of vertices used to render the scene node. Initializes
+	 * buffers to the correct size based on the size of the given array
+	 * @param vertices a list of vertices to render with
+	 */
 	public void setVertices(ArrayList<Vertex> vertices)
 	{
 		this.vertices = vertices;
@@ -59,12 +80,20 @@ public class SceneNodeImpl
 		texCoordBuffer = Buffers.newDirectFloatBuffer(2*vertices.size());
 	}
 	
+	/**
+	 * Changes the location to draw the mesh when {@code render} is called
+	 * @param t the new transformation
+	 */
 	public void setTransformation(Transformation t)
 	{
 		this.transformation = t;
 	}
 	
-	public void reposition()
+	/**
+	 * Fills the vertex and normal buffers with the proper data so that the scene
+	 * node can be rendered
+	 */
+	public void prepare()
 	{
 		for (int i=0; i<vertices.size(); i++)
 		{
@@ -74,16 +103,29 @@ public class SceneNodeImpl
 		normalBuffer.rewind();
 	}
 	
+	/**
+	 * Directly sets the texCoord buffer to use for rendering
+	 * @param texCoordBuffer a reference to the texCoord buffer to use for rendering
+	 */
 	public void setTexCoordBuffer(FloatBuffer texCoordBuffer)
 	{
 		this.texCoordBuffer = texCoordBuffer;
 	}
 	
+	/**
+	 * Directly sets the element buffer to use for rendering
+	 * @param texCoordBuffer a reference to the element buffer to use for rendering
+	 */
 	public void setElementBuffer(IntBuffer elementBuffer)
 	{
 		this.elementBuffer = elementBuffer;
 	}
 	
+	/**
+	 * Requests buffers from OpenGL to allow the vertex, normal, texCoord, and element buffers to
+	 * be used when rendering. This must be called before {@code render}
+	 * @param gl
+	 */
 	public void renderInit(GL3 gl)
 	{
 		IntBuffer tempBuffer = Buffers.newDirectIntBuffer(4);
@@ -94,6 +136,10 @@ public class SceneNodeImpl
 		elementBufferPos = tempBuffer.get(3);
 	}
 	
+	/**
+	 * Renders the mesh at the location previously specified
+	 * @param gl
+	 */
 	public void render(GL3 gl)
 	{
 		MatrixHandler mh = c.getMatrixHandler();

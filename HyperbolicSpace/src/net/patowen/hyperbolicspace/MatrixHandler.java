@@ -10,6 +10,12 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
+/**
+ * {@code MatrixHandler} has two purposes. It holds a Transformation stack for the viewpoint and
+ * for hierarchical models, and it interacts with the shader to set the uniforms to the appropriate
+ * values.
+ * @author Patrick Owen
+ */
 public class MatrixHandler
 {
 	private ShaderState shaderState;
@@ -26,6 +32,11 @@ public class MatrixHandler
 	private FloatBuffer orientBuf;
 	private FloatBuffer translateBuf;
 	
+	/**
+	 * Initializes all values to their defaults
+	 * @param shaderState the {@code ShaderState} representing the shader whose
+	 * uniforms are set
+	 */
 	public MatrixHandler(ShaderState shaderState)
 	{
 		this.shaderState = shaderState;
@@ -44,41 +55,64 @@ public class MatrixHandler
 		colorBuf = Buffers.newDirectFloatBuffer(colorArray);
 	}
 	
-	public ShaderState getShaderState()
-	{
-		return shaderState;
-	}
-	
+	/**
+	 * Sets the stored transformation to the identity
+	 */
 	public void reset()
 	{
 		transformation = new Transformation();
 	}
 	
+	/**
+	 * Adds the specified transformation relative to the current transformation
+	 * @param t The transformation to apply before the current one
+	 */
 	public void addTransformation(Transformation t)
 	{
 		transformation = transformation.composeBefore(t);
 	}
 	
+	/**
+	 * Stores the current transformation onto a stack for later retrieval
+	 */
 	public void pushTransformation()
 	{
 		transformationStack.push(transformation);
 	}
 	
+	/**
+	 * Sets the current transformation to the previously stored transformation
+	 * on the stack
+	 */
 	public void popTransformation()
 	{
 		transformation = transformationStack.pop();
 	}
 	
+	/**
+	 * Sets the stored perspective matrix to the given matrix
+	 * @param perspective the perspective matrix represented via a
+	 * 16-value array in column-major order
+	 */
 	public void setPerspective(float[] perspective)
 	{
-		perspectiveArray = perspective.clone();
+		System.arraycopy(perspective, 0, perspectiveArray, 0, 16);
 	}
 	
+	/**
+	 * Sets the stored color to the given color
+	 * @param color the color represented via a 4-value array (r, g, b, a)
+	 */
 	public void setColor(float[] color)
 	{
-		colorArray = color.clone();
+		System.arraycopy(color, 0, colorArray, 0, 4);
 	}
 	
+	/**
+	 * Sets all the uniforms of the shader to the currently stored values. This
+	 * should be called before drawing anything if anything was changed.
+	 * @param gl
+	 */
 	public void update(GL3 gl)
 	{
 		Orientation o = transformation.getRotation();

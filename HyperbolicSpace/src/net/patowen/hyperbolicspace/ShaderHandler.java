@@ -5,8 +5,18 @@ import java.util.Scanner;
 
 import com.jogamp.opengl.util.glsl.ShaderCode;
 
+/**
+ * Helper class to allow shaders to be loaded from files in the shaders package
+ * @author Patrick Owen
+ */
 public class ShaderHandler
 {
+	/**
+	 * Returns a {@code ShaderCode} object for the specified file
+	 * @param type GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER, etc.
+	 * @param fname the name of the shader file, without its directory structure
+	 * @return the fully prepared, but not compiled, {@code ShaderCode} object
+	 */
 	public static ShaderCode getShaderCode(int type, String fname)
 	{
 		ClassLoader cl = ShaderHandler.class.getClassLoader();

@@ -1,5 +1,9 @@
 package net.patowen.hyperbolicspace;
 
+/**
+ * A controllable camera used to navigate hyperbolic space with some control over the world
+ * @author Patrick Owen
+ */
 public class Player
 {
 	private Controller c;
@@ -8,6 +12,11 @@ public class Player
 	private Transformation pos;
 	private Vector3 vel;
 	
+	/**
+	 * Initializes the {@code Player} and puts it in the specified {@code World}
+	 * @param c
+	 * @param w the world the {@code Player} can explore
+	 */
 	public Player(Controller c, World w)
 	{
 		this.c = c;
@@ -17,6 +26,11 @@ public class Player
 		vel = new Vector3();
 	}
 	
+	/**
+	 * Moves the camera based on player input and exercises some control, such
+	 * as spawning structures
+	 * @param dt the time step in seconds
+	 */
 	public void step(double dt)
 	{
 		handleTurning(dt);
@@ -27,7 +41,10 @@ public class Player
 		handleSpawning();
 	}
 	
-	public void handleSpawning()
+	/**
+	 * Places meshes in front of the player depending on what controls are pressed
+	 */
+	private void handleSpawning()
 	{
 		InputHandler inputHandler = c.getInputHandler();
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_1))
@@ -52,12 +69,21 @@ public class Player
 		}
 	}
 	
+	/**
+	 * Adds the specified node to the world transformed by the given transformation relative to the player
+	 * @param sceneNode the node to add
+	 * @param t a transformation to apply to the node before applying the player transformation
+	 */
 	public void spawnNode(SceneNode sceneNode, Transformation t)
 	{
 		sceneNode.setTransformation((new Transformation(pos)).composeBefore(t));
 		w.addNode(sceneNode);
 	}
 	
+	/**
+	 * Accelerates to the desired velocity depending on the controls the user is pressing
+	 * @param dt the time step in seconds
+	 */
 	public void handleAcceleration(double dt)
 	{
 		InputHandler inputHandler = c.getInputHandler();
@@ -91,6 +117,11 @@ public class Player
 		approachVelocity(goalVel, maxChange);
 	}
 	
+	/**
+	 * Accelerates to the given velocity linearly
+	 * @param goalVel the ideal velocity to achieve
+	 * @param maxChange the maximum change allowed to be added to the current velocity
+	 */
 	public void approachVelocity(Vector3 goalVel, double maxChange)
 	{
 		double dist = goalVel.minus(vel).magnitude();
@@ -105,6 +136,10 @@ public class Player
 		}
 	}
 	
+	/**
+	 * Moves the camera properly given the current velocity
+	 * @param dt the time step
+	 */
 	public void handleMovement(double dt)
 	{
 		Vector3 loc = pos.getTranslation();
@@ -128,6 +163,10 @@ public class Player
 			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
 	}
 	
+	/**
+	 * Rotates the camera based on the controls pressed
+	 * @param dt the time step
+	 */
 	public void handleTurning(double dt)
 	{
 		InputHandler inputHandler = c.getInputHandler();
@@ -145,11 +184,20 @@ public class Player
 		pos = pos.composeBefore(new Transformation(o, new Vector3()));
 	}
 	
+	/**
+	 * Transforms the view such that the player is transformed to the origin facing the default direction
+	 */
 	public void setView()
 	{
 		c.getMatrixHandler().addTransformation(pos.inverse());
 	}
 	
+	/**
+	 * Converts the velocity to the position an object would reach after traveling at that
+	 * velocity for one second.
+	 * @param vel the velocity to convert
+	 * @return the resulting position
+	 */
 	private Vector3 convertToPosition(Vector3 vel)
 	{
 		double mag = vel.magnitude();
@@ -159,6 +207,12 @@ public class Player
 			return vel.times(Math.tanh(mag)/mag);
 	}
 	
+	/**
+	 * Converts the position to the velocity an object would need to travel to that position
+	 * in one second.
+	 * @param pos the position to convert
+	 * @return the resulting velocity
+	 */
 	private Vector3 convertToVelocity(Vector3 pos)
 	{
 		double mag = pos.magnitude();

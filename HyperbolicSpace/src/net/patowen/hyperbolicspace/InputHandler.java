@@ -25,12 +25,19 @@ public class InputHandler implements KeyListener, MouseListener
 	private double mouseX, mouseY;
 	private double mouseSensitivity;
 	
-	//Variables used outside to choose which control is being inspected
+	//TODO add a level of abstraction to the controls and allow multiple control schemes.
+	
+	/** A keyboard control */
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, SLOW = 4, TILT_LEFT = 5, TILT_RIGHT = 6,
 			SPAWN_1 = 7, SPAWN_2 = 8, SPAWN_3 = 9, SPAWN_4 = 10; //Keyboard
+	
+	/** The number of keyboard controls */
 	public static final int NUM_KEYS = 11;
 	
+	/** A mouse control */
 	public static final int FORWARDS = 0, BACKWARDS = 1; //Mouse
+	
+	/** The number of mouse controls */
 	public static final int NUM_MOUSE_BUTTONS = 2;
 	
 	//Key code of each control
@@ -64,8 +71,8 @@ public class InputHandler implements KeyListener, MouseListener
 	private boolean[] mouseHelper;
 	
 	/**
-	 * Initializes the inputs and sets up a Robot that controls the mouse.
-	 * @param comp the component that reads keyboard events
+	 * Initializes the inputs and sets up a {@code Robot} that controls the mouse.
+	 * @param c
 	 */
 	public InputHandler(Controller c)
 	{
@@ -161,7 +168,8 @@ public class InputHandler implements KeyListener, MouseListener
 	}
 	
 	/**
-	 * Updates which keys are pressed and which are not.
+	 * Updates which keys are pressed and which are not. This should
+	 * be called once per frame.
 	 */
 	public void updatePressed()
 	{
@@ -288,6 +296,9 @@ public class InputHandler implements KeyListener, MouseListener
 		return mousePressed[button];
 	}
 	
+	/*
+	 * Grabs or releases the mouse depending on the argument.
+	 */
 	private void setFocused(boolean focused)
 	{
 		GLWindow win = c.getWindow();
@@ -296,6 +307,8 @@ public class InputHandler implements KeyListener, MouseListener
 		if (focused)
 		{
 			win.setPointerVisible(false);
+			
+			//Prevent sudden direction changes by resetting the mouse
 			int centerX = win.getX() + win.getWidth()/2;
 			int centerY = win.getY() + win.getHeight()/2;			
 			robot.mouseMove(centerX, centerY);
@@ -326,8 +339,10 @@ public class InputHandler implements KeyListener, MouseListener
 		if (e.getKeyCode() == KeyEvent.VK_F11)
 		{
 			c.toggleFullscreen();
+			
 			if (focused)
 			{
+				//Prevent sudden direction changes by resetting the mouse
 				GLWindow win = c.getWindow();
 				int centerX = win.getX() + win.getWidth()/2;
 				int centerY = win.getY() + win.getHeight()/2;			

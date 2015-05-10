@@ -9,7 +9,10 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.math.FloatUtil;
 
-
+/**
+ * Handles the window and its render loop.
+ * @author Patrick Owen
+ */
 public class Renderer
 {
 	private Controller c;
@@ -30,6 +33,7 @@ public class Renderer
 		{
 			private Controller c = Renderer.this.c;
 			
+			//Exit the simulation if the user closes the window
 			public void windowDestroyNotify(WindowEvent e)
 			{
 				c.exit();
@@ -40,6 +44,7 @@ public class Renderer
 		{
 			private Controller c = Renderer.this.c;
 			
+			//Performs a single frame of the render loop, also updating the physics of the world
 			public void display(GLAutoDrawable drawable)
 			{
 				step(1.0/60);
@@ -48,9 +53,10 @@ public class Renderer
 			
 			public void dispose(GLAutoDrawable drawable)
 			{
-				
+				//Nothing to dispose. Garbage collection takes care of everything.
 			}
 			
+			//Configures OpenGL's settings, initializes textures and meshes for rendering, and sets up shaders
 			public void init(GLAutoDrawable drawable)
 			{
 				GL3 gl = drawable.getGL().getGL3();
@@ -61,6 +67,7 @@ public class Renderer
 				c.initShaders(gl);
 			}
 			
+			//Modifies the perspective to match the size of the window
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 			{
 				float[] mat = new float[16];
@@ -72,17 +79,28 @@ public class Renderer
 		c.startAnimation();
 	}
 	
+	/**
+	 * Creates the world and initializes input
+	 */
 	public void initialize()
 	{
 		c.createInputHandler();
 		world = new World(c);
 	}
 	
+	/**
+	 * Performs a single frame of the simulation
+	 * @param dt the time step in seconds
+	 */
 	public void step(double dt)
 	{
 		world.step(dt);
 	}
 	
+	/**
+	 * Renders the world at its current state
+	 * @param gl
+	 */
 	public void render(GL3 gl)
 	{
 		gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);

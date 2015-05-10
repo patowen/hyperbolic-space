@@ -233,6 +233,13 @@ public class Vector3
 		return (times(factor).plusMultiple(v, vFactor)).times(1/denom);
 	}
 	
+	/**
+	 * Returns the vector after an ideal rotation in the Poincare ball model
+	 * @param q the point at infinity on the horocycle the vector moves along
+	 * @param r the direction the origin originally moves. q and r should be orthogonal unit vectors
+	 * @param v the distance along the horocycle the origin is moved
+	 * @return the rotated vector
+	 */
 	public Vector3 horoRotate(Vector3 q, Vector3 r, double v)
 	{
 		double zmqs = this.minus(q).squared();
