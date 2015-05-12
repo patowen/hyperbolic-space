@@ -46,7 +46,7 @@ public class Renderer
 			//Performs a single frame of the render loop, also updating the physics of the world
 			public void display(GLAutoDrawable drawable)
 			{
-				step(1.0/60);
+				step(1.0/30);
 				render(drawable.getGL().getGL3());
 			}
 			

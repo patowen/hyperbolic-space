@@ -68,7 +68,7 @@ public class Controller
 	 */
 	public void startAnimation()
 	{
-		anim = new FPSAnimator(win, 60);
+		anim = new FPSAnimator(win, 30);
 		anim.start();
 	}
 	
