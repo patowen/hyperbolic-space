@@ -45,6 +45,8 @@ public class Player
 	 */
 	public void step(double dt)
 	{
+		handleNoclip();
+		
 		handleTurning(dt);
 		handleAcceleration(dt);
 		
@@ -53,6 +55,40 @@ public class Player
 		handleOrientation();
 		
 		handleSpawning();
+	}
+	
+	private void handleNoclip()
+	{
+		if (c.getInputHandler().getKeyPressed(InputHandler.NOCLIP))
+		{
+			if (noclip)
+			{
+				noclip = false;
+				
+				//Fix options that were left unchanged during noclip
+				Orientation o = pos.getRotation();
+				
+				Vector3 planePoint = getPlanePoint(pos.getTranslation());
+				Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
+				
+				o = o.hyperTranslate(offset.times(-1), pos.getTranslation());
+				
+				double dir = Math.atan2(-o.z.y, -o.z.x);
+				horizontalDir = new Orientation();
+				horizontalDir.rotate(new Vector3(0, 0, 1), dir);
+				o = horizontalDir.inverse().transform(o);
+				
+				verticalDir = Math.atan2(-o.z.z, -o.z.x);
+				o.rotate(new Vector3(0, -1, 0), -verticalDir);
+				
+				tilt = -Math.atan2(o.y.y, o.y.z);
+				o.rotate(new Vector3(1, 0, 0), tilt);
+			}
+			else
+			{
+				noclip = true;
+			}
+		}
 	}
 	
 	/**
@@ -142,7 +178,13 @@ public class Player
 		}
 		else
 		{
-			Vector3 goalVel = horizontalDir.transform(new Vector3(maxVel*dy, -maxVel*dx, 0));
+			Orientation o = new Orientation();
+			o = horizontalDir.transform(o);
+			Vector3 planePoint = getPlanePoint(pos.getTranslation());
+			Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
+			o = o.hyperTranslate(offset, planePoint);
+			
+			Vector3 goalVel = o.transform(new Vector3(maxVel*dy, -maxVel*dx, 0));
 			approachVelocity(goalVel, maxChange);
 		}
 		

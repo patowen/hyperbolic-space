@@ -29,10 +29,10 @@ public class InputHandler implements KeyListener, MouseListener
 	
 	/** A keyboard control */
 	public static final int UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, SLOW = 4, TILT_LEFT = 5, TILT_RIGHT = 6,
-			SPAWN_1 = 7, SPAWN_2 = 8, SPAWN_3 = 9, SPAWN_4 = 10; //Keyboard
+			SPAWN_1 = 7, SPAWN_2 = 8, SPAWN_3 = 9, SPAWN_4 = 10, NOCLIP = 11, JUMP = 12; //Keyboard
 	
 	/** The number of keyboard controls */
-	public static final int NUM_KEYS = 11;
+	public static final int NUM_KEYS = 13;
 	
 	/** A mouse control */
 	public static final int FORWARDS = 0, BACKWARDS = 1; //Mouse
@@ -107,6 +107,8 @@ public class InputHandler implements KeyListener, MouseListener
 		keyCode[8] = KeyEvent.VK_2;
 		keyCode[9] = KeyEvent.VK_3;
 		keyCode[10] = KeyEvent.VK_4;
+		keyCode[11] = KeyEvent.VK_V;
+		keyCode[12] = KeyEvent.VK_SPACE;
 		
 		mouseButton = new int[NUM_MOUSE_BUTTONS];
 		mouseButton[0] = MouseEvent.BUTTON1;
