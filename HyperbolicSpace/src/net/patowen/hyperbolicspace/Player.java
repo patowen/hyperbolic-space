@@ -14,7 +14,9 @@ public class Player
 	
 	private boolean noclip;
 	
-	//Grounded values
+	//Non-noclip values
+	private double radius;
+	private boolean grounded;
 	private Orientation horizontalDir;
 	private double verticalDir;
 	private double tilt;
@@ -29,12 +31,14 @@ public class Player
 		this.c = c;
 		this.w = w;
 		
-		pos = new Transformation(new Orientation(), new Vector3(0, 0, 0.5));
+		radius = 0.2;
+		pos = new Transformation(new Orientation(), new Vector3(0, 0, radius));
 		vel = new Vector3();
 		
 		noclip = false;
+		grounded = true;
 		horizontalDir = new Orientation();
-		verticalDir = 0;
+		verticalDir = -0.3;
 		tilt = 0;
 	}
 	
@@ -87,6 +91,7 @@ public class Player
 			else
 			{
 				noclip = true;
+				grounded = false;
 			}
 		}
 	}
@@ -124,7 +129,7 @@ public class Player
 	 * @param sceneNode the node to add
 	 * @param t a transformation to apply to the node before applying the player transformation
 	 */
-	public void spawnNode(SceneNode sceneNode, Transformation t)
+	private void spawnNode(SceneNode sceneNode, Transformation t)
 	{
 		if (noclip)
 			sceneNode.setTransformation(pos.composeBefore(t));
@@ -142,7 +147,7 @@ public class Player
 	 * Accelerates to the desired velocity depending on the controls the user is pressing
 	 * @param dt the time step in seconds
 	 */
-	public void handleAcceleration(double dt)
+	private void handleAcceleration(double dt)
 	{
 		InputHandler inputHandler = c.getInputHandler();
 		double maxChange, maxVel;
@@ -176,7 +181,7 @@ public class Player
 			Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
 			approachVelocity(goalVel, maxChange);
 		}
-		else
+		else if (grounded)
 		{
 			Orientation o = new Orientation();
 			o = horizontalDir.transform(o);
@@ -186,21 +191,29 @@ public class Player
 			
 			Vector3 goalVel = o.transform(new Vector3(maxVel*dy, -maxVel*dx, 0));
 			approachVelocity(goalVel, maxChange);
+			
+			if (inputHandler.getKeyPressed(InputHandler.JUMP))
+			{
+				vel = vel.plusMultiple(o.z, 5);
+				grounded = false;
+			}
 		}
-		
-//		vel.addMultiple(getGravity(), dt);
+		else
+		{
+			vel.addMultiple(getGravity(), dt);
+		}
 	}
 	
-//	private Vector3 getGravity()
-//	{
-//		Vector3 goal = getPlanePoint(pos.getTranslation());
-//		return goal.hyperTranslate(pos.getTranslation().times(-1)).times(5);
-//	}
+	private Vector3 getGravity()
+	{
+		Vector3 goal = getPlaneDirection(pos.getTranslation());
+		return goal.hyperTranslate(pos.getTranslation().times(-1)).times(10);
+	}
 	
 	private void snapToPlane()
 	{
 		Vector3 start = pos.getTranslation();
-		Vector3 goal = (new Vector3(0, 0, 0.1)).hyperTranslate(getPlanePoint(start)).hyperTranslate(start.times(-1));
+		Vector3 goal = (new Vector3(0, 0, radius)).hyperTranslate(getPlanePoint(start)).hyperTranslate(start.times(-1));
 		
 		pos = pos.composeAfter(new Transformation(new Orientation(), start.times(-1)));
 		pos = pos.composeAfter(new Transformation(new Orientation(), goal));
@@ -226,7 +239,7 @@ public class Player
 	 * @param goalVel the ideal velocity to achieve
 	 * @param maxChange the maximum change allowed to be added to the current velocity
 	 */
-	public void approachVelocity(Vector3 goalVel, double maxChange)
+	private void approachVelocity(Vector3 goalVel, double maxChange)
 	{
 		double dist = goalVel.minus(vel).magnitude();
 		if (dist <= maxChange)
@@ -244,7 +257,7 @@ public class Player
 	 * Moves the camera properly given the current velocity
 	 * @param dt the time step
 	 */
-	public void handleMovement(double dt)
+	private void handleMovement(double dt)
 	{
 		Vector3 loc = pos.getTranslation();
 		
@@ -267,7 +280,15 @@ public class Player
 			Vector3 newPlanePos = getPlanePoint(pos.getTranslation());
 			Vector3 dPlanePos = oldPlanePos.hyperTranslate(newPlanePos.times(-1));
 			horizontalDir = horizontalDir.hyperTranslate(oldPlanePos, dPlanePos);
-			snapToPlane();
+			
+			Vector3 offset = pos.getTranslation().hyperTranslate(newPlanePos.times(-1));
+			if (offset.z < radius)
+			{
+				grounded = true;
+			}
+			
+			if (grounded)
+				snapToPlane();
 		}
 		
 		//Spherical precision frontier
@@ -296,7 +317,7 @@ public class Player
 	 * Rotates the camera based on the controls pressed
 	 * @param dt the time step
 	 */
-	public void handleTurning(double dt)
+	private void handleTurning(double dt)
 	{
 		InputHandler inputHandler = c.getInputHandler();
 		
