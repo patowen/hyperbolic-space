@@ -75,7 +75,7 @@ public class Player
 				Vector3 planePoint = getPlanePoint(pos.getTranslation());
 				Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
 				
-				o = o.hyperTranslate(offset.times(-1), pos.getTranslation());
+				o = o.hyperTranslate(offset.times(-1), planePoint);
 				
 				double dir = Math.atan2(-o.z.y, -o.z.x);
 				horizontalDir = new Orientation();
@@ -200,7 +200,8 @@ public class Player
 		}
 		else
 		{
-			vel.addMultiple(getGravity(), dt);
+			vel.addMultiple(getGravity(), dt); //Gravity
+			vel = vel.times(Math.exp(-0.2*dt)); //Air friction
 		}
 	}
 	
@@ -282,12 +283,16 @@ public class Player
 			horizontalDir = horizontalDir.hyperTranslate(oldPlanePos, dPlanePos);
 			
 			Vector3 offset = pos.getTranslation().hyperTranslate(newPlanePos.times(-1));
-			if (offset.z < radius)
+			if (offset.z < radius && !grounded)
 			{
 				grounded = true;
+				snapToPlane();
+				
+				//Reset velocity
+				Vector3 perpen = newPlanePos.hyperTranslate(pos.getTranslation().times(-1));
+				vel = vel.plusMultiple(perpen, -perpen.dot(vel)/perpen.squared());
 			}
-			
-			if (grounded)
+			else if (grounded)
 				snapToPlane();
 		}
 		
