@@ -12,6 +12,13 @@ public class Player
 	private Transformation pos;
 	private Vector3 vel;
 	
+	private boolean noclip;
+	
+	//Grounded values
+	private Orientation horizontalDir;
+	private double verticalDir;
+	private double tilt;
+	
 	/**
 	 * Initializes the {@code Player} and puts it in the specified {@code World}
 	 * @param c
@@ -22,8 +29,13 @@ public class Player
 		this.c = c;
 		this.w = w;
 		
-		pos = new Transformation();
+		pos = new Transformation(new Orientation(), new Vector3(0, 0, 0.5));
 		vel = new Vector3();
+		
+		noclip = false;
+		horizontalDir = new Orientation();
+		verticalDir = 0;
+		tilt = 0;
 	}
 	
 	/**
@@ -37,6 +49,8 @@ public class Player
 		handleAcceleration(dt);
 		
 		handleMovement(dt);
+		
+		handleOrientation();
 		
 		handleSpawning();
 	}
@@ -76,7 +90,15 @@ public class Player
 	 */
 	public void spawnNode(SceneNode sceneNode, Transformation t)
 	{
-		sceneNode.setTransformation((new Transformation(pos)).composeBefore(t));
+		if (noclip)
+			sceneNode.setTransformation(pos.composeBefore(t));
+		else
+		{
+			Vector3 groundPos = getPlanePoint(pos.getTranslation());
+			Orientation groundDir = new Orientation(new Vector3(0, -1, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0));
+			groundDir = horizontalDir.transform(groundDir);
+			sceneNode.setTransformation((new Transformation(groundDir, groundPos)).composeBefore(t));
+		}
 		w.addNode(sceneNode);
 	}
 	
@@ -115,6 +137,38 @@ public class Player
 		
 		Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
 		approachVelocity(goalVel, maxChange);
+		
+//		vel.addMultiple(getGravity(), dt);
+	}
+	
+//	private Vector3 getGravity()
+//	{
+//		Vector3 goal = getPlanePoint(pos.getTranslation());
+//		return goal.hyperTranslate(pos.getTranslation().times(-1)).times(5);
+//	}
+	
+	private void snapToPlane()
+	{
+		Vector3 start = pos.getTranslation();
+		Vector3 goal = (new Vector3(0, 0, 0.1)).hyperTranslate(getPlanePoint(start)).hyperTranslate(start.times(-1));
+		
+		pos = pos.composeAfter(new Transformation(new Orientation(), start.times(-1)));
+		pos = pos.composeAfter(new Transformation(new Orientation(), goal));
+		pos = pos.composeAfter(new Transformation(new Orientation(), start));
+	}
+	
+	private Vector3 getPlanePoint(Vector3 p)
+	{
+		Vector3 klein = p.times(2/(1+p.squared()));
+		Vector3 perpen = new Vector3(klein.x, klein.y, 0);
+		return perpen.times(1.0 / (1 + Math.sqrt(Math.max(0, 1-perpen.squared()))));
+	}
+	
+	private Vector3 getPlaneDirection(Vector3 p)
+	{
+		Vector3 klein = p.times(2/(1+p.squared()));
+		Vector3 perpen = new Vector3(klein.x, klein.y, -Math.sqrt(1-klein.x*klein.x-klein.y*klein.y));
+		return perpen.times(1.0 / (1 + Math.sqrt(Math.max(0, 1-perpen.squared()))));
 	}
 	
 	/**
@@ -146,6 +200,7 @@ public class Player
 		
 		Vector3 velPos = convertToPosition(vel.times(0.01));
 		Vector3 dPos = convertToPosition(vel.times(0.1*dt));
+		
 		pos = new Transformation(pos.getRotation(), new Vector3());
 		
 		pos = pos.composeAfter(new Transformation(new Orientation(), dPos));
@@ -156,11 +211,34 @@ public class Player
 		
 		vel = convertToVelocity(velPos).times(100);
 		
+		if (!noclip)
+		{
+			Vector3 oldPlanePos = getPlanePoint(loc);
+			Vector3 newPlanePos = getPlanePoint(pos.getTranslation());
+			Vector3 dPlanePos = oldPlanePos.hyperTranslate(newPlanePos.times(-1));
+			horizontalDir = horizontalDir.hyperTranslate(oldPlanePos, dPlanePos);
+			snapToPlane();
+		}
+		
 		//Spherical precision frontier
 		double mag = pos.getTranslation().magnitude();
 		double maxMag = 0.9998;
 		if (mag > maxMag)
 			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
+	}
+	
+	private void handleOrientation()
+	{
+		if (!noclip)
+		{
+			Orientation o = new Orientation(new Vector3(0, -1, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0));
+			o.rotate(new Vector3(0, -1, 0), verticalDir);
+			o = horizontalDir.transform(o);
+			Vector3 planePoint = getPlanePoint(pos.getTranslation());
+			Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
+			o = o.hyperTranslate(offset, planePoint);
+			pos = new Transformation(o, pos.getTranslation());
+		}
 	}
 	
 	/**
@@ -172,16 +250,32 @@ public class Player
 		InputHandler inputHandler = c.getInputHandler();
 		
 		inputHandler.readMouse();
-		Orientation o = new Orientation();
-		o.rotate(o.y, -inputHandler.getMouseX()*45);
-		o.rotate(o.x, -inputHandler.getMouseY()*45);
-		double tilt = 0;
-		if (inputHandler.getKey(InputHandler.TILT_LEFT))
-			tilt -= 1;
-		if (inputHandler.getKey(InputHandler.TILT_RIGHT))
-			tilt += 1;
-		o.rotate(o.z, -tilt*dt);
-		pos = pos.composeBefore(new Transformation(o, new Vector3()));
+		
+		if (noclip)
+		{
+			Orientation o = new Orientation();
+			o.rotate(o.y, -inputHandler.getMouseX()*45);
+			o.rotate(o.x, -inputHandler.getMouseY()*45);
+			double tilt = 0;
+			if (inputHandler.getKey(InputHandler.TILT_LEFT))
+				tilt -= 1;
+			if (inputHandler.getKey(InputHandler.TILT_RIGHT))
+				tilt += 1;
+			o.rotate(o.z, -tilt*dt);
+			pos = pos.composeBefore(new Transformation(o, new Vector3()));
+		}
+		else
+		{
+			verticalDir += -inputHandler.getMouseY()*45;
+			if (verticalDir > Math.PI) verticalDir = Math.PI;
+			if (verticalDir < -Math.PI) verticalDir = Math.PI;
+			Orientation o = new Orientation();
+			
+			o.rotate(new Vector3(0, 0, 1), -inputHandler.getMouseX()*45);
+			
+			horizontalDir = o.transform(horizontalDir);
+			horizontalDir.normalize();
+		}
 	}
 	
 	/**

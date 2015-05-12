@@ -27,6 +27,7 @@ public class World
 		player = new Player(c, this);
 		
 		nodes = new ArrayList<SceneNode>();
+		nodes.add(new SceneNode(c.plane));
 	}
 	
 	/**

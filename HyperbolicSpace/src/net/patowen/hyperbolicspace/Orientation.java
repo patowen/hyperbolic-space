@@ -71,9 +71,9 @@ public class Orientation
 	public void normalize()
 	{
 		x.normalize();
-		y = x.cross(z);
+		y = z.cross(x);
 		y.normalize();
-		z = y.cross(x);
+		z = x.cross(y);
 	}
 	
 	/**
@@ -144,5 +144,13 @@ public class Orientation
 		Orientation o = new Orientation(x, y, z);
 		o.normalize();
 		return o;
+	}
+	
+	/**
+	 * Returns a string representation of the orientation
+	 */
+	public String toString()
+	{
+		return "[" + x + "," + y + "," + z + "]";
 	}
 }

@@ -250,4 +250,12 @@ public class Vector3
 		
 		return times(factor).plusMultiple(r,rFactor).plusMultiple(q, qFactor).times(1/denom);
 	}
+	
+	/**
+	 * Returns a string representation of the vector
+	 */
+	public String toString()
+	{
+		return "(" + x + "," + y + "," + z + ")";
+	}
 }
