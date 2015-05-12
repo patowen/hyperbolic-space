@@ -45,6 +45,8 @@ public class Player
 		horizontalDir = new Orientation();
 		verticalDir = -0.3;
 		tilt = 0;
+		
+		handleOrientation();
 	}
 	
 	/**
