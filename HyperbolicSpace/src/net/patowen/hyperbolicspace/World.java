@@ -31,6 +31,17 @@ public class World
 	}
 	
 	/**
+	 * Resets the world to how it was before it was initialized
+	 */
+	public void reset()
+	{
+		player = new Player(c, this);
+		
+		nodes.clear();
+		nodes.add(new SceneNode(c.plane));
+	}
+	
+	/**
 	 * Spawns the specified node into the scene
 	 * @param sceneNode the node to add
 	 */
@@ -45,9 +56,13 @@ public class World
 	 */
 	public void step(double dt)
 	{
+		InputHandler inputHandler = c.getInputHandler();
 		player.step(dt);
 		
-		c.getInputHandler().updatePressed();
+		if (inputHandler.getKeyPressed(InputHandler.RESET))
+			reset();
+		
+		inputHandler.updatePressed();
 	}
 	
 	/**

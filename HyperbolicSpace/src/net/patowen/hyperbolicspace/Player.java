@@ -277,6 +277,14 @@ public class Player
 		
 		if (!noclip)
 		{
+			//Grow or shrink
+			InputHandler inputHandler = c.getInputHandler();
+			if (inputHandler.getKey(InputHandler.GROW))
+				radius = convertToRadius(convertToCircumference(radius)*Math.exp(dt));
+			if (inputHandler.getKey(InputHandler.SHRINK))
+				radius = convertToRadius(convertToCircumference(radius)*Math.exp(-dt));
+			
+			//Move horizontally
 			Vector3 oldPlanePos = getPlanePoint(loc);
 			Vector3 newPlanePos = getPlanePoint(pos.getTranslation());
 			Vector3 dPlanePos = oldPlanePos.hyperTranslate(newPlanePos.times(-1));
@@ -301,6 +309,16 @@ public class Player
 		double maxMag = 0.9998;
 		if (mag > maxMag)
 			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
+	}
+	
+	private double convertToCircumference(double r)
+	{
+		return (Math.sinh(MathHelper.atanh(radius)));
+	}
+	
+	private double convertToRadius(double a)
+	{
+		return Math.tanh(MathHelper.asinh(a));
 	}
 	
 	private void handleOrientation()
