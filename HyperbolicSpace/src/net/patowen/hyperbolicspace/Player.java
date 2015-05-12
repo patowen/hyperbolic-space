@@ -82,6 +82,9 @@ public class Player
 				Vector3 planePoint = getPlanePoint(pos.getTranslation());
 				Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
 				
+				//Change size if necessary
+				if (offset.z < radius) radius = Math.max(0.01, offset.z);
+				
 				o = o.hyperTranslate(offset.times(-1), planePoint);
 				
 				double dir = Math.atan2(-o.z.y, -o.z.x);
