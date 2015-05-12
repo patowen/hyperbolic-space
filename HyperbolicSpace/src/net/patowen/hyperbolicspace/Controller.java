@@ -97,6 +97,8 @@ public class Controller
 			return;
 		}
 		
+		caps.setDepthBits(16);
+		
 		win = GLWindow.create(caps);
 	}
 	
