@@ -20,8 +20,8 @@ public class Horosphere implements SceneNodeType
 	private SceneNodeImpl sceneNode;
 	
 	private int textureStepsPerWrap = 10;
-	private int numWraps = 10;
-	private double size = 5;
+	private int numWraps = 20;
+	private double size = 10;
 	
 	/**
 	 * Initializes the {@code Horosphere} mesh.

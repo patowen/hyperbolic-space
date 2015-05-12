@@ -1,5 +1,7 @@
 package net.patowen.hyperbolicspace;
 
+import com.jogamp.opengl.math.FloatUtil;
+
 /**
  * A controllable camera used to navigate hyperbolic space with some control over the world
  * @author Patrick Owen
@@ -13,6 +15,9 @@ public class Player
 	private Vector3 vel;
 	
 	private boolean noclip;
+	
+	//Perspective
+	private double zoom = 0.6;
 	
 	//Non-noclip values
 	private double radius;
@@ -59,6 +64,8 @@ public class Player
 		handleOrientation();
 		
 		handleSpawning();
+		
+		handleZooming(dt);
 	}
 	
 	private void handleNoclip()
@@ -349,8 +356,8 @@ public class Player
 		if (noclip)
 		{
 			Orientation o = new Orientation();
-			o.rotate(o.y, -inputHandler.getMouseX()*45);
-			o.rotate(o.x, -inputHandler.getMouseY()*45);
+			o.rotate(o.y, -inputHandler.getMouseX()*45*Math.atan(zoom));
+			o.rotate(o.x, -inputHandler.getMouseY()*45*Math.atan(zoom));
 			double tilt = 0;
 			if (inputHandler.getKey(InputHandler.TILT_LEFT))
 				tilt -= 1;
@@ -361,18 +368,41 @@ public class Player
 		}
 		else
 		{
-			verticalDir += -inputHandler.getMouseY()*45;
+			verticalDir += -inputHandler.getMouseY()*45*Math.atan(zoom);
 			if (verticalDir > Math.PI/2) verticalDir = Math.PI/2;
 			if (verticalDir < -Math.PI/2) verticalDir = -Math.PI/2;
 			if (tilt > 0) tilt = Math.max(0, tilt - 0.1);
 			if (tilt < 0) tilt = Math.min(0, tilt + 0.1);
 			Orientation o = new Orientation();
 			
-			o.rotate(new Vector3(0, 0, 1), -inputHandler.getMouseX()*45);
+			o.rotate(new Vector3(0, 0, 1), -inputHandler.getMouseX()*45*Math.atan(zoom));
 			
 			horizontalDir = o.transform(horizontalDir);
 			horizontalDir.normalize();
 		}
+	}
+	
+	/**
+	 * Allows the user to change perspective
+	 * @param dt the time step
+	 */
+	private void handleZooming(double dt)
+	{
+		InputHandler inputHandler = c.getInputHandler();
+		if (inputHandler.getKey(InputHandler.ZOOM_IN))
+			zoom *= Math.exp(-dt);
+		if (inputHandler.getKey(InputHandler.ZOOM_OUT))
+			zoom *= Math.exp(dt);
+	}
+	
+	/**
+	 * Sets the perspective matrix to the correct type based on player input
+	 * @param aspect Aspect ratio of the screen
+	 */
+	public void setPerspective(float aspect)
+	{
+		float[] mat = new float[16];
+		c.getMatrixHandler().setPerspective(FloatUtil.makePerspective(mat, 0, true, (float)(Math.atan(zoom)*2), aspect, 0.01f, 8.1f));
 	}
 	
 	/**

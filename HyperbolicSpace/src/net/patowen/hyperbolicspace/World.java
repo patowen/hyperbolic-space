@@ -16,6 +16,8 @@ public class World
 	private ArrayList<SceneNode> nodes; //List of rendered nodes
 	private Player player; //Controllable camera
 	
+	private int viewportWidth, viewportHeight;
+	
 	/**
 	 * Initializes the world and its {@code Player} object
 	 * @param c
@@ -28,6 +30,17 @@ public class World
 		
 		nodes = new ArrayList<SceneNode>();
 		nodes.add(new SceneNode(c.plane));
+	}
+	
+	/**
+	 * Sets the viewport used for perspective in the world
+	 * @param width The width in pixels of the viewport
+	 * @param height The height in pixels of the viewport
+	 */
+	public void setViewport(int width, int height)
+	{
+		viewportWidth = width;
+		viewportHeight = height;
 	}
 	
 	/**
@@ -61,6 +74,8 @@ public class World
 		
 		if (inputHandler.getKeyPressed(InputHandler.RESET))
 			reset();
+		if (inputHandler.getKeyPressed(InputHandler.CLEAR))
+			nodes.clear();
 		
 		inputHandler.updatePressed();
 	}
@@ -71,6 +86,7 @@ public class World
 	 */
 	public void render(GL3 gl)
 	{
+		player.setPerspective((float)viewportWidth/viewportHeight);
 		player.setView();
 		
 		for (SceneNode node : nodes)

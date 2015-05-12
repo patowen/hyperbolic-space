@@ -7,7 +7,6 @@ import javax.media.opengl.GLEventListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.math.FloatUtil;
 
 /**
  * Handles the window and its render loop.
@@ -70,8 +69,8 @@ public class Renderer
 			//Modifies the perspective to match the size of the window
 			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 			{
-				float[] mat = new float[16];
-				c.getMatrixHandler().setPerspective(FloatUtil.makePerspective(mat, 0, true, 0.78f, (float)width/height, 0.01f, 8.1f));
+				//Perspective is done in the player's main method
+				world.setViewport(width, height);
 			}
 		});
 		
