@@ -69,7 +69,7 @@ public class Player
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_2))
 		{
 			spawnNode(new SceneNode(c.building), new Transformation(
-					new Orientation(new Vector3(-1,0,0), new Vector3(0,0,1), new Vector3(0,1,0)), new Vector3(0,0,-0.4)));
+					new Orientation(new Vector3(-1,0,0), new Vector3(0,0,1), new Vector3(0,1,0)), new Vector3(0,0.003,-0.4)));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_3))
 		{
@@ -135,8 +135,16 @@ public class Player
 		if (inputHandler.getKey(InputHandler.LEFT))
 			dx -= 1;
 		
-		Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
-		approachVelocity(goalVel, maxChange);
+		if (noclip)
+		{
+			Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
+			approachVelocity(goalVel, maxChange);
+		}
+		else
+		{
+			Vector3 goalVel = horizontalDir.transform(new Vector3(maxVel*dy, -maxVel*dx, 0));
+			approachVelocity(goalVel, maxChange);
+		}
 		
 //		vel.addMultiple(getGravity(), dt);
 	}
@@ -232,6 +240,7 @@ public class Player
 		if (!noclip)
 		{
 			Orientation o = new Orientation(new Vector3(0, -1, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0));
+			o.rotate(new Vector3(1, 0, 0), tilt);
 			o.rotate(new Vector3(0, -1, 0), verticalDir);
 			o = horizontalDir.transform(o);
 			Vector3 planePoint = getPlanePoint(pos.getTranslation());
@@ -267,8 +276,10 @@ public class Player
 		else
 		{
 			verticalDir += -inputHandler.getMouseY()*45;
-			if (verticalDir > Math.PI) verticalDir = Math.PI;
-			if (verticalDir < -Math.PI) verticalDir = Math.PI;
+			if (verticalDir > Math.PI/2) verticalDir = Math.PI/2;
+			if (verticalDir < -Math.PI/2) verticalDir = -Math.PI/2;
+			if (tilt > 0) tilt = Math.max(0, tilt - 0.1);
+			if (tilt < 0) tilt = Math.min(0, tilt + 0.1);
 			Orientation o = new Orientation();
 			
 			o.rotate(new Vector3(0, 0, 1), -inputHandler.getMouseX()*45);
