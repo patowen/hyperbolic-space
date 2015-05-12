@@ -98,6 +98,7 @@ public class Controller
 		}
 		
 		caps.setDepthBits(24);
+		caps.setSampleBuffers(true);
 		
 		win = GLWindow.create(caps);
 	}
