@@ -76,7 +76,8 @@ public class DrawHelper
 			Vector2 a = w.dir(x);
 			Vector2 b = w.dir(y);
 			
-			double result = a.dot(b);
+//			double result = a.dot(b);
+			double result = 1/(a.minus(b).squared()) - 1.25;
 			
 			if (first)
 				path.moveTo(i, getJ(result));

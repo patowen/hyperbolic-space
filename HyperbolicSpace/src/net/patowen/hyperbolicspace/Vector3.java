@@ -2,6 +2,7 @@ package net.patowen.hyperbolicspace;
 
 
 
+
 /**
  * The {@code Vector3} class represents a given vector in 3-dimensional Euclidean space.
  * @author Patrick Owen
@@ -231,6 +232,19 @@ public class Vector3
 		double factor = 1 - v.squared();
 		
 		return (times(factor).plusMultiple(v, vFactor)).times(1/denom);
+	}
+	
+	/**
+	 * Returns {@code x} after a translation in the Poincare ball model that directly moves the
+	 * vector to the origin.
+	 * @param x a unit vector
+	 * @return the direction from the vector to {@code x}
+	 */
+	public Vector3 hyperDirectionTo(Vector3 x)
+	{
+		Vector3 v = this;
+		Vector3 diff = x.minus(v);
+		return diff.times(2*diff.dot(x)/diff.squared()).minus(x);
 	}
 	
 	/**

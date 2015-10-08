@@ -1,6 +1,8 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.collision;
 
 import java.util.ArrayList;
+
+import net.patowen.hyperbolicspace.Vector3;
 
 @SuppressWarnings("unused")
 public class CollisionHandler
