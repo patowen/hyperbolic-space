@@ -8,4 +8,9 @@ public class Collision
 	{
 		this.distance = distance;
 	}
+	
+	public String toString()
+	{
+		return Double.toString(distance);
+	}
 }

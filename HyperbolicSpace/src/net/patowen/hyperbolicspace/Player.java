@@ -1,5 +1,10 @@
 package net.patowen.hyperbolicspace;
 
+import java.util.Optional;
+
+import net.patowen.hyperbolicspace.collision.Collision;
+import net.patowen.hyperbolicspace.collision.Plane;
+
 import com.jogamp.opengl.math.FloatUtil;
 
 /**
@@ -166,13 +171,13 @@ public class Player
 		
 		if (inputHandler.getKey(InputHandler.SLOW))
 		{
-			maxChange = 2*dt;
-			maxVel = 1;
+			maxChange = 0.2*dt;
+			maxVel = 0.1;
 		}
 		else
 		{
-			maxChange = 20*dt;
-			maxVel = 10;
+			maxChange = 2*dt;
+			maxVel = 1;
 		}
 		double dx=0, dy=0, dz=0;
 		if (inputHandler.getMouseButton(InputHandler.FORWARDS))
@@ -206,7 +211,7 @@ public class Player
 			
 			if (inputHandler.getKeyPressed(InputHandler.JUMP))
 			{
-				vel = vel.plusMultiple(o.z, 5);
+				vel = vel.plusMultiple(o.z, 0.5);
 				grounded = false;
 			}
 		}
@@ -220,7 +225,7 @@ public class Player
 	private Vector3 getGravity()
 	{
 		Vector3 goal = getPlaneDirection(pos.getTranslation());
-		return goal.hyperTranslate(pos.getTranslation().times(-1)).times(10);
+		return goal.hyperTranslate(pos.getTranslation().times(-1)).times(1); //1 is the gravitational acceleration
 	}
 	
 	private void snapToPlane()
@@ -275,7 +280,15 @@ public class Player
 		Vector3 loc = pos.getTranslation();
 		
 		Vector3 velPos = convertToPosition(vel.times(0.01));
-		Vector3 dPos = convertToPosition(vel.times(0.1*dt));
+		Vector3 dPos = convertToPosition(vel.times(dt));
+		
+		Plane plane = new Plane();
+		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius));
+		if (o.isPresent())
+		{
+			System.out.println(o.get());
+			dPos = convertToPosition(vel.times(dt*o.get().distance));
+		}
 		
 		pos = new Transformation(pos.getRotation(), new Vector3());
 		

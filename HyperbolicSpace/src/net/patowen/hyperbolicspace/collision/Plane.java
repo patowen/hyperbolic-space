@@ -18,38 +18,44 @@ public class Plane implements Wall
 	
 	public Optional<Collision> getSphereCollision(Vector3 start, Vector3 direction, double distance, double radius)
 	{
-		double goalInv = distanceToIsometricInvarient(radius);
+		double goalInv = distanceToIsometricInvariant(radius);
 		//TODO actually use fast algorithm
-		int steps = 64;
+		int steps = 6400;
 		for (int i=0; i<steps; i++)
 		{
 			double disp = Math.tanh(distance*i/steps);
 			Vector3 pos = direction.times(disp).hyperTranslate(start);
-			if (getIsometricInvarient(pos) < goalInv)
+			if (getIsometricInvariant(pos) < goalInv)
 			{
-				return Optional.of(new Collision(distance*(i-1)/steps));
+				if (i == 0) return Optional.empty();
+				return Optional.of(new Collision((double)(i-1)/steps));
 			}
 		}
 		return Optional.empty();
 	}
 	
-	// Returns the inverse of the circumdiameter of the three points at infinity of the plane
+	// Returns the inverse of the squared circumradius of the three points at infinity of the plane
 	// on the poincare disk model after being transformed so that pos is moved to the center.
-	private double getIsometricInvarient(Vector3 pos)
+	public double getIsometricInvariant(Vector3 pos)
 	{
 		Vector3 v1t = pos.hyperDirectionTo(v1), v2t = pos.hyperDirectionTo(v2), v3t = pos.hyperDirectionTo(v3);
 		Vector3 a = v2t.minus(v1t), b = v3t.minus(v1t);
 		double product = a.squared() * b.squared();
 		double numerator = product - MathHelper.sqr(a.dot(b));
 		double denominator = product * (a.minus(b)).squared();
-		return numerator/denominator;
+		return 4*numerator/denominator;
 	}
 	
-	private double distanceToIsometricInvarient(double dist)
+	private double distanceToIsometricInvariant(double dist)
 	{
 		Vector3 v1 = new Vector3(-1, 0, 0), v2 = new Vector3(1, 0, 0), v3 = new Vector3(0, Math.tanh(dist), 0);
 		v1 = v3.hyperDirectionTo(v1);
 		v2 = v3.hyperDirectionTo(v2);
-		return 1 / (v1.minus(v2).magnitude());
+		return 4 / MathHelper.sqr(v1.minus(v2).magnitude());
+	}
+	
+	private double isometricInvariantToDistance(double invariant)
+	{
+		return 0;
 	}
 }
