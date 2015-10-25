@@ -4,9 +4,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import javax.media.opengl.GL3;
-
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL3;
 
 /**
  * Represents a section of a horosphere. A horosphere is the limit shape of continually expanding a sphere

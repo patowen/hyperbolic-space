@@ -1,6 +1,6 @@
 package net.patowen.hyperbolicspace;
 
-import javax.media.opengl.GL3;
+import com.jogamp.opengl.GL3;
 
 /**
  * Stores the location of a single instance of a {@code SceneNodeType} and renders it.

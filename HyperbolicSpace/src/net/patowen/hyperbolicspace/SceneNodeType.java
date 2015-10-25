@@ -1,6 +1,6 @@
 package net.patowen.hyperbolicspace;
 
-import javax.media.opengl.GL3;
+import com.jogamp.opengl.GL3;
 
 /**
  * Represents a mesh with a texture that can be drawn at any location

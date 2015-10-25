@@ -1,12 +1,12 @@
 package net.patowen.hyperbolicspace;
 
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLException;
-import javax.media.opengl.GLProfile;
 import javax.swing.JOptionPane;
 
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLException;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;

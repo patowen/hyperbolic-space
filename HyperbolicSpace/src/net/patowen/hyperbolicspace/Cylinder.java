@@ -4,9 +4,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import javax.media.opengl.GL3;
-
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL3;
 
 public class Cylinder implements SceneNodeType
 {

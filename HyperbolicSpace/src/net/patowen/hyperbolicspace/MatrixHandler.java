@@ -3,10 +3,9 @@ package net.patowen.hyperbolicspace;
 import java.nio.FloatBuffer;
 import java.util.Stack;
 
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLUniformData;
-
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GLUniformData;
 import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.glsl.ShaderState;
 

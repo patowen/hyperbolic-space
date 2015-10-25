@@ -5,8 +5,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 
-import javax.media.opengl.GL3;
-
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;

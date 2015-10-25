@@ -4,9 +4,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import javax.media.opengl.GL3;
-
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL3;
 
 /**
  * Represents a regular dodecahedron with right angles on every vertex. Such a shape
