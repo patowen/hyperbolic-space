@@ -2,7 +2,7 @@ package net.patowen.hyperbolicspace.collision;
 
 import java.util.Optional;
 
-import net.patowen.hyperbolicspace.Vector3;
+import net.patowen.hyperbolicspace.math.Vector3;
 
 public interface Wall
 {

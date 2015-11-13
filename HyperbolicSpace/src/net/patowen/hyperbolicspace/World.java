@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.GL3;
 
+import net.patowen.hyperbolicspace.entity.Player;
+import net.patowen.hyperbolicspace.rendering.SceneNode;
+
 /**
  * Handles the logic and rendering of all elements in the scene and
  * represents the scene itself

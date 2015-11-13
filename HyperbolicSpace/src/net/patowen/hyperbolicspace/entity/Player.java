@@ -1,9 +1,17 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.entity;
 
 import java.util.Optional;
 
+import net.patowen.hyperbolicspace.Controller;
+import net.patowen.hyperbolicspace.InputHandler;
+import net.patowen.hyperbolicspace.World;
 import net.patowen.hyperbolicspace.collision.Collision;
 import net.patowen.hyperbolicspace.collision.Plane;
+import net.patowen.hyperbolicspace.math.MathHelper;
+import net.patowen.hyperbolicspace.math.Orientation;
+import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.rendering.SceneNode;
 
 import com.jogamp.opengl.math.FloatUtil;
 
@@ -217,7 +225,7 @@ public class Player
 		}
 		else
 		{
-			vel.addMultiple(getGravity(), dt); //Gravity
+			vel = vel.plusMultiple(getGravity(), dt); //Gravity
 			vel = vel.times(Math.exp(-0.2*dt)); //Air friction
 		}
 	}

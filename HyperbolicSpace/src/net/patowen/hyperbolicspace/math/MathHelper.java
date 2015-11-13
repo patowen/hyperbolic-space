@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.math;
 
 /**
  * {@code MathHelper} includes some trigonometric functions that were missing from

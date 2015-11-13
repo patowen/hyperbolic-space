@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.rendering;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;

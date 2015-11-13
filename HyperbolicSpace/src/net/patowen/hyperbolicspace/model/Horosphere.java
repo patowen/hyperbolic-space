@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.model;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -6,6 +6,13 @@ import java.util.ArrayList;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL3;
+
+import net.patowen.hyperbolicspace.Controller;
+import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
+import net.patowen.hyperbolicspace.rendering.SceneNodeType;
+import net.patowen.hyperbolicspace.rendering.Vertex;
 
 /**
  * Represents a section of a horosphere. A horosphere is the limit shape of continually expanding a sphere

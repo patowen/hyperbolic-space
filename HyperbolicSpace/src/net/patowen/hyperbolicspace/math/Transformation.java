@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.math;
 
 /**
  * The {@code Transformation} class represents an isometric transformation in hyperbolic space. Like

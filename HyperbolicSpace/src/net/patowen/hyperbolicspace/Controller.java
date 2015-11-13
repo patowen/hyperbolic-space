@@ -12,6 +12,15 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
+import net.patowen.hyperbolicspace.model.Building;
+import net.patowen.hyperbolicspace.model.Dodecahedron;
+import net.patowen.hyperbolicspace.model.Horosphere;
+import net.patowen.hyperbolicspace.model.Plane;
+import net.patowen.hyperbolicspace.rendering.SceneNodeType;
+import net.patowen.hyperbolicspace.rendering.ShaderHandler;
+import net.patowen.hyperbolicspace.rendering.ShaderUniformHandler;
+import net.patowen.hyperbolicspace.rendering.TextureBank;
+
 /**
  * {@code Controller} acts as a context in which all other classes can access shared
  * data without having to pass things around arbitrary.
@@ -20,7 +29,7 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 public class Controller
 {
 	private FPSAnimator anim;
-	private MatrixHandler matrixHandler;
+	private ShaderUniformHandler matrixHandler;
 	private InputHandler inputHandler;
 	private GLWindow win;
 	
@@ -133,7 +142,7 @@ public class Controller
 		prog.add(fsCode);
 		
 		ShaderState shaderState = new ShaderState();
-		matrixHandler = new MatrixHandler(shaderState);
+		matrixHandler = new ShaderUniformHandler(shaderState);
 		shaderState.attachShaderProgram(gl, prog, false);
 		shaderState.bindAttribLocation(gl, 0, "vertex_position");
 		shaderState.bindAttribLocation(gl, 1, "normal_position");
@@ -148,7 +157,7 @@ public class Controller
 	 * Returns the main {@code MatrixHandler} object
 	 * @return a reference to the main {@code MatrixHandler} object
 	 */
-	public MatrixHandler getMatrixHandler()
+	public ShaderUniformHandler getMatrixHandler()
 	{
 		return matrixHandler;
 	}

@@ -1,7 +1,4 @@
-package net.patowen.hyperbolicspace;
-
-
-
+package net.patowen.hyperbolicspace.math;
 
 /**
  * The {@code Vector3} class represents a given vector in 3-dimensional Euclidean space.
@@ -107,17 +104,6 @@ public class Vector3
 	}
 	
 	/**
-	 * Adds the argument to the vector.
-	 * @param v a vector
-	 */
-	public void add(Vector3 v)
-	{
-		x += v.x;
-		y += v.y;
-		z += v.z;
-	}
-	
-	/**
 	 * Returns the result of adding the vector to the argument times the given scalar.
 	 * @param v a vector
 	 * @param c a scalar factor
@@ -126,18 +112,6 @@ public class Vector3
 	public Vector3 plusMultiple(Vector3 v, double c)
 	{
 		return new Vector3(x+v.x*c, y+v.y*c, z+v.z*c);
-	}
-	
-	/**
-	 * Adds the argument times the given scalar to the vector.
-	 * @param v a vector
-	 * @param c a scalar factor
-	 */
-	public void addMultiple(Vector3 v, double c)
-	{
-		x += v.x*c;
-		y += v.y*c;
-		z += v.z*c;
 	}
 	
 	/**
@@ -151,17 +125,6 @@ public class Vector3
 	}
 	
 	/**
-	 * Subtracts the argument from the vector.
-	 * @param v a vector
-	 */
-	public void subtract(Vector3 v)
-	{
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
-	}
-	
-	/**
 	 * Returns the vector multiplied by the given scalar.
 	 * @param c a scalar factor
 	 * @return the vector times the scalar factor
@@ -169,17 +132,6 @@ public class Vector3
 	public Vector3 times(double c)
 	{
 		return new Vector3(c*x, c*y, c*z);
-	}
-	
-	/**
-	 * Multiplies the vector by the given scalar.
-	 * @param c a scalar factor
-	 */
-	public void multiply(double c)
-	{
-		x *= c;
-		y *= c;
-		z *= c;
 	}
 	
 	/**

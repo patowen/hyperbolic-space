@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.rendering;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -8,6 +8,9 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.Texture;
+
+import net.patowen.hyperbolicspace.Controller;
+import net.patowen.hyperbolicspace.math.Transformation;
 
 /**
  * Holds the logic common to all {@code SceneNodeType}s
@@ -141,7 +144,7 @@ public class SceneNodeImpl
 	 */
 	public void render(GL3 gl)
 	{
-		MatrixHandler mh = c.getMatrixHandler();
+		ShaderUniformHandler mh = c.getMatrixHandler();
 		
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vertexBufferPos);
 		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);

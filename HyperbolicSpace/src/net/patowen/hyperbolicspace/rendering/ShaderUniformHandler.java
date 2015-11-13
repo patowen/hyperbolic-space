@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.rendering;
 
 import java.nio.FloatBuffer;
 import java.util.Stack;
@@ -9,13 +9,17 @@ import com.jogamp.opengl.GLUniformData;
 import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
+import net.patowen.hyperbolicspace.math.Orientation;
+import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector3;
+
 /**
  * {@code MatrixHandler} has two purposes. It holds a Transformation stack for the viewpoint and
  * for hierarchical models, and it interacts with the shader to set the uniforms to the appropriate
  * values.
  * @author Patrick Owen
  */
-public class MatrixHandler
+public class ShaderUniformHandler
 {
 	private ShaderState shaderState;
 	
@@ -36,7 +40,7 @@ public class MatrixHandler
 	 * @param shaderState the {@code ShaderState} representing the shader whose
 	 * uniforms are set
 	 */
-	public MatrixHandler(ShaderState shaderState)
+	public ShaderUniformHandler(ShaderState shaderState)
 	{
 		this.shaderState = shaderState;
 		

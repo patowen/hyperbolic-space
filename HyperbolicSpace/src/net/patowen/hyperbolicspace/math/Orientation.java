@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.math;
 
 /**
  * The {@code Orientation} class holds a 3x3 matrix that represents the orientation of a given object

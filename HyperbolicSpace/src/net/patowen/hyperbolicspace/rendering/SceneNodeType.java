@@ -1,6 +1,8 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.rendering;
 
 import com.jogamp.opengl.GL3;
+
+import net.patowen.hyperbolicspace.math.Transformation;
 
 /**
  * Represents a mesh with a texture that can be drawn at any location

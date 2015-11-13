@@ -1,6 +1,8 @@
-package net.patowen.hyperbolicspace;
+package net.patowen.hyperbolicspace.rendering;
 
 import java.nio.FloatBuffer;
+
+import net.patowen.hyperbolicspace.math.Vector3;
 
 /**
  * The {@code Vertex} class represents a vertex in hyperbolic space represented via the
