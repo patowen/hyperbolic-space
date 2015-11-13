@@ -2,6 +2,7 @@ package net.patowen.hyperbolicspace.rendering;
 
 import java.nio.FloatBuffer;
 
+import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
 
 /**
@@ -13,6 +14,7 @@ public class Vertex
 {
 	private Vector3 pos;
 	private Vector3 norm;
+	private Vector2 texCoord;
 	
 	/**
 	 * Constructs a {@code Vertex} object in the Poincare ball with no defined normal.
@@ -20,10 +22,10 @@ public class Vertex
 	 * @param y the y-position
 	 * @param z the z-position
 	 */
-	public Vertex(double x, double y, double z)
-	{
-		this(new Vector3(x, y, z), new Vector3());
-	}
+//	public Vertex(double x, double y, double z)
+//	{
+//		this(new Vector3(x, y, z), new Vector3());
+//	}
 	
 	/**
 	 * Constructs a {@code Vertex} object with the given coordinates for its position and normal.
@@ -34,9 +36,9 @@ public class Vertex
 	 * @param ny the y-coordinate of the normal vector
 	 * @param nz the z-coordinate of the normal vector
 	 */
-	public Vertex(double x, double y, double z, double nx, double ny, double nz)
+	public Vertex(double x, double y, double z, double nx, double ny, double nz, double tx, double ty)
 	{
-		this(new Vector3(x, y, z), new Vector3(nx, ny, nz));
+		this(new Vector3(x, y, z), new Vector3(nx, ny, nz), new Vector2(tx, ty));
 	}
 	
 	/**
@@ -44,20 +46,21 @@ public class Vertex
 	 * @param pos the position vector
 	 * @param norm the normal vector
 	 */
-	public Vertex(Vector3 pos)
-	{
-		this(pos, new Vector3());
-	}
+//	public Vertex(Vector3 pos)
+//	{
+//		this(pos, new Vector3());
+//	}
 	
 	/**
 	 * Constructs a {@code Vertex} object with the given vectors for its position and normal.
 	 * @param pos the position vector
 	 * @param norm the normal vector
 	 */
-	public Vertex(Vector3 pos, Vector3 norm)
+	public Vertex(Vector3 pos, Vector3 norm, Vector2 texCoord)
 	{
 		this.pos = pos;
 		this.norm = norm;
+		this.texCoord = texCoord;
 	}
 	
 	/**
@@ -65,7 +68,7 @@ public class Vertex
 	 * @param vertexBuffer the FloatBuffer for the position vector
 	 * @param normalBuffer the FloatBuffer for the normal vector
 	 */
-	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer)
+	public void use(FloatBuffer vertexBuffer, FloatBuffer normalBuffer, FloatBuffer texCoordBuffer)
 	{
 		vertexBuffer.put((float)pos.x);
 		vertexBuffer.put((float)pos.y);
@@ -74,5 +77,8 @@ public class Vertex
 		normalBuffer.put((float)norm.x);
 		normalBuffer.put((float)norm.y);
 		normalBuffer.put((float)norm.z);
+		
+		texCoordBuffer.put((float)texCoord.x);
+		texCoordBuffer.put((float)texCoord.y);
 	}
 }

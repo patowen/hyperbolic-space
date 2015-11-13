@@ -2,8 +2,8 @@ package net.patowen.hyperbolicspace.rendering;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.Texture;
@@ -35,9 +35,9 @@ public class TextureBank
 	{
 		createPlaceholderTexture(gl);
 		
-		stone = createTextureFromFile(gl, "stone.jpg");
-		metal = createTextureFromFile(gl, "metal.png");
-		clouds = createTextureFromFile(gl, "flat_clouds.png");
+		stone = createTextureFromFile(gl, "stone.jpg", "jpg");
+		metal = createTextureFromFile(gl, "metal.png", "png");
+		clouds = createTextureFromFile(gl, "flat_clouds.png", "png");
 	}
 	
 	/**
@@ -46,11 +46,13 @@ public class TextureBank
 	 * @param fname the filename of the texture, without its path
 	 * @return the newly-created texture
 	 */
-	private Texture createTextureFromFile(GL3 gl, String fname)
+	private Texture createTextureFromFile(GL3 gl, String fname, String extension)
 	{
 		try
 		{
-			Texture tex = TextureIO.newTexture(new File("textures", fname), true);
+			ClassLoader cl = TextureBank.class.getClassLoader();
+			InputStream stream = cl.getResourceAsStream("net/patowen/hyperbolicspace/textures/"+fname);
+			Texture tex = TextureIO.newTexture(stream, true, extension);
 			gl.glGenerateMipmap(tex.getTarget());
 			return tex;
 		}
@@ -61,15 +63,23 @@ public class TextureBank
 	}
 	
 	/**
-	 * Creates a 2x2 magenta and black checkerboard pattern to use as a texture if
+	 * Creates an 8x8 magenta and black checkerboard pattern to use as a texture if
 	 * the correct texture is missing
 	 * @param gl
 	 */
 	private void createPlaceholderTexture(GL3 gl)
 	{
-		BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
 		WritableRaster raster = image.getRaster();
-		raster.setPixels(0, 0, 2, 2, new int[] {255, 0, 255, 0, 0, 0, 0, 0, 0, 255, 0, 255});
+		float[] black = new float[] {0, 0, 0};
+		float[] magenta = new float[] {255, 0, 255};
+		for (int i=0; i<image.getWidth(); i++)
+		{
+			for (int j=0; j<image.getHeight(); j++)
+			{
+				raster.setPixel(i, j, (i+j)%2==0 ? magenta : black);
+			}
+		}
 		
 		placeholder = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
 		placeholder.setTexParameteri(gl, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_NEAREST);

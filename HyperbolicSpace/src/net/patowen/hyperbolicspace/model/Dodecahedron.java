@@ -1,6 +1,5 @@
 package net.patowen.hyperbolicspace.model;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -9,6 +8,8 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector2;
+import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
 import net.patowen.hyperbolicspace.rendering.Vertex;
@@ -36,20 +37,34 @@ public class Dodecahedron implements SceneNodeType
 		double p = (1+Math.sqrt(5))/2;
 		double q = s/p; p = s*p;
 		
-		v.add(new Vertex( 0,  q,  p)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( q,  p,  0)); v.add(new Vertex(-q,  p,  0)); v.add(new Vertex(-s,  s,  s));
-		v.add(new Vertex( 0,  q, -p)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex(-q,  p,  0)); v.add(new Vertex( q,  p,  0)); v.add(new Vertex( s,  s, -s));
-		v.add(new Vertex( 0, -q,  p)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex(-q, -p,  0)); v.add(new Vertex( q, -p,  0)); v.add(new Vertex( s, -s,  s));
-		v.add(new Vertex( 0, -q, -p)); v.add(new Vertex( s, -s, -s)); v.add(new Vertex( q, -p,  0)); v.add(new Vertex(-q, -p,  0)); v.add(new Vertex(-s, -s, -s));
+		double[][][] vertices = new double[][][] {
+			{{ 0,  q,  p}, { s,  s,  s}, { q,  p,  0}, {-q,  p,  0}, {-s,  s,  s}},
+			{{ 0,  q, -p}, {-s,  s, -s}, {-q,  p,  0}, { q,  p,  0}, { s,  s, -s}},
+			{{ 0, -q,  p}, {-s, -s,  s}, {-q, -p,  0}, { q, -p,  0}, { s, -s,  s}},
+			{{ 0, -q, -p}, { s, -s, -s}, { q, -p,  0}, {-q, -p,  0}, {-s, -s, -s}},
+			
+			{{ p,  0,  q}, { s,  s,  s}, { 0,  q,  p}, { 0, -q,  p}, { s, -s,  s}},
+			{{-p,  0,  q}, {-s, -s,  s}, { 0, -q,  p}, { 0,  q,  p}, {-s,  s,  s}},
+			{{ p,  0, -q}, { s, -s, -s}, { 0, -q, -p}, { 0,  q, -p}, { s,  s, -s}},
+			{{-p,  0, -q}, {-s,  s, -s}, { 0,  q, -p}, { 0, -q, -p}, {-s, -s, -s}},
+			
+			{{ q,  p,  0}, { s,  s,  s}, { p,  0,  q}, { p,  0, -q}, { s,  s, -s}},
+			{{ q, -p,  0}, { s, -s, -s}, { p,  0, -q}, { p,  0,  q}, { s, -s,  s}},
+			{{-q,  p,  0}, {-s,  s, -s}, {-p,  0, -q}, {-p,  0,  q}, {-s,  s,  s}},
+			{{-q, -p,  0}, {-s, -s,  s}, {-p,  0,  q}, {-p,  0, -q}, {-s, -s, -s}}
+		};
 		
-		v.add(new Vertex( p,  0,  q)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( 0,  q,  p)); v.add(new Vertex( 0, -q,  p)); v.add(new Vertex( s, -s,  s));
-		v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex( 0, -q,  p)); v.add(new Vertex( 0,  q,  p)); v.add(new Vertex(-s,  s,  s));
-		v.add(new Vertex( p,  0, -q)); v.add(new Vertex( s, -s, -s)); v.add(new Vertex( 0, -q, -p)); v.add(new Vertex( 0,  q, -p)); v.add(new Vertex( s,  s, -s));
-		v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex( 0,  q, -p)); v.add(new Vertex( 0, -q, -p)); v.add(new Vertex(-s, -s, -s));
+		double[][] texCoords = new double[][] {
+			{0.0, 0.0}, {1.0, 0.0}, {1.0, 0.5}, {0.5, 1.0}, {0.0, 1.0},
+		};
 		
-		v.add(new Vertex( q,  p,  0)); v.add(new Vertex( s,  s,  s)); v.add(new Vertex( p,  0,  q)); v.add(new Vertex( p,  0, -q)); v.add(new Vertex( s,  s, -s));
-		v.add(new Vertex( q, -p,  0)); v.add(new Vertex( s, -s, -s)); v.add(new Vertex( p,  0, -q)); v.add(new Vertex( p,  0,  q)); v.add(new Vertex( s, -s,  s));
-		v.add(new Vertex(-q,  p,  0)); v.add(new Vertex(-s,  s, -s)); v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-s,  s,  s));
-		v.add(new Vertex(-q, -p,  0)); v.add(new Vertex(-s, -s,  s)); v.add(new Vertex(-p,  0,  q)); v.add(new Vertex(-p,  0, -q)); v.add(new Vertex(-s, -s, -s));
+		for (int i=0; i<vertices.length; i++) {
+			for (int j=0; j<vertices[i].length; j++) {
+				double[] vertex = vertices[i][j];
+				double[] texCoord = texCoords[j];
+				v.add(new Vertex(new Vector3(vertex[0], vertex[1], vertex[2]), new Vector3(), new Vector2(texCoord[0], texCoord[1])));
+			}
+		}
 		
 		sceneNode = new SceneNodeImpl(this.c);
 		sceneNode.setVertices(v);
@@ -74,29 +89,7 @@ public class Dodecahedron implements SceneNodeType
 		});
 		elementBuffer.rewind();
 		
-		FloatBuffer textureBuffer = Buffers.newDirectFloatBuffer(v.size()*2);
-		
-		textureBuffer.put(new float[]
-		{
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-		});
-		textureBuffer.rewind();
-		
 		sceneNode.setElementBuffer(elementBuffer);
-		sceneNode.setTexCoordBuffer(textureBuffer);
 		sceneNode.prepare();
 	}
 	

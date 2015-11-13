@@ -1,6 +1,5 @@
 package net.patowen.hyperbolicspace.model;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -10,6 +9,7 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
@@ -43,11 +43,11 @@ public class Plane implements SceneNodeType
 		tessellate(tVert, tFace);
 		for (TessellatorFace f : tFace)
 		{
-			v.add(new Vertex(f.vertices[0].getPosition()));
-			v.add(new Vertex(f.vertices[1].getPosition()));
-			v.add(new Vertex(f.vertices[2].getPosition()));
-			v.add(new Vertex(f.vertices[3].getPosition()));
-			v.add(new Vertex(f.vertices[4].getPosition()));
+			v.add(new Vertex(new Vector3(f.vertices[0].getPosition()), new Vector3(), new Vector2(0, 0)));
+			v.add(new Vertex(new Vector3(f.vertices[1].getPosition()), new Vector3(), new Vector2(1, 0)));
+			v.add(new Vertex(new Vector3(f.vertices[2].getPosition()), new Vector3(), new Vector2(1, 0.5)));
+			v.add(new Vertex(new Vector3(f.vertices[3].getPosition()), new Vector3(), new Vector2(0.5, 1)));
+			v.add(new Vertex(new Vector3(f.vertices[4].getPosition()), new Vector3(), new Vector2(0, 1)));
 		}
 		
 		sceneNode = new SceneNodeImpl(this.c);
@@ -64,19 +64,7 @@ public class Plane implements SceneNodeType
 		}
 		elementBuffer.rewind();
 		
-		FloatBuffer textureBuffer = Buffers.newDirectFloatBuffer(v.size()*2);
-		
-		for (int i=0; i<tFace.size(); i++)
-		{
-			textureBuffer.put(new float[]
-			{
-				0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,
-			});
-		}
-		textureBuffer.rewind();
-		
 		sceneNode.setElementBuffer(elementBuffer);
-		sceneNode.setTexCoordBuffer(textureBuffer);
 		sceneNode.prepare();
 	}
 	

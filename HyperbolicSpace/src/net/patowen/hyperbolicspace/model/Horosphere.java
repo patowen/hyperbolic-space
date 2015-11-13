@@ -1,6 +1,5 @@
 package net.patowen.hyperbolicspace.model;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -9,6 +8,7 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
@@ -59,7 +59,7 @@ public class Horosphere implements SceneNodeType
 						vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(1,0,0), ((double)ii/numSteps-0.5)*size);
 						vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(0,1,0), ((double)jj/numSteps-0.5)*size);
 //						vertex = vertex.hyperTranslate(new Vector3(0.02*ii, 0.02*jj, 0));
-						v.add(new Vertex(vertex));
+						v.add(new Vertex(vertex, new Vector3(), new Vector2((double)i/textureStepsPerWrap, (double)j/textureStepsPerWrap)));
 					}
 				}
 			}
@@ -87,27 +87,7 @@ public class Horosphere implements SceneNodeType
 		
 		elementBuffer.rewind();
 		
-		FloatBuffer textureBuffer = Buffers.newDirectFloatBuffer(v.size()*2);
-		
-		for (int xx=0; xx<numWraps; xx++)
-		{
-			for (int yy=0; yy<numWraps; yy++)
-			{
-				for (int i=0; i<=textureStepsPerWrap; i++)
-				{
-					for (int j=0; j<=textureStepsPerWrap; j++)
-					{
-						textureBuffer.put((float)i/textureStepsPerWrap);
-						textureBuffer.put((float)j/textureStepsPerWrap);
-					}
-				}
-			}
-		}
-		
-		textureBuffer.rewind();
-		
 		sceneNode.setElementBuffer(elementBuffer);
-		sceneNode.setTexCoordBuffer(textureBuffer);
 		sceneNode.prepare();
 	}
 	

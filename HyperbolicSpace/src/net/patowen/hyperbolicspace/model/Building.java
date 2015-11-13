@@ -1,6 +1,5 @@
 package net.patowen.hyperbolicspace.model;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -9,6 +8,7 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
@@ -54,9 +54,11 @@ public class Building implements SceneNodeType
 		
 		//Base
 		int indexBase = v.size();
-		v.add(new Vertex(center));
-		for (int j=0; j<baseSides; j++)
-			v.add(new Vertex(corners[j]));
+		v.add(new Vertex(center, new Vector3(), new Vector2(0.75, 0.25)));
+		for (int j=0; j<baseSides; j++) {
+			double theta = j*Math.PI*2/baseSides;
+			v.add(new Vertex(corners[j], new Vector3(), new Vector2(0.75+0.25*Math.cos(theta), 0.25+0.25*Math.sin(theta))));
+		}
 		
 		//Sides
 		int[] indexSides = new int[numWraps];
@@ -68,7 +70,8 @@ public class Building implements SceneNodeType
 				for (int j=0; j<baseSides; j++)
 				{
 					int j1 = j+1; if (j1 == baseSides) j1 = 0;
-					v.add(new Vertex(corners[j])); v.add(new Vertex(corners[j1]));
+					v.add(new Vertex(corners[j], new Vector3(), new Vector2(0, (double)i/heightStepsPerWrap)));
+					v.add(new Vertex(corners[j1], new Vector3(), new Vector2(0.5, (double)i/heightStepsPerWrap)));
 				}
 				
 				if (i == heightStepsPerWrap) break;
@@ -81,9 +84,11 @@ public class Building implements SceneNodeType
 		
 		//Top
 		int indexTop = v.size();
-		v.add(new Vertex(center));
-		for (int j=0; j<baseSides; j++)
-			v.add(new Vertex(corners[j]));
+		v.add(new Vertex(center, new Vector3(), new Vector2(0.75, 0.75)));
+		for (int j=0; j<baseSides; j++) {
+			double theta = j*Math.PI*2/baseSides;
+			v.add(new Vertex(corners[j], new Vector3(), new Vector2(0.75+0.25*Math.cos(theta), 0.75+0.25*Math.sin(theta))));
+		}
 		
 		sceneNode = new SceneNodeImpl(this.c);
 		sceneNode.setVertices(v);
@@ -125,43 +130,7 @@ public class Building implements SceneNodeType
 		
 		elementBuffer.rewind();
 		
-		FloatBuffer textureBuffer = Buffers.newDirectFloatBuffer(v.size()*2);
-		
-		textureBuffer.put(0.75f); textureBuffer.put(0.25f);
-		for (int i=0; i<baseSides; i++)
-		{
-			double theta = i*Math.PI*2/baseSides;
-			textureBuffer.put((float)(0.75+0.25*Math.cos(theta)));
-			textureBuffer.put((float)(0.25+0.25*Math.sin(theta)));
-		}
-		
-		for (int wrap=0; wrap<numWraps; wrap++)
-		{
-			for (int i=0; i<=heightStepsPerWrap; i++)
-			{
-				for (int j=0; j<baseSides; j++)
-				{
-					textureBuffer.put(0.0f);
-					textureBuffer.put((float)i / heightStepsPerWrap);
-					
-					textureBuffer.put(0.5f);
-					textureBuffer.put((float)i / heightStepsPerWrap);
-				}
-			}
-		}
-		
-		textureBuffer.put(0.75f); textureBuffer.put(0.75f);
-		for (int i=0; i<baseSides; i++)
-		{
-			double theta = i*Math.PI*2/baseSides;
-			textureBuffer.put((float)(0.75+0.25*Math.cos(theta)));
-			textureBuffer.put((float)(0.75+0.25*Math.sin(theta)));
-		}
-		
-		textureBuffer.rewind();
-		
 		sceneNode.setElementBuffer(elementBuffer);
-		sceneNode.setTexCoordBuffer(textureBuffer);
 		sceneNode.prepare();
 	}
 	

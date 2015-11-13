@@ -92,26 +92,18 @@ public class SceneNodeImpl
 	}
 	
 	/**
-	 * Fills the vertex and normal buffers with the proper data so that the scene
+	 * Fills the vertex, normal, and texCoord buffers with the proper data so that the scene
 	 * node can be rendered
 	 */
 	public void prepare()
 	{
 		for (int i=0; i<vertices.size(); i++)
 		{
-			vertices.get(i).use(vertexBuffer, normalBuffer);
+			vertices.get(i).use(vertexBuffer, normalBuffer, texCoordBuffer);
 		}
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
-	}
-	
-	/**
-	 * Directly sets the texCoord buffer to use for rendering
-	 * @param texCoordBuffer a reference to the texCoord buffer to use for rendering
-	 */
-	public void setTexCoordBuffer(FloatBuffer texCoordBuffer)
-	{
-		this.texCoordBuffer = texCoordBuffer;
+		texCoordBuffer.rewind();
 	}
 	
 	/**
