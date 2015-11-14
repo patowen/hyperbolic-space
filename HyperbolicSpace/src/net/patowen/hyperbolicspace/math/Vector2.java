@@ -52,6 +52,12 @@ public class Vector2
 		this.y = y;
 	}
 	
+	public Vector2(double[] coords)
+	{
+		x = coords[0];
+		y = coords[1];
+	}
+	
 	/**
 	 * Changes the vector to the unit vector pointing in the same direction. This method
 	 * does nothing to the zero vector.

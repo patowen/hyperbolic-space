@@ -290,13 +290,13 @@ public class Player
 		Vector3 velPos = convertToPosition(vel.times(0.01));
 		Vector3 dPos = convertToPosition(vel.times(dt));
 		
-		Plane plane = new Plane();
-		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius));
-		if (o.isPresent())
-		{
-			System.out.println(o.get());
-			dPos = convertToPosition(vel.times(dt*o.get().distance));
-		}
+//		Plane plane = new Plane();
+//		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius));
+//		if (o.isPresent())
+//		{
+//			System.out.println(o.get());
+//			dPos = convertToPosition(vel.times(dt*o.get().distance));
+//		}
 		
 		pos = new Transformation(pos.getRotation(), new Vector3());
 		

@@ -59,6 +59,13 @@ public class Vector3
 		this.z = z;
 	}
 	
+	public Vector3(double[] coords)
+	{
+		x = coords[0];
+		y = coords[1];
+		z = coords[2];
+	}
+	
 	/**
 	 * Changes the vector to the unit vector pointing in the same direction. This method
 	 * does nothing to the zero vector.

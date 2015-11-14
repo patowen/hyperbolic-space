@@ -37,7 +37,11 @@ public class SceneNodeImpl
 	private IntBuffer elementBuffer;
 	private int elementBufferPos;
 	
+	private int vertexArrayBufferPos;
+	
 	private float[] color;
+	
+	private Model model;
 	
 	/**
 	 * Initializes the scene node type with defaults
@@ -48,6 +52,12 @@ public class SceneNodeImpl
 		this.c = c;
 		transformation = new Transformation();
 		color = new float[] {1, 1, 1, 1};
+		model = null;
+	}
+	
+	public void setModel(Model model)
+	{
+		this.model = model;
 	}
 	
 	/**
@@ -97,13 +107,16 @@ public class SceneNodeImpl
 	 */
 	public void prepare()
 	{
-		for (int i=0; i<vertices.size(); i++)
+		if (model == null)
 		{
-			vertices.get(i).use(vertexBuffer, normalBuffer, texCoordBuffer);
+			for (int i=0; i<vertices.size(); i++)
+			{
+				vertices.get(i).use(vertexBuffer, normalBuffer, texCoordBuffer);
+			}
+			vertexBuffer.rewind();
+			normalBuffer.rewind();
+			texCoordBuffer.rewind();
 		}
-		vertexBuffer.rewind();
-		normalBuffer.rewind();
-		texCoordBuffer.rewind();
 	}
 	
 	/**
@@ -122,12 +135,46 @@ public class SceneNodeImpl
 	 */
 	public void renderInit(GL3 gl)
 	{
-		IntBuffer tempBuffer = Buffers.newDirectIntBuffer(4);
-		gl.glGenBuffers(4, tempBuffer);
-		vertexBufferPos = tempBuffer.get(0);
-		normalBufferPos = tempBuffer.get(1);
-		texCoordBufferPos = tempBuffer.get(2);
-		elementBufferPos = tempBuffer.get(3);
+		if (model == null)
+		{
+			IntBuffer tempBuffer2 = Buffers.newDirectIntBuffer(1);
+			gl.glGenVertexArrays(1, tempBuffer2);
+			vertexArrayBufferPos = tempBuffer2.get(0);
+			
+			IntBuffer tempBuffer = Buffers.newDirectIntBuffer(4);
+			gl.glGenBuffers(4, tempBuffer);
+			vertexBufferPos = tempBuffer.get(0);
+			normalBufferPos = tempBuffer.get(1);
+			texCoordBufferPos = tempBuffer.get(2);
+			elementBufferPos = tempBuffer.get(3);
+			
+			gl.glBindVertexArray(vertexArrayBufferPos);
+			gl.glEnableVertexAttribArray(0);
+			gl.glEnableVertexAttribArray(1);
+			gl.glEnableVertexAttribArray(2);
+			
+			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vertexBufferPos);
+			gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
+			gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
+			
+			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, normalBufferPos);
+			gl.glBufferData(GL3.GL_ARRAY_BUFFER, normalBuffer.capacity()*4, normalBuffer, GL3.GL_DYNAMIC_DRAW);
+			gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 0, 0);
+			
+			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, texCoordBufferPos);
+			gl.glBufferData(GL3.GL_ARRAY_BUFFER, texCoordBuffer.capacity()*4, texCoordBuffer, GL3.GL_DYNAMIC_DRAW);
+			gl.glVertexAttribPointer(2, 2, GL3.GL_FLOAT, false, 0, 0);
+			
+			gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
+			gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBuffer.capacity()*4, elementBuffer, GL3.GL_STATIC_DRAW);
+			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+			
+			gl.glBindVertexArray(0);
+		}
+		else
+		{
+			model.init(gl);
+		}
 	}
 	
 	/**
@@ -138,40 +185,28 @@ public class SceneNodeImpl
 	{
 		ShaderUniformHandler mh = c.getMatrixHandler();
 		
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vertexBufferPos);
-		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
-		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
-		
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, normalBufferPos);
-		gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 0, 0);
-		gl.glBufferData(GL3.GL_ARRAY_BUFFER, normalBuffer.capacity()*4, normalBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
-		
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, texCoordBufferPos);
-		gl.glVertexAttribPointer(2, 2, GL3.GL_FLOAT, false, 0, 0);
-		gl.glBufferData(GL3.GL_ARRAY_BUFFER, texCoordBuffer.capacity()*4, texCoordBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
-		
-		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
-		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBuffer.capacity()*4, elementBuffer, GL3.GL_STATIC_DRAW);
-		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+		if (model == null)
+			gl.glBindVertexArray(vertexArrayBufferPos);
 		
 		mh.pushTransformation();
 		mh.addTransformation(transformation);
 		mh.setColor(color);
 		mh.update(gl);
-		
-		gl.glEnableVertexAttribArray(0);
-		gl.glEnableVertexAttribArray(1);
-		gl.glEnableVertexAttribArray(2);
 		texture.bind(gl);
-		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
-		gl.glDrawElements(GL3.GL_TRIANGLES, elementBuffer.capacity(), GL3.GL_UNSIGNED_INT, 0);
-		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
-		gl.glDisableVertexAttribArray(2);
-		gl.glDisableVertexAttribArray(1);
-		gl.glDisableVertexAttribArray(0);
+		
+		if (model == null)
+		{
+			gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
+			gl.glDrawElements(GL3.GL_TRIANGLES, elementBuffer.capacity(), GL3.GL_UNSIGNED_INT, 0);
+			gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+		else
+		{
+			model.render(gl);
+		}
+		
+		if (model == null)
+			gl.glBindVertexArray(0);
 		
 		mh.popTransformation();
 	}
