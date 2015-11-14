@@ -1,7 +1,9 @@
-package net.patowen.hyperbolicspace.rendering;
+package net.patowen.hyperbolicspace.modelhelper;
 
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.rendering.Model;
+import net.patowen.hyperbolicspace.rendering.Vertex;
 
 public class Polygon
 {
@@ -20,7 +22,7 @@ public class Polygon
 		setNormals();
 	}
 	
-	public void setRegularTexture(Vector2 center, double radius, double initialRatio)
+	public void setTexCoordsRegular(Vector2 center, double radius, double initialRatio)
 	{
 		for (int i=0; i<numVertices; i++)
 		{

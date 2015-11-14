@@ -5,13 +5,11 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector2;
-import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.modelhelper.Polygon;
+import net.patowen.hyperbolicspace.modelhelper.VertexHelper;
 import net.patowen.hyperbolicspace.rendering.Model;
-import net.patowen.hyperbolicspace.rendering.Polygon;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
-import net.patowen.hyperbolicspace.rendering.Vertex;
-import net.patowen.hyperbolicspace.rendering.VertexHelper;
 
 /**
  * Represents a regular dodecahedron with right angles on every vertex. Such a shape
@@ -53,13 +51,9 @@ public class Dodecahedron implements SceneNodeType
 			{{-q, -p,  0}, {-s, -s,  s}, {-p,  0,  q}, {-p,  0, -q}, {-s, -s, -s}}
 		};
 		
-		double[][] texCoords = new double[][] {
-			{0.0, 0.0}, {1.0, 0.0}, {1.0, 0.5}, {0.5, 1.0}, {0.0, 1.0}
-		};
-		
 		for (int i=0; i<vertices.length; i++) {
 			Polygon face = new Polygon(VertexHelper.arrayToVector3(vertices[i]));
-			face.setTexCoords(VertexHelper.arrayToVector2(texCoords));
+			face.setTexCoordsRegular(new Vector2(0.5, 0.5), 0.5, 0);
 			face.addToModel(model);
 		}
 		

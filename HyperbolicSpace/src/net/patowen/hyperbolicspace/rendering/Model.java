@@ -96,6 +96,12 @@ public class Model
 		elements.add(v3);
 	}
 	
+	public void addQuad(int v1, int v2, int v3, int v4)
+	{
+		addTriangle(v1, v2, v3);
+		addTriangle(v1, v3, v4);
+	}
+	
 	public void render(GL3 gl)
 	{
 		gl.glBindVertexArray(vertexArrayBufferPos);

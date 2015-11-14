@@ -46,4 +46,16 @@ public class MathHelper
 	{
 		return x*x;
 	}
+	
+	/**
+	 * Returns a number congruent to x (mod n) in the range [lower, lower+n)
+	 * @param x
+	 * @param n
+	 * @param lower
+	 * @return x + a*n in the specified range for some a
+	 */
+	public static int modBound(int x, int n, int lower)
+	{
+		return Math.floorMod(x-lower, n)+lower;
+	}
 }

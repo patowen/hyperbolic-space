@@ -1,4 +1,4 @@
-package net.patowen.hyperbolicspace.rendering;
+package net.patowen.hyperbolicspace.modelhelper;
 
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;

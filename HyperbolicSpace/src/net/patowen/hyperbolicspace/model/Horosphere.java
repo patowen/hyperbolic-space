@@ -58,7 +58,6 @@ public class Horosphere implements SceneNodeType
 						Vector3 vertex = new Vector3();
 						vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(1,0,0), ((double)ii/numSteps-0.5)*size);
 						vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(0,1,0), ((double)jj/numSteps-0.5)*size);
-//						vertex = vertex.hyperTranslate(new Vector3(0.02*ii, 0.02*jj, 0));
 						v.add(new Vertex(vertex, new Vector3(), new Vector2((double)i/textureStepsPerWrap, (double)j/textureStepsPerWrap)));
 					}
 				}
