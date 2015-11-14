@@ -1,9 +1,7 @@
 package net.patowen.hyperbolicspace.model;
 
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
@@ -11,9 +9,10 @@ import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.modelhelper.Polygon;
+import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
-import net.patowen.hyperbolicspace.rendering.Vertex;
 
 /**
  * Represents a hyperbolic plane aligned to the x and y vectors at the origin. The mesh
@@ -36,36 +35,24 @@ public class Plane implements SceneNodeType
 	public Plane(Controller c)
 	{
 		this.c = c;
-		ArrayList<Vertex> v = new ArrayList<Vertex>();
+		Model model = new Model();
 		
 		ArrayList<TessellatorVertex> tVert = new ArrayList<TessellatorVertex>();
 		ArrayList<TessellatorFace> tFace = new ArrayList<TessellatorFace>();
 		tessellate(tVert, tFace);
 		for (TessellatorFace f : tFace)
 		{
-			v.add(new Vertex(new Vector3(f.vertices[0].getPosition()), new Vector3(), new Vector2(0, 0)));
-			v.add(new Vertex(new Vector3(f.vertices[1].getPosition()), new Vector3(), new Vector2(1, 0)));
-			v.add(new Vertex(new Vector3(f.vertices[2].getPosition()), new Vector3(), new Vector2(1, 0.5)));
-			v.add(new Vertex(new Vector3(f.vertices[3].getPosition()), new Vector3(), new Vector2(0.5, 1)));
-			v.add(new Vertex(new Vector3(f.vertices[4].getPosition()), new Vector3(), new Vector2(0, 1)));
+			Polygon cell = new Polygon(5);
+			for (int i=0; i<5; i++)
+			{
+				cell.setPosition(i, f.vertices[i].getPosition());
+			}
+			cell.setTexCoordsRegular(new Vector2(0.5, 0.5), 0.5, 0);
+			cell.addToModel(model);
 		}
 		
 		sceneNode = new SceneNodeImpl(this.c);
-		sceneNode.setVertices(v);
-		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(3*3*tFace.size());
-		for (int i=0; i<tFace.size(); i++)
-		{
-			elementBuffer.put(new int[]
-			{
-				i*5+0, i*5+1, i*5+2,
-				i*5+0, i*5+2, i*5+3,
-				i*5+0, i*5+3, i*5+4,
-			});
-		}
-		elementBuffer.rewind();
-		
-		sceneNode.setElementBuffer(elementBuffer);
-		sceneNode.prepare();
+		sceneNode.setModel(model);
 	}
 	
 	/**

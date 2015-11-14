@@ -12,14 +12,25 @@ public class Polygon
 	private Vector2[] texCoords;
 	private final int numVertices;
 	
+	public Polygon(int numVertices)
+	{
+		this.numVertices = numVertices;
+		positions = new Vector3[numVertices];
+		normals = new Vector3[numVertices];
+		texCoords = new Vector2[numVertices];
+	}
+	
 	public Polygon(Vector3[] positions)
 	{
 		this.positions = positions;
 		numVertices = positions.length;
 		normals = new Vector3[numVertices];
 		texCoords = new Vector2[numVertices];
-		
-		setNormals();
+	}
+	
+	public void setPosition(int i, Vector3 pos)
+	{
+		positions[i] = pos;
 	}
 	
 	public void setTexCoordsRegular(Vector2 center, double radius, double initialRatio)
@@ -59,6 +70,7 @@ public class Polygon
 	
 	public void addToModel(Model model)
 	{
+		setNormals();
 		int[] indices = new int[numVertices];
 		for (int i=0; i<numVertices; i++)
 		{
