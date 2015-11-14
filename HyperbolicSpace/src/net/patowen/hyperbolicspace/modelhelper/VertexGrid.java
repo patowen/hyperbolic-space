@@ -56,9 +56,9 @@ public class VertexGrid
 		int start0 = MathHelper.modBound(t.offset0, t.size0, -t.size0+1);
 		int start1 = MathHelper.modBound(t.offset1, t.size1, -t.size1+1);
 		
-		for (int i0=start0; i0<size0; i0++)
+		for (int i0=start0; i0<size0; i0+=t.size0)
 		{
-			for (int i1=start1; i1<size1; i1++)
+			for (int i1=start1; i1<size1; i1+=t.size1)
 			{
 				int[][] vertices = new int[t.size0+1][t.size1+1];
 				for (int j0=Math.max(i0, 0); j0<=Math.min(i0+t.size0, size0); j0++)
