@@ -16,6 +16,7 @@ import net.patowen.hyperbolicspace.model.Building;
 import net.patowen.hyperbolicspace.model.Dodecahedron;
 import net.patowen.hyperbolicspace.model.Horosphere;
 import net.patowen.hyperbolicspace.model.Plane;
+import net.patowen.hyperbolicspace.model.Sphere;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
 import net.patowen.hyperbolicspace.rendering.ShaderHandler;
 import net.patowen.hyperbolicspace.rendering.ShaderUniformHandler;
@@ -36,7 +37,7 @@ public class Controller
 	private TextureBank textureBank;
 	
 	/** A renderable scene node */
-	public SceneNodeType dodecahedron, building, horosphere, plane;
+	public SceneNodeType dodecahedron, building, horosphere, plane, sphere;
 	
 	/**
 	 * Constructs all meshes
@@ -47,6 +48,7 @@ public class Controller
 		building = new Building(this);
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
+		sphere = new Sphere(this);
 	}
 	
 	/**
@@ -62,6 +64,7 @@ public class Controller
 		building.renderInit(gl);
 		horosphere.renderInit(gl);
 		plane.renderInit(gl);
+		sphere.renderInit(gl);
 	}
 	
 	/**

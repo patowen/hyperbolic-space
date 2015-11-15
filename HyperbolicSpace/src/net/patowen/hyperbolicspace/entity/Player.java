@@ -39,6 +39,8 @@ public class Player
 	private double verticalDir;
 	private double tilt;
 	
+	private SceneNode indicator;
+	
 	/**
 	 * Initializes the {@code Player} and puts it in the specified {@code World}
 	 * @param c
@@ -48,6 +50,9 @@ public class Player
 	{
 		this.c = c;
 		this.w = w;
+		
+		indicator = new SceneNode(c.sphere);
+		w.addNode(indicator);
 		
 		radius = 0.2;
 		pos = new Transformation(new Orientation(), new Vector3(0, 0, radius));
@@ -145,6 +150,11 @@ public class Player
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_4))
 		{
 			spawnNode(new SceneNode(c.plane), new Transformation(
+					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
+		}
+		if (inputHandler.getKeyPressed(InputHandler.SPAWN_5))
+		{
+			spawnNode(new SceneNode(c.sphere), new Transformation(
 					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
 		}
 	}
@@ -297,6 +307,7 @@ public class Player
 			System.out.println(o.get());
 			dPos = convertToPosition(vel.times(dt*o.get().distance));
 		}
+		indicator.setTransformation(new Transformation(new Orientation(), plane.getProjection(pos.getTranslation())));
 		
 		pos = new Transformation(pos.getRotation(), new Vector3());
 		

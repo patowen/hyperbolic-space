@@ -52,9 +52,8 @@ public class World
 	 */
 	public void reset()
 	{
-		player = new Player(c, this);
-		
 		nodes.clear();
+		player = new Player(c, this);
 		nodes.add(new SceneNode(c.plane));
 		SceneNode plane2 = new SceneNode(c.plane);
 		plane2.setTransformation(new Transformation(
