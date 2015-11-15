@@ -290,7 +290,7 @@ public class Player
 		Vector3 velPos = convertToPosition(vel.times(0.01));
 		Vector3 dPos = convertToPosition(vel.times(dt));
 		
-		Plane plane = new Plane();
+		Plane plane = new Plane(new Vector3(), new Vector3(0, 5.0/13, 12.0/13));
 		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius)*2);
 		if (o.isPresent())
 		{

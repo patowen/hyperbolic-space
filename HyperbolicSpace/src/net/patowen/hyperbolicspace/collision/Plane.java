@@ -15,6 +15,12 @@ public class Plane implements Wall
 		norm = new Vector3(0, 0, 1);
 	}
 	
+	public Plane(Vector3 pos, Vector3 norm)
+	{
+		this.pos = pos;
+		this.norm = norm;
+	}
+	
 	public Optional<Collision> getSphereCollision(Vector3 start, Vector3 direction, double distance, double radius)
 	{
 		double goalInv = distanceToIsometricInvariant(radius);
@@ -33,14 +39,21 @@ public class Plane implements Wall
 		return Optional.empty();
 	}
 	
-	// Returns the inverse of the squared circumradius of the three points at infinity of the plane
-	// on the poincare disk model after being transformed so that pos is moved to the center.
+	// Returns the hyperbolic sine of the distance from the plane to the specified point.
 	public double getIsometricInvariant(Vector3 point)
 	{
 		Vector3 pointT = point.hyperTranslate(pos), normT = pos.hyperDirectionTo(norm);
 		double dot = pointT.dot(normT);
 		double sinhC = 2*dot/(1-pointT.squared());
 		return sinhC;
+	}
+	
+	public Vector3 getProjection(Vector3 point)
+	{
+		Vector3 pointT = point.hyperTranslate(pos), normT = pos.hyperDirectionTo(norm);
+		Vector3 euclidProj = pointT.minus(normT.times(normT.dot(pointT)));
+		Vector3 tanhB = euclidProj.times(2.0/(1.0+point.squared()));
+		return tanhB.times(1.0/(1+Math.sqrt(1-tanhB.squared())));
 	}
 	
 	private double distanceToIsometricInvariant(double dist)

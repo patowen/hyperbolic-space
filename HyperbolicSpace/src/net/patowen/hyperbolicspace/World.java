@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.entity.Player;
+import net.patowen.hyperbolicspace.math.Orientation;
+import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 
 /**
@@ -29,10 +32,8 @@ public class World
 	{
 		this.c = c;
 		
-		player = new Player(c, this);
-		
 		nodes = new ArrayList<SceneNode>();
-		nodes.add(new SceneNode(c.plane));
+		reset();
 	}
 	
 	/**
@@ -55,6 +56,11 @@ public class World
 		
 		nodes.clear();
 		nodes.add(new SceneNode(c.plane));
+		SceneNode plane2 = new SceneNode(c.plane);
+		plane2.setTransformation(new Transformation(
+				new Orientation(new Vector3(1, 0, 0), new Vector3(0, 12.0/13, -5.0/13), new Vector3(0, 5.0/13, 12.0/13)),
+				new Vector3()));
+		nodes.add(plane2);
 	}
 	
 	/**
