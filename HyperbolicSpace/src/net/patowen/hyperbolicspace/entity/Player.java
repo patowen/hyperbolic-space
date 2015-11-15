@@ -2,6 +2,8 @@ package net.patowen.hyperbolicspace.entity;
 
 import java.util.Optional;
 
+import com.jogamp.opengl.math.FloatUtil;
+
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.InputHandler;
 import net.patowen.hyperbolicspace.World;
@@ -12,8 +14,6 @@ import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
-
-import com.jogamp.opengl.math.FloatUtil;
 
 /**
  * A controllable camera used to navigate hyperbolic space with some control over the world
@@ -290,13 +290,13 @@ public class Player
 		Vector3 velPos = convertToPosition(vel.times(0.01));
 		Vector3 dPos = convertToPosition(vel.times(dt));
 		
-//		Plane plane = new Plane();
-//		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius));
-//		if (o.isPresent())
-//		{
-//			System.out.println(o.get());
-//			dPos = convertToPosition(vel.times(dt*o.get().distance));
-//		}
+		Plane plane = new Plane();
+		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius)*2);
+		if (o.isPresent())
+		{
+			System.out.println(o.get());
+			dPos = convertToPosition(vel.times(dt*o.get().distance));
+		}
 		
 		pos = new Transformation(pos.getRotation(), new Vector3());
 		
