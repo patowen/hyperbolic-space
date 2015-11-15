@@ -7,6 +7,11 @@ import net.patowen.hyperbolicspace.rendering.Vertex;
 
 public class Polygon
 {
+	boolean fanAtCenter;
+	private Vector3 centerPosition;
+	private Vector3 centerNormal;
+	private Vector2 centerTexCoord;
+	
 	private Vector3[] positions;
 	private Vector3[] normals;
 	private Vector2[] texCoords;
@@ -18,6 +23,7 @@ public class Polygon
 		positions = new Vector3[numVertices];
 		normals = new Vector3[numVertices];
 		texCoords = new Vector2[numVertices];
+		fanAtCenter = false;
 	}
 	
 	public Polygon(Vector3[] positions)
@@ -26,6 +32,7 @@ public class Polygon
 		numVertices = positions.length;
 		normals = new Vector3[numVertices];
 		texCoords = new Vector2[numVertices];
+		fanAtCenter = false;
 	}
 	
 	public void setPosition(int i, Vector3 pos)
@@ -33,18 +40,30 @@ public class Polygon
 		positions[i] = pos;
 	}
 	
-	public void setTexCoordsRegular(Vector2 center, double radius, double initialRatio)
+	public void setCenterPosition(Vector3 pos)
+	{
+		fanAtCenter = true;
+		centerPosition = pos;
+	}
+	
+	public void setTexCoordsRegular(Vector2 center, double xRadius, double yRadius, double initialRatio)
 	{
 		for (int i=0; i<numVertices; i++)
 		{
 			double angle = (initialRatio + (double)i/numVertices) * Math.PI * 2;
-			texCoords[i] = center.plusMultiple(new Vector2(Math.cos(angle), Math.sin(angle)), radius);
+			texCoords[i] = new Vector2(xRadius*Math.cos(angle), yRadius*Math.sin(angle)).plus(center);
 		}
+		centerTexCoord = center;
 	}
 	
 	public void setTexCoords(Vector2[] texCoords)
 	{
 		this.texCoords = texCoords;
+	}
+	
+	public void setCenterTexCoord(Vector2 texCoord)
+	{
+		this.centerTexCoord = texCoord;
 	}
 	
 	public void setNormals()
@@ -66,6 +85,19 @@ public class Polygon
 			normal.normalize();
 			normals[i] = normal;
 		}
+		
+		if (fanAtCenter)
+		{
+			Vector3 vector1 = positions[0].hyperTranslate(centerPosition.times(-1));
+			Vector3 vector2 = positions[1].hyperTranslate(centerPosition.times(-1));
+			
+			Vector3 normal = vector1.cross(vector2);
+			normal.normalize();
+			
+			normal = centerPosition.times(-1).hyperDirectionTo(normal);
+			normal.normalize();
+			centerNormal = normal;
+		}
 	}
 	
 	public void addToModel(Model model)
@@ -77,9 +109,20 @@ public class Polygon
 			indices[i] = model.addVertex(new Vertex(positions[i], normals[i], texCoords[i]));
 		}
 		
-		for (int i=2; i<numVertices; i++)
+		if (fanAtCenter)
 		{
-			model.addTriangle(indices[0], indices[i-1], indices[i]);
+			int centerIndex = model.addVertex(new Vertex(centerPosition, centerNormal, centerTexCoord));
+			for (int i=0; i<numVertices; i++)
+			{
+				model.addTriangle(centerIndex, indices[i], indices[(i+1)%numVertices]);
+			}
+		}
+		else
+		{
+			for (int i=2; i<numVertices; i++)
+			{
+				model.addTriangle(indices[0], indices[i-1], indices[i]);
+			}
 		}
 	}
 }

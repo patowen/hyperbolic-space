@@ -47,7 +47,7 @@ public class Plane implements SceneNodeType
 			{
 				cell.setPosition(i, f.vertices[i].getPosition());
 			}
-			cell.setTexCoordsRegular(new Vector2(0.5, 0.5), 0.5, 0);
+			cell.setTexCoordsRegular(new Vector2(0.5, 0.5), 0.5, 0.5, 0);
 			cell.addToModel(model);
 		}
 		

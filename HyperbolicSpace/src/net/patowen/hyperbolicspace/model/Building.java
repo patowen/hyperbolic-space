@@ -1,18 +1,16 @@
 package net.patowen.hyperbolicspace.model;
 
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.modelhelper.Polygon;
+import net.patowen.hyperbolicspace.modelhelper.VertexGrid;
+import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
-import net.patowen.hyperbolicspace.rendering.Vertex;
 
 /**
  * Represents a tall structure with a pentagonal base. Ideally, this structure can be tessellated
@@ -39,7 +37,7 @@ public class Building implements SceneNodeType
 	public Building(Controller c)
 	{
 		this.c = c;
-		ArrayList<Vertex> v = new ArrayList<Vertex>();
+		Model model = new Model();
 		
 		double dx = Math.tanh(baseRadius);
 		double dz = Math.tanh(totalHeight/heightStepsPerWrap/numWraps);
@@ -53,85 +51,57 @@ public class Building implements SceneNodeType
 		}
 		
 		//Base
-		int indexBase = v.size();
-		v.add(new Vertex(center, new Vector3(), new Vector2(0.75, 0.25)));
-		for (int j=0; j<baseSides; j++) {
-			double theta = j*Math.PI*2/baseSides;
-			v.add(new Vertex(corners[j], new Vector3(), new Vector2(0.75+0.25*Math.cos(theta), 0.25+0.25*Math.sin(theta))));
+		Polygon base = new Polygon(baseSides);
+		base.setCenterPosition(center);
+		for (int j=0; j<baseSides; j++)
+		{
+			base.setPosition(j, corners[baseSides-j-1]);
 		}
+		base.setTexCoordsRegular(new Vector2(0.75, 0.25), 0.25, 0.25, 0);
+		base.addToModel(model);
 		
 		//Sides
-		int[] indexSides = new int[numWraps];
-		for (int wrap=0; wrap<numWraps; wrap++)
+		VertexGrid[] grids = new VertexGrid[baseSides];
+		int numSteps = numWraps*heightStepsPerWrap;
+		for (int j=0; j<baseSides; j++)
 		{
-			indexSides[wrap] = v.size();
-			for (int i=0; ; i++)
+			grids[j] = new VertexGrid(1, numSteps);
+			grids[j].setTexCoords(0, 0, 0.5, 1, 1, heightStepsPerWrap, 0, 0);
+		}
+		for (int i=0; i<=numSteps; i++)
+		{
+			for (int j=0; j<baseSides; j++)
 			{
-				for (int j=0; j<baseSides; j++)
-				{
-					int j1 = j+1; if (j1 == baseSides) j1 = 0;
-					v.add(new Vertex(corners[j], new Vector3(), new Vector2(0, (double)i/heightStepsPerWrap)));
-					v.add(new Vertex(corners[j1], new Vector3(), new Vector2(0.5, (double)i/heightStepsPerWrap)));
-				}
-				
-				if (i == heightStepsPerWrap) break;
-				
+				int j1 = j+1; if (j1 == baseSides) j1 = 0;
+				grids[j].setPosition(0, i, corners[j]);
+				grids[j].setPosition(1, i, corners[j1]);
+				grids[j].setNormal(0, i, new Vector3());
+				grids[j].setNormal(1, i, new Vector3());
+			}
+			
+			if (i != numSteps)
+			{
 				for (int j=0; j<baseSides; j++)
 					corners[j] = corners[j].hyperTranslate(new Vector3(0, 0, dz));
 				center = center.hyperTranslate(new Vector3(0, 0, dz));
 			}
 		}
+		for (int j=0; j<baseSides; j++)
+		{
+			grids[j].addToModel(model);
+		}
 		
 		//Top
-		int indexTop = v.size();
-		v.add(new Vertex(center, new Vector3(), new Vector2(0.75, 0.75)));
+		Polygon top = new Polygon(baseSides);
+		top.setCenterPosition(center);
 		for (int j=0; j<baseSides; j++) {
-			double theta = j*Math.PI*2/baseSides;
-			v.add(new Vertex(corners[j], new Vector3(), new Vector2(0.75+0.25*Math.cos(theta), 0.75+0.25*Math.sin(theta))));
+			top.setPosition(j, corners[j]);
 		}
+		top.setTexCoordsRegular(new Vector2(0.75, 0.75), 0.25, 0.25, 0);
+		top.addToModel(model);
 		
 		sceneNode = new SceneNodeImpl(this.c);
-		sceneNode.setVertices(v);
-		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(baseSides*((6+6*heightStepsPerWrap)*numWraps));
-		
-		//Base
-		for (int i=0; i<baseSides; i++)
-		{
-			int i1 = i+1;
-			if (i1 == baseSides) i1 = 0;
-			elementBuffer.put(indexBase); elementBuffer.put(indexBase+1+i1); elementBuffer.put(indexBase+1+i);
-		}
-		
-		//Sides
-		for (int wrap=0; wrap<numWraps; wrap++)
-		{
-			for (int i=0; i<heightStepsPerWrap; i++)
-			{
-				for (int j=0; j<baseSides; j++)
-				{
-					elementBuffer.put(indexSides[wrap]+i*2*baseSides+2*j);
-					elementBuffer.put(indexSides[wrap]+i*2*baseSides+2*j+1);
-					elementBuffer.put(indexSides[wrap]+(i+1)*2*baseSides+2*j+1);
-					
-					elementBuffer.put(indexSides[wrap]+i*2*baseSides+2*j);
-					elementBuffer.put(indexSides[wrap]+(i+1)*2*baseSides+2*j+1);
-					elementBuffer.put(indexSides[wrap]+(i+1)*2*baseSides+2*j);
-				}
-			}
-		}
-		
-		//Top
-		for (int i=0; i<baseSides; i++)
-		{
-			int i1 = i+1;
-			if (i1 == baseSides) i1 = 0;
-			elementBuffer.put(indexTop); elementBuffer.put(indexTop+1+i); elementBuffer.put(indexTop+1+i1);
-		}
-		
-		elementBuffer.rewind();
-		
-		sceneNode.setElementBuffer(elementBuffer);
-		sceneNode.prepare();
+		sceneNode.setModel(model);
 	}
 	
 	public void renderInit(GL3 gl)

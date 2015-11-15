@@ -53,7 +53,7 @@ public class Dodecahedron implements SceneNodeType
 		
 		for (int i=0; i<vertices.length; i++) {
 			Polygon face = new Polygon(VertexHelper.arrayToVector3(vertices[i]));
-			face.setTexCoordsRegular(new Vector2(0.5, 0.5), 0.5, 0);
+			face.setTexCoordsRegular(new Vector2(0.5, 0.5), 0.5, 0.5, 0);
 			face.addToModel(model);
 		}
 		
