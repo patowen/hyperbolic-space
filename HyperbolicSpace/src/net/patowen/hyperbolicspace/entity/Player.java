@@ -9,6 +9,7 @@ import net.patowen.hyperbolicspace.InputHandler;
 import net.patowen.hyperbolicspace.World;
 import net.patowen.hyperbolicspace.collision.Collision;
 import net.patowen.hyperbolicspace.collision.Plane;
+import net.patowen.hyperbolicspace.collision.SphereCollider;
 import net.patowen.hyperbolicspace.math.MathHelper;
 import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transformation;
@@ -34,10 +35,6 @@ public class Player
 	
 	//Non-noclip values
 	private double radius;
-	private boolean grounded;
-	private Orientation horizontalDir;
-	private double verticalDir;
-	private double tilt;
 	
 	private SceneNode indicator;
 	
@@ -58,11 +55,7 @@ public class Player
 		pos = new Transformation(new Orientation(), new Vector3(0, 0, radius));
 		vel = new Vector3();
 		
-		noclip = false;
-		grounded = true;
-		horizontalDir = new Orientation();
-		verticalDir = -0.3;
-		tilt = 0;
+		noclip = true;
 		
 		handleOrientation();
 	}
@@ -95,33 +88,10 @@ public class Player
 			if (noclip)
 			{
 				noclip = false;
-				
-				//Fix options that were left unchanged during noclip
-				Orientation o = pos.getRotation();
-				
-				Vector3 planePoint = getPlanePoint(pos.getTranslation());
-				Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
-				
-				//Change size if necessary
-				if (offset.z < radius) radius = Math.max(0.01, offset.z);
-				
-				o = o.hyperTranslate(offset.times(-1), planePoint);
-				
-				double dir = Math.atan2(-o.z.y, -o.z.x);
-				horizontalDir = new Orientation();
-				horizontalDir.rotate(new Vector3(0, 0, 1), dir);
-				o = horizontalDir.inverse().transform(o);
-				
-				verticalDir = Math.atan2(-o.z.z, -o.z.x);
-				o.rotate(new Vector3(0, -1, 0), -verticalDir);
-				
-				tilt = -Math.atan2(o.y.y, o.y.z);
-				o.rotate(new Vector3(1, 0, 0), tilt);
 			}
 			else
 			{
 				noclip = true;
-				grounded = false;
 			}
 		}
 	}
@@ -166,15 +136,7 @@ public class Player
 	 */
 	private void spawnNode(SceneNode sceneNode, Transformation t)
 	{
-		if (noclip)
-			sceneNode.setTransformation(pos.composeBefore(t));
-		else
-		{
-			Vector3 groundPos = getPlanePoint(pos.getTranslation());
-			Orientation groundDir = new Orientation(new Vector3(0, -1, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0));
-			groundDir = horizontalDir.transform(groundDir);
-			sceneNode.setTransformation((new Transformation(groundDir, groundPos)).composeBefore(t));
-		}
+		sceneNode.setTransformation(pos.composeBefore(t));
 		w.addNode(sceneNode);
 	}
 	
@@ -189,13 +151,13 @@ public class Player
 		
 		if (inputHandler.getKey(InputHandler.SLOW))
 		{
-			maxChange = 0.2*dt;
-			maxVel = 0.1;
+			maxChange = 0.4*dt;
+			maxVel = 0.2;
 		}
 		else
 		{
-			maxChange = 2*dt;
-			maxVel = 1;
+			maxChange = 4*dt;
+			maxVel = 2;
 		}
 		double dx=0, dy=0, dz=0;
 		if (inputHandler.getMouseButton(InputHandler.FORWARDS))
@@ -216,58 +178,10 @@ public class Player
 			Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
 			approachVelocity(goalVel, maxChange);
 		}
-		else if (grounded)
-		{
-			Orientation o = new Orientation();
-			o = horizontalDir.transform(o);
-			Vector3 planePoint = getPlanePoint(pos.getTranslation());
-			Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
-			o = o.hyperTranslate(offset, planePoint);
-			
-			Vector3 goalVel = o.transform(new Vector3(maxVel*dy, -maxVel*dx, 0));
-			approachVelocity(goalVel, maxChange);
-			
-			if (inputHandler.getKeyPressed(InputHandler.JUMP))
-			{
-				vel = vel.plusMultiple(o.z, 0.5);
-				grounded = false;
-			}
-		}
 		else
 		{
-			vel = vel.plusMultiple(getGravity(), dt); //Gravity
 			vel = vel.times(Math.exp(-0.2*dt)); //Air friction
 		}
-	}
-	
-	private Vector3 getGravity()
-	{
-		Vector3 goal = getPlaneDirection(pos.getTranslation());
-		return goal.hyperTranslate(pos.getTranslation().times(-1)).times(1); //1 is the gravitational acceleration
-	}
-	
-	private void snapToPlane()
-	{
-		Vector3 start = pos.getTranslation();
-		Vector3 goal = (new Vector3(0, 0, radius)).hyperTranslate(getPlanePoint(start)).hyperTranslate(start.times(-1));
-		
-		pos = pos.composeAfter(new Transformation(new Orientation(), start.times(-1)));
-		pos = pos.composeAfter(new Transformation(new Orientation(), goal));
-		pos = pos.composeAfter(new Transformation(new Orientation(), start));
-	}
-	
-	private Vector3 getPlanePoint(Vector3 p)
-	{
-		Vector3 klein = p.times(2/(1+p.squared()));
-		Vector3 perpen = new Vector3(klein.x, klein.y, 0);
-		return perpen.times(1.0 / (1 + Math.sqrt(Math.max(0, 1-perpen.squared()))));
-	}
-	
-	private Vector3 getPlaneDirection(Vector3 p)
-	{
-		Vector3 klein = p.times(2/(1+p.squared()));
-		Vector3 perpen = new Vector3(klein.x, klein.y, -Math.sqrt(1-klein.x*klein.x-klein.y*klein.y));
-		return perpen.times(1.0 / (1 + Math.sqrt(Math.max(0, 1-perpen.squared()))));
 	}
 	
 	/**
@@ -296,63 +210,30 @@ public class Player
 	private void handleMovement(double dt)
 	{
 		Vector3 loc = pos.getTranslation();
-		
-		Vector3 velPos = convertToPosition(vel.times(0.01));
-		Vector3 dPos = convertToPosition(vel.times(dt));
+		Vector3 direction = new Vector3(vel);
+		direction.normalize();
+		direction = direction.hyperTranslate(loc);
+		double velMag = vel.magnitude();
 		
 		Plane plane = new Plane(new Vector3(), new Vector3(0, 5.0/13, 12.0/13));
-		Optional<Collision> o = plane.getSphereCollision(loc, vel.times(1/vel.magnitude()), vel.magnitude()*dt, MathHelper.atanh(radius)*2);
-		if (o.isPresent())
-		{
-			System.out.println(o.get());
-			dPos = convertToPosition(vel.times(dt*o.get().distance));
-		}
-		indicator.setTransformation(new Transformation(new Orientation(), plane.getProjection(pos.getTranslation())));
+		SphereCollider collider = new SphereCollider(pos, 2*MathHelper.atanh(radius), direction, velMag, dt);
+		Optional<Collision> o = plane.getSphereCollision(collider);
+		collider.applyCollision(o);
 		
-		pos = new Transformation(pos.getRotation(), new Vector3());
+		pos = collider.pos;
+		velMag = collider.speed;
+		direction = collider.direction;
 		
-		pos = pos.composeAfter(new Transformation(new Orientation(), dPos));
-		velPos = velPos.hyperTranslate(dPos);
-		
-		pos = pos.composeAfter(new Transformation(new Orientation(), loc));
-		velPos = velPos.hyperTranslate(loc).hyperTranslate(pos.getTranslation().times(-1));
-		
-		vel = convertToVelocity(velPos).times(100);
-		
-		if (!noclip)
-		{
-			//Grow or shrink
-			InputHandler inputHandler = c.getInputHandler();
-			if (inputHandler.getKey(InputHandler.GROW))
-				radius = convertToRadius(convertToCircumference(radius)*Math.exp(dt));
-			if (inputHandler.getKey(InputHandler.SHRINK))
-				radius = convertToRadius(convertToCircumference(radius)*Math.exp(-dt));
-			
-			//Move horizontally
-			Vector3 oldPlanePos = getPlanePoint(loc);
-			Vector3 newPlanePos = getPlanePoint(pos.getTranslation());
-			Vector3 dPlanePos = oldPlanePos.hyperTranslate(newPlanePos.times(-1));
-			horizontalDir = horizontalDir.hyperTranslate(oldPlanePos, dPlanePos);
-			
-			Vector3 offset = pos.getTranslation().hyperTranslate(newPlanePos.times(-1));
-			if (offset.z < radius && !grounded)
-			{
-				grounded = true;
-				snapToPlane();
-				
-				//Reset velocity
-				Vector3 perpen = newPlanePos.hyperTranslate(pos.getTranslation().times(-1));
-				vel = vel.plusMultiple(perpen, -perpen.dot(vel)/perpen.squared());
-			}
-			else if (grounded)
-				snapToPlane();
-		}
+		direction = direction.hyperTranslate(pos.getTranslation().times(-1));
+		vel = direction.times(velMag);
 		
 		//Spherical precision frontier
 		double mag = pos.getTranslation().magnitude();
 		double maxMag = 0.9998;
 		if (mag > maxMag)
 			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
+		
+		indicator.setTransformation(new Transformation(new Orientation(), plane.getProjection(pos.getTranslation())));
 	}
 	
 	private double convertToCircumference(double r)
@@ -367,17 +248,7 @@ public class Player
 	
 	private void handleOrientation()
 	{
-		if (!noclip)
-		{
-			Orientation o = new Orientation(new Vector3(0, -1, 0), new Vector3(0, 0, 1), new Vector3(-1, 0, 0));
-			o.rotate(new Vector3(1, 0, 0), tilt);
-			o.rotate(new Vector3(0, -1, 0), verticalDir);
-			o = horizontalDir.transform(o);
-			Vector3 planePoint = getPlanePoint(pos.getTranslation());
-			Vector3 offset = pos.getTranslation().hyperTranslate(planePoint.times(-1));
-			o = o.hyperTranslate(offset, planePoint);
-			pos = new Transformation(o, pos.getTranslation());
-		}
+		// This method should slowly orient the player toward the gravity field.
 	}
 	
 	/**
@@ -390,33 +261,16 @@ public class Player
 		
 		inputHandler.readMouse();
 		
-		if (noclip)
-		{
-			Orientation o = new Orientation();
-			o.rotate(o.y, -inputHandler.getMouseX()*45*Math.atan(zoom));
-			o.rotate(o.x, -inputHandler.getMouseY()*45*Math.atan(zoom));
-			double tilt = 0;
-			if (inputHandler.getKey(InputHandler.TILT_LEFT))
-				tilt -= 1;
-			if (inputHandler.getKey(InputHandler.TILT_RIGHT))
-				tilt += 1;
-			o.rotate(o.z, -tilt*dt);
-			pos = pos.composeBefore(new Transformation(o, new Vector3()));
-		}
-		else
-		{
-			verticalDir += -inputHandler.getMouseY()*45*Math.atan(zoom);
-			if (verticalDir > Math.PI/2) verticalDir = Math.PI/2;
-			if (verticalDir < -Math.PI/2) verticalDir = -Math.PI/2;
-			if (tilt > 0) tilt = Math.max(0, tilt - 0.1);
-			if (tilt < 0) tilt = Math.min(0, tilt + 0.1);
-			Orientation o = new Orientation();
-			
-			o.rotate(new Vector3(0, 0, 1), -inputHandler.getMouseX()*45*Math.atan(zoom));
-			
-			horizontalDir = o.transform(horizontalDir);
-			horizontalDir.normalize();
-		}
+		Orientation o = new Orientation();
+		o.rotate(o.y, -inputHandler.getMouseX()*45*Math.atan(zoom));
+		o.rotate(o.x, -inputHandler.getMouseY()*45*Math.atan(zoom));
+		double tilt = 0;
+		if (inputHandler.getKey(InputHandler.TILT_LEFT))
+			tilt -= 1;
+		if (inputHandler.getKey(InputHandler.TILT_RIGHT))
+			tilt += 1;
+		o.rotate(o.z, -tilt*dt);
+		pos = pos.composeBefore(new Transformation(o, new Vector3()));
 	}
 	
 	/**

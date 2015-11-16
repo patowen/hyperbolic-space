@@ -62,7 +62,6 @@ public class Renderer
 				c.renderInit(gl);
 				gl.glClearColor(0, 0, 0, 1);
 				gl.glEnable(GL3.GL_DEPTH_TEST);
-				gl.glEnable(GL3.GL_CULL_FACE);
 				
 				c.initShaders(gl);
 			}

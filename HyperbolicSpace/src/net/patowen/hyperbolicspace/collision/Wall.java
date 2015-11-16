@@ -6,5 +6,6 @@ import net.patowen.hyperbolicspace.math.Vector3;
 
 public interface Wall
 {
-	public Optional<Collision> getSphereCollision(Vector3 start, Vector3 direction, double distance, double radius);
+	public Optional<Collision> getSphereCollision(SphereCollider collider);
+	public Vector3 getProjection(Vector3 point);
 }

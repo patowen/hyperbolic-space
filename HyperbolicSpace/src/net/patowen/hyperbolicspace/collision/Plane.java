@@ -21,19 +21,20 @@ public class Plane implements Wall
 		this.norm = norm;
 	}
 	
-	public Optional<Collision> getSphereCollision(Vector3 start, Vector3 direction, double distance, double radius)
+	public Optional<Collision> getSphereCollision(SphereCollider collider)
 	{
-		double goalInv = distanceToIsometricInvariant(radius);
+		Vector3 directionAdjusted = collider.pos.getTranslation().hyperDirectionTo(collider.direction);
+		double goalInv = distanceToIsometricInvariant(collider.radius);
 		//TODO actually use fast algorithm
 		int steps = 6400;
 		for (int i=0; i<steps; i++)
 		{
-			double disp = Math.tanh(distance*i/steps);
-			Vector3 pos = direction.times(disp).hyperTranslate(start);
+			double disp = Math.tanh(collider.speed*collider.time*i/steps/2);
+			Vector3 pos = directionAdjusted.times(disp).hyperTranslate(collider.pos.getTranslation());
 			if (getIsometricInvariant(pos) < goalInv)
 			{
 				if (i == 0) return Optional.empty();
-				return Optional.of(new Collision((double)(i-1)/steps));
+				return Optional.of(new Collision((double)(i-1)/steps, this));
 			}
 		}
 		return Optional.empty();

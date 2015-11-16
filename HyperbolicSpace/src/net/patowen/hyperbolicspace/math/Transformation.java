@@ -12,8 +12,8 @@ public class Transformation
 	 * Internally, a transformation is represented as a rotation
 	 * followed by a hyperbolic translation.
 	 */
-	private Orientation rotation;
-	private Vector3 translation;
+	private final Orientation rotation;
+	private final Vector3 translation;
 	
 	/**
 	 * Constructs a {@code Transformation} object representing the identity transformation.
@@ -22,6 +22,24 @@ public class Transformation
 	{
 		rotation = new Orientation();
 		translation = new Vector3();
+	}
+	
+	/**
+	 * Constructs a {@code Transformation} object representing the given rotation
+	 */
+	public Transformation(Orientation rotation)
+	{
+		this.rotation = rotation;
+		translation = new Vector3();
+	}
+	
+	/**
+	 * Constructs a {@code Transformation} object representing the given translation
+	 */
+	public Transformation(Vector3 translation)
+	{
+		rotation = new Orientation();
+		this.translation = translation;
 	}
 	
 	/**
