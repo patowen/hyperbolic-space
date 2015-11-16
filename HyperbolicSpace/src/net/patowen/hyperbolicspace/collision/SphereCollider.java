@@ -22,23 +22,44 @@ public class SphereCollider
 		this.time = time;
 	}
 	
+	private Vector3 getRelativeDirection()
+	{
+		return direction.hyperTranslate(pos.getTranslation().times(-1));
+	}
+	
+	private void adjustPos(Vector3 relativePos)
+	{
+		Vector3 loc = pos.getTranslation();
+		pos = new Transformation(pos.getRotation(), relativePos);
+		pos = pos.composeAfter(new Transformation(loc));
+	}
+	
 	public void applyCollision(Optional<Collision> collisionOption)
 	{
 		Vector3 dPos;
-		Vector3 directionAdjusted = direction.hyperTranslate(pos.getTranslation().times(-1));
+		Vector3 directionAdjusted = getRelativeDirection();
 		if (collisionOption.isPresent())
 		{
 			Collision collision = collisionOption.get();
 			dPos = directionAdjusted.times(Math.tanh(speed*time*collision.distance/2));
-			speed = 0;
+			time *= (1-collision.distance);
+			adjustPos(dPos);
+			
+			Wall wall = collision.wall;
+			Vector3 normal = wall.getProjection(pos.getTranslation()).hyperTranslate(pos.getTranslation().times(-1));
+			normal.normalize();
+			Vector3 vel = directionAdjusted.times(speed);
+			vel = vel.minus(normal.times(normal.dot(vel)));
+			speed = vel.magnitude();
+			vel.normalize();
+			directionAdjusted = vel;
 		}
 		else
 		{
 			dPos = directionAdjusted.times(Math.tanh(speed*time/2));
+			adjustPos(dPos);
+			time = 0;
 		}
-		Vector3 loc = pos.getTranslation();
-		pos = new Transformation(pos.getRotation(), dPos);
-		pos = pos.composeAfter(new Transformation(loc));
-		direction = directionAdjusted.hyperTranslate(dPos).hyperTranslate(loc);
+		direction = directionAdjusted.hyperTranslate(dPos).hyperTranslate(pos.getTranslation());
 	}
 }

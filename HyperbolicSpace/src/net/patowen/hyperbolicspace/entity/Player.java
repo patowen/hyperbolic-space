@@ -49,9 +49,9 @@ public class Player
 		this.w = w;
 		
 		indicator = new SceneNode(c.sphere);
-		w.addNode(indicator);
+//		w.addNode(indicator);
 		
-		radius = 0.2;
+		radius = 0.2*0.1;
 		pos = new Transformation(new Orientation(), new Vector3(0, 0, radius));
 		vel = new Vector3();
 		
@@ -218,6 +218,8 @@ public class Player
 		Plane plane = new Plane(new Vector3(), new Vector3(0, 5.0/13, 12.0/13));
 		SphereCollider collider = new SphereCollider(pos, 2*MathHelper.atanh(radius), direction, velMag, dt);
 		Optional<Collision> o = plane.getSphereCollision(collider);
+		collider.applyCollision(o);
+		o = plane.getSphereCollision(collider);
 		collider.applyCollision(o);
 		
 		pos = collider.pos;
