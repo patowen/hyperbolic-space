@@ -46,7 +46,7 @@ public class Plane implements Wall
 		Vector3 pointT = point.hyperTranslate(pos), normT = pos.hyperDirectionTo(norm);
 		double dot = pointT.dot(normT);
 		double sinhC = 2*dot/(1-pointT.squared());
-		return sinhC;
+		return Math.abs(sinhC);
 	}
 	
 	public Vector3 getProjection(Vector3 point)

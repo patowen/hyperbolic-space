@@ -215,7 +215,7 @@ public class Player
 		direction = direction.hyperTranslate(loc);
 		double velMag = vel.magnitude();
 		
-		Plane plane = new Plane(new Vector3(), new Vector3(0, 5.0/13, 12.0/13));
+		Plane plane = new Plane(new Vector3(), new Vector3(0, 0, -1));
 		SphereCollider collider = new SphereCollider(pos, 2*MathHelper.atanh(radius), direction, velMag, dt);
 		Optional<Collision> o = plane.getSphereCollision(collider);
 		collider.applyCollision(o);
