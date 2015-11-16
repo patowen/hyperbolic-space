@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.entity.Player;
-import net.patowen.hyperbolicspace.math.Orientation;
-import net.patowen.hyperbolicspace.math.Transformation;
-import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 
 /**

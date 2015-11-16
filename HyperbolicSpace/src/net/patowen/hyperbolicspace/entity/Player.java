@@ -51,7 +51,7 @@ public class Player
 		indicator = new SceneNode(c.sphere);
 //		w.addNode(indicator);
 		
-		radius = 0.2*0.1;
+		radius = 0.2;
 		pos = new Transformation(new Orientation(), new Vector3(0, 0, radius));
 		vel = new Vector3();
 		
@@ -216,7 +216,7 @@ public class Player
 		double velMag = vel.magnitude();
 		
 		Plane plane = new Plane(new Vector3(), new Vector3(0, 0, -1));
-		SphereCollider collider = new SphereCollider(pos, 2*MathHelper.atanh(radius), direction, velMag, dt);
+		SphereCollider collider = new SphereCollider(pos, radius, direction, velMag, dt);
 		Optional<Collision> o = plane.getSphereCollision(collider);
 		collider.applyCollision(o);
 		o = plane.getSphereCollision(collider);
@@ -240,7 +240,7 @@ public class Player
 	
 	private double convertToCircumference(double r)
 	{
-		return (Math.sinh(MathHelper.atanh(radius)));
+		return (Math.sinh(MathHelper.atanh(r)));
 	}
 	
 	private double convertToRadius(double a)
