@@ -52,7 +52,7 @@ public class Player
 //		w.addNode(indicator);
 		
 		radius = 0.2;
-		pos = new Transformation(new Orientation(), new Vector3(0, 0, radius));
+		pos = new Transformation(new Orientation(), new Vector3(0, 0, Math.tanh(radius/2)));
 		vel = new Vector3();
 		
 		noclip = true;
@@ -219,8 +219,8 @@ public class Player
 		SphereCollider collider = new SphereCollider(pos, radius, direction, velMag, dt);
 		Optional<Collision> o = plane.getSphereCollision(collider);
 		collider.applyCollision(o);
-		o = plane.getSphereCollision(collider);
-		collider.applyCollision(o);
+//		o = plane.getSphereCollision(collider);
+//		collider.applyCollision(o);
 		
 		pos = collider.pos;
 		velMag = collider.speed;

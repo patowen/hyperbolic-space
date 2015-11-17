@@ -37,29 +37,29 @@ public class SphereCollider
 	public void applyCollision(Optional<Collision> collisionOption)
 	{
 		Vector3 dPos;
-		Vector3 directionAdjusted = getRelativeDirection();
+		Vector3 relativeDirection = getRelativeDirection();
 		if (collisionOption.isPresent())
 		{
 			Collision collision = collisionOption.get();
-			dPos = directionAdjusted.times(Math.tanh(speed*time*collision.distance/2));
-			time *= (1-collision.distance);
+			dPos = relativeDirection.times(Math.tanh(speed*time*collision.distance/2));
 			adjustPos(dPos);
+			time *= (1-collision.distance);
 			
 			Wall wall = collision.wall;
 			Vector3 normal = wall.getProjection(pos.getTranslation()).hyperTranslate(pos.getTranslation().times(-1));
 			normal.normalize();
-			Vector3 vel = directionAdjusted.times(speed);
+			Vector3 vel = relativeDirection.times(speed);
 			vel = vel.minus(normal.times(normal.dot(vel)));
 			speed = vel.magnitude();
 			vel.normalize();
-			directionAdjusted = vel;
+			relativeDirection = vel;
 		}
 		else
 		{
-			dPos = directionAdjusted.times(Math.tanh(speed*time/2));
+			dPos = relativeDirection.times(Math.tanh(speed*time/2));
 			adjustPos(dPos);
 			time = 0;
 		}
-		direction = directionAdjusted.hyperTranslate(dPos).hyperTranslate(pos.getTranslation());
+		direction = relativeDirection.hyperTranslate(dPos).hyperTranslate(pos.getTranslation());
 	}
 }

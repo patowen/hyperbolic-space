@@ -23,21 +23,56 @@ public class Plane implements Wall
 	
 	public Optional<Collision> getSphereCollision(SphereCollider collider)
 	{
-		Vector3 directionAdjusted = collider.pos.getTranslation().hyperDirectionTo(collider.direction);
+		double dist = getIsometricInvariant(collider.pos.getTranslation());
 		double goalInv = distanceToIsometricInvariant(collider.radius);
-		//TODO actually use fast algorithm
-		int steps = 6400;
-		for (int i=0; i<steps; i++)
+		System.out.print(dist-goalInv + " ");
+		if (dist < goalInv || collider.speed == 0 || collider.time == 0)
+			return Optional.empty();
+		double x1 = 0, x2 = 0.5*(isometricInvariantToDistance(dist)-collider.radius)/collider.speed/collider.time;
+		if (x2 < 0 || x2 > 1)
+			return Optional.empty();
+		System.out.print("#");
+		while (x2-x1 > 1e-8)
 		{
-			double disp = Math.tanh(collider.speed*collider.time*i/steps/2);
-			Vector3 pos = directionAdjusted.times(disp).hyperTranslate(collider.pos.getTranslation());
-			if (getIsometricInvariant(pos) < goalInv)
+			double y1 = getIsometricInvariant(collider, x1)-goalInv;
+			double y2 = getIsometricInvariant(collider, x2)-goalInv;
+			System.out.print(y2 + " ");
+			double x3 = x2-y2*(x2-x1)/(y2-y1);
+			if (x3 < 0 || x3 > 1)
 			{
-				if (i == 0) return Optional.empty();
-				return Optional.of(new Collision((double)(i-1)/steps, this));
+				System.out.println();
+				return Optional.empty();
 			}
+			x1 = x2;
+			x2 = x3;
 		}
-		return Optional.empty();
+		System.out.println();
+		if (getIsometricInvariant(collider, x2) > getIsometricInvariant(collider, x1))
+			return Optional.empty();
+//		System.out.println();
+		return Optional.of(new Collision(x1, this));
+		
+		
+		//TODO actually use fast algorithm
+//		int steps = 6400;
+//		for (int i=0; i<steps; i++)
+//		{
+//			if (getIsometricInvariant(collider, (double)i/steps) < goalInv)
+//			{
+//				if (i == 0) return Optional.empty();
+//				return Optional.of(new Collision((double)(i-1)/steps, this));
+//			}
+//		}
+//		return Optional.empty();
+	}
+	
+	private double getIsometricInvariant(SphereCollider collider, double distanceRatio)
+	{
+		Vector3 relativeDirection = collider.direction.hyperTranslate(collider.pos.getTranslation().times(-1));
+		double disp = Math.tanh(collider.speed*collider.time*distanceRatio/2);
+		Vector3 pos = relativeDirection.times(disp).hyperTranslate(collider.pos.getTranslation());
+		return getIsometricInvariant(pos);
+		
 	}
 	
 	// Returns the hyperbolic sine of the distance from the plane to the specified point.
