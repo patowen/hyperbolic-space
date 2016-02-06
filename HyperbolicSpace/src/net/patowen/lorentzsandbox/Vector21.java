@@ -11,6 +11,18 @@ public class Vector21
 		x = 0; y = 0; w = 1;
 	}
 	
+	public Vector21(double x, double y, double w)
+	{
+		this.x = x;
+		this.y = y;
+		this.w = w;
+	}
+	
+	public Vector21(Vector21 v)
+	{
+		this(v.x, v.y, v.w);
+	}
+	
 	// Must be unit vector; creates vector on cone
 	public static Vector21 makeIdeal(Vector2 v)
 	{
@@ -27,21 +39,9 @@ public class Vector21
 		return new Vector21(v.x*2/dist, v.y*2/dist, 2/dist-1);
 	}
 	
-	public Vector21(Vector21 v)
-	{
-		this(v.x, v.y, v.w);
-	}
-	
 	public void reset()
 	{
-		x = 0; y = 0;
-	}
-	
-	public Vector21(double x, double y, double w)
-	{
-		this.x = x;
-		this.y = y;
-		this.w = w;
+		x = 0; y = 0; w = 1;
 	}
 	
 	// calling this method with zero vector is bad code.
