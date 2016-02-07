@@ -9,10 +9,7 @@ import com.jogamp.opengl.GLUniformData;
 import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
-import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transform;
-import net.patowen.hyperbolicspace.math.Transformation;
-import net.patowen.hyperbolicspace.math.Vector3;
 
 /**
  * {@code MatrixHandler} has two purposes. It holds a Transformation stack for the viewpoint and

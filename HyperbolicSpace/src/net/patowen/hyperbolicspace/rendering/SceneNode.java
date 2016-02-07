@@ -3,7 +3,6 @@ package net.patowen.hyperbolicspace.rendering;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.math.Transform;
-import net.patowen.hyperbolicspace.math.Transformation;
 
 /**
  * Stores the location of a single instance of a {@code SceneNodeType} and renders it.

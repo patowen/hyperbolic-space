@@ -82,10 +82,10 @@ public class Transform {
 		z = z.plusMultiple(y, -z.dot(y)); // Separate z from y
 		w = w.plusMultiple(y, -w.dot(y)); // Separate w from y
 		
-		y = y.times(1.0/Math.sqrt(z.squared())); // Normalize z
+		z = z.times(1.0/Math.sqrt(z.squared())); // Normalize z
 		w = w.plusMultiple(z, -w.dot(z)); // Separate w from z
 		
-		y = y.times(1.0/Math.sqrt(-w.squared())); // Normalize w (with reversed sign)
+		w = w.times(1.0/Math.sqrt(-w.squared())); // Normalize w (with reversed sign)
 		
 		return this;
 	}

@@ -1,19 +1,12 @@
 package net.patowen.hyperbolicspace.entity;
 
-import java.util.Optional;
-
 import com.jogamp.opengl.math.FloatUtil;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.InputHandler;
 import net.patowen.hyperbolicspace.World;
-import net.patowen.hyperbolicspace.collision.Collision;
-import net.patowen.hyperbolicspace.collision.Plane;
-import net.patowen.hyperbolicspace.collision.SphereCollider;
-import net.patowen.hyperbolicspace.math.MathHelper;
 import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transform;
-import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
@@ -38,8 +31,6 @@ public class Player
 	//Non-noclip values
 	private double radius;
 	
-	private SceneNode indicator;
-	
 	/**
 	 * Initializes the {@code Player} and puts it in the specified {@code World}
 	 * @param c
@@ -49,9 +40,6 @@ public class Player
 	{
 		this.c = c;
 		this.w = w;
-		
-		indicator = new SceneNode(c.sphere);
-//		w.addNode(indicator);
 		
 		radius = 0.2;
 		pos = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, Math.tanh(radius/2))));
@@ -216,22 +204,13 @@ public class Player
 	private void handleMovement(double dt)
 	{
 		pos = pos.transform(Transform.translation(convertToPosition(vel, dt)));
+		pos.normalize();
 		
 		//Spherical precision frontier
 //		double mag = pos.getTranslation().magnitude();
 //		double maxMag = 0.9998;
 //		if (mag > maxMag)
 //			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
-	}
-	
-	private double convertToCircumference(double r)
-	{
-		return (Math.sinh(MathHelper.atanh(r)));
-	}
-	
-	private double convertToRadius(double a)
-	{
-		return Math.tanh(MathHelper.asinh(a));
 	}
 	
 	private void handleOrientation()
@@ -310,20 +289,5 @@ public class Player
 			Vector3 v = vel.times(Math.sinh(mag*dt)/mag);
 			return new Vector31(v.x, v.y, v.z, Math.cosh(mag*dt));
 		}
-	}
-	
-	/**
-	 * Converts the position to the velocity an object would need to travel to that position
-	 * in one second.
-	 * @param pos the position to convert
-	 * @return the resulting velocity
-	 */
-	private Vector3 convertToVelocity(Vector3 pos)
-	{
-		double mag = pos.magnitude();
-		if (mag == 0)
-			return new Vector3(pos);
-		else
-			return pos.times(MathHelper.atanh(mag)/mag);
 	}
 }
