@@ -3,7 +3,7 @@ package net.patowen.hyperbolicspace.model;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
-import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
 
@@ -155,9 +155,9 @@ public class Cylinder implements SceneNodeType
 		sceneNode.setTexture(c.getTextureBank().metal);
 	}
 	
-	public void render(GL3 gl, Transformation t)
+	public void render(GL3 gl, Transform t)
 	{
-		sceneNode.setTransformation(t);
+		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}
 }

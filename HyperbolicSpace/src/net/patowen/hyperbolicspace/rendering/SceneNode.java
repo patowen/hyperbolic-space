@@ -2,6 +2,7 @@ package net.patowen.hyperbolicspace.rendering;
 
 import com.jogamp.opengl.GL3;
 
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Transformation;
 
 /**
@@ -11,7 +12,7 @@ import net.patowen.hyperbolicspace.math.Transformation;
 public class SceneNode
 {
 	private SceneNodeType type;
-	private Transformation t;
+	private Transform t;
 	
 	/**
 	 * Initializes the SceneNode. No heavy computation is done in this method
@@ -20,14 +21,14 @@ public class SceneNode
 	public SceneNode(SceneNodeType type)
 	{
 		this.type = type;
-		t = new Transformation();
+		t = Transform.identity();
 	}
 	
 	/**
 	 * Changes the location of the instance of the {@code SceneNodeType}
 	 * @param t the new transformation
 	 */
-	public void setTransformation(Transformation t)
+	public void setTransformation(Transform t)
 	{
 		this.t = t;
 	}

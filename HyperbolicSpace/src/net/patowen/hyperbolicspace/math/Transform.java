@@ -50,6 +50,15 @@ public class Transform {
 			new Vector31(0, 0, 0, 1));
 	}
 	
+	public static Transform fromOrientation(Orientation o)
+	{
+		return new Transform(
+			new Vector31(o.x.x, o.x.y, o.x.z, 0),
+			new Vector31(o.y.x, o.y.y, o.y.z, 0),
+			new Vector31(o.z.x, o.z.y, o.z.z, 0),
+			new Vector31(0, 0, 0, 1));
+	}
+	
 	public Transform inverse()
 	{
 		return new Transform(

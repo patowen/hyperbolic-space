@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 
 /**
  * The {@code Vertex} class represents a vertex in hyperbolic space represented via the
@@ -12,20 +13,9 @@ import net.patowen.hyperbolicspace.math.Vector3;
  */
 public class Vertex
 {
-	private Vector3 pos;
-	private Vector3 norm;
+	private Vector31 pos;
+	private Vector31 norm;
 	private Vector2 texCoord;
-	
-	/**
-	 * Constructs a {@code Vertex} object in the Poincare ball with no defined normal.
-	 * @param x the x-position
-	 * @param y the y-position
-	 * @param z the z-position
-	 */
-//	public Vertex(double x, double y, double z)
-//	{
-//		this(new Vector3(x, y, z), new Vector3());
-//	}
 	
 	/**
 	 * Constructs a {@code Vertex} object with the given coordinates for its position and normal.
@@ -36,19 +26,9 @@ public class Vertex
 	 * @param ny the y-coordinate of the normal vector
 	 * @param nz the z-coordinate of the normal vector
 	 */
-	public Vertex(double x, double y, double z, double nx, double ny, double nz, double tx, double ty)
-	{
-		this(new Vector3(x, y, z), new Vector3(nx, ny, nz), new Vector2(tx, ty));
-	}
-	
-	/**
-	 * Constructs a {@code Vertex} object with the given vector for its position and no defined normal.
-	 * @param pos the position vector
-	 * @param norm the normal vector
-	 */
-//	public Vertex(Vector3 pos)
+//	public Vertex(double x, double y, double z, double nx, double ny, double nz, double tx, double ty)
 //	{
-//		this(pos, new Vector3());
+//		this(new Vector3(x, y, z), new Vector3(nx, ny, nz), new Vector2(tx, ty));
 //	}
 	
 	/**
@@ -58,8 +38,9 @@ public class Vertex
 	 */
 	public Vertex(Vector3 pos, Vector3 norm, Vector2 texCoord)
 	{
-		this.pos = pos;
-		this.norm = norm;
+		int todo;
+		this.pos = Vector31.makePoincare(pos);
+		this.norm = new Vector31(norm.x, norm.y, norm.z, 1);
 		this.texCoord = texCoord;
 	}
 	
@@ -73,10 +54,12 @@ public class Vertex
 		vertexBuffer.put((float)pos.x);
 		vertexBuffer.put((float)pos.y);
 		vertexBuffer.put((float)pos.z);
+		vertexBuffer.put((float)pos.w);
 		
 		normalBuffer.put((float)norm.x);
 		normalBuffer.put((float)norm.y);
 		normalBuffer.put((float)norm.z);
+		normalBuffer.put((float)norm.w);
 		
 		texCoordBuffer.put((float)texCoord.x);
 		texCoordBuffer.put((float)texCoord.y);

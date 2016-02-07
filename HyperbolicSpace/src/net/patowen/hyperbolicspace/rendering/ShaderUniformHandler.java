@@ -10,6 +10,7 @@ import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
 import net.patowen.hyperbolicspace.math.Orientation;
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector3;
 
@@ -23,8 +24,8 @@ public class ShaderUniformHandler
 {
 	private ShaderState shaderState;
 	
-	private Transformation transformation;
-	private Stack<Transformation> transformationStack;
+	private Transform transform;
+	private Stack<Transform> transformStack;
 	
 	private FloatBuffer perspectiveBuf;
 	private float[] perspectiveArray;
@@ -32,8 +33,7 @@ public class ShaderUniformHandler
 	private FloatBuffer colorBuf;
 	private float[] colorArray;
 	
-	private FloatBuffer orientBuf;
-	private FloatBuffer translateBuf;
+	private FloatBuffer transformBuf;
 	
 	/**
 	 * Initializes all values to their defaults
@@ -44,16 +44,15 @@ public class ShaderUniformHandler
 	{
 		this.shaderState = shaderState;
 		
-		transformation = new Transformation();
-		transformationStack = new Stack<Transformation>();
+		transform = Transform.identity();
+		transformStack = new Stack<Transform>();
 		
 		perspectiveArray = new float[16];
 		colorArray = new float[] {1, 1, 1, 1};
 		
 		FloatUtil.makeIdentity(perspectiveArray);
 		
-		orientBuf = Buffers.newDirectFloatBuffer(9);
-		translateBuf = Buffers.newDirectFloatBuffer(3);
+		transformBuf = Buffers.newDirectFloatBuffer(16);
 		perspectiveBuf = Buffers.newDirectFloatBuffer(perspectiveArray);
 		colorBuf = Buffers.newDirectFloatBuffer(colorArray);
 	}
@@ -63,16 +62,16 @@ public class ShaderUniformHandler
 	 */
 	public void reset()
 	{
-		transformation = new Transformation();
+		transform = Transform.identity();
 	}
 	
 	/**
 	 * Adds the specified transformation relative to the current transformation
 	 * @param t The transformation to apply before the current one
 	 */
-	public void addTransformation(Transformation t)
+	public void addTransformation(Transform t)
 	{
-		transformation = transformation.composeBefore(t);
+		transform = transform.transform(t);
 	}
 	
 	/**
@@ -80,7 +79,7 @@ public class ShaderUniformHandler
 	 */
 	public void pushTransformation()
 	{
-		transformationStack.push(transformation);
+		transformStack.push(transform);
 	}
 	
 	/**
@@ -89,7 +88,7 @@ public class ShaderUniformHandler
 	 */
 	public void popTransformation()
 	{
-		transformation = transformationStack.pop();
+		transform = transformStack.pop();
 	}
 	
 	/**
@@ -118,24 +117,19 @@ public class ShaderUniformHandler
 	 */
 	public void update(GL3 gl)
 	{
-		Orientation o = transformation.getRotation();
-		orientBuf.put(new float[] {
-				(float)o.x.x, (float)o.x.y, (float)o.x.z,
-				(float)o.y.x, (float)o.y.y, (float)o.y.z,
-				(float)o.z.x, (float)o.z.y, (float)o.z.z});
-		orientBuf.rewind();
-		
-		Vector3 v = transformation.getTranslation();
-		translateBuf.put(new float[] {(float)v.x, (float)v.y, (float)v.z});
-		translateBuf.rewind();
+		transformBuf.put(new float[] {
+				(float)transform.x.x, (float)transform.x.y, (float)transform.x.z, (float)transform.x.w,
+				(float)transform.y.x, (float)transform.y.y, (float)transform.y.z, (float)transform.y.w,
+				(float)transform.z.x, (float)transform.z.y, (float)transform.z.z, (float)transform.z.w,
+				(float)transform.w.x, (float)transform.w.y, (float)transform.w.z, (float)transform.w.w});
+		transformBuf.rewind();
 		
 		perspectiveBuf.put(perspectiveArray).rewind();
 		
 		colorBuf.put(colorArray).rewind();
 		
-		shaderState.uniform(gl, new GLUniformData("transform", 3, 3, orientBuf));
+		shaderState.uniform(gl, new GLUniformData("transform", 4, 4, transformBuf));
 		shaderState.uniform(gl, new GLUniformData("perspective", 4, 4, perspectiveBuf));
-		shaderState.uniform(gl, new GLUniformData("translate", 3, translateBuf));
 		shaderState.uniform(gl, new GLUniformData("color", 4, colorBuf));
 	}
 }

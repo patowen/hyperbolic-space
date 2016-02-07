@@ -28,8 +28,8 @@ public class Model
 	
 	public void init(GL3 gl)
 	{
-		FloatBuffer vertexBuffer = Buffers.newDirectFloatBuffer(3*vertices.size());
-		FloatBuffer normalBuffer = Buffers.newDirectFloatBuffer(3*vertices.size());
+		FloatBuffer vertexBuffer = Buffers.newDirectFloatBuffer(4*vertices.size());
+		FloatBuffer normalBuffer = Buffers.newDirectFloatBuffer(4*vertices.size());
 		FloatBuffer texCoordBuffer = Buffers.newDirectFloatBuffer(2*vertices.size());
 		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(elements.size());
 		
@@ -65,11 +65,11 @@ public class Model
 		
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vertexBufferPos);
 		gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
+		gl.glVertexAttribPointer(0, 4, GL3.GL_FLOAT, false, 0, 0);
 		
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, normalBufferPos);
 		gl.glBufferData(GL3.GL_ARRAY_BUFFER, normalBuffer.capacity()*4, normalBuffer, GL3.GL_DYNAMIC_DRAW);
-		gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 0, 0);
+		gl.glVertexAttribPointer(1, 4, GL3.GL_FLOAT, false, 0, 0);
 		
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, texCoordBufferPos);
 		gl.glBufferData(GL3.GL_ARRAY_BUFFER, texCoordBuffer.capacity()*4, texCoordBuffer, GL3.GL_DYNAMIC_DRAW);

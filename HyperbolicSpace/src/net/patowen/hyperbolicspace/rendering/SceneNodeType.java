@@ -2,7 +2,7 @@ package net.patowen.hyperbolicspace.rendering;
 
 import com.jogamp.opengl.GL3;
 
-import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Transform;
 
 /**
  * Represents a mesh with a texture that can be drawn at any location
@@ -21,5 +21,5 @@ public interface SceneNodeType
 	 * @param gl
 	 * @param t where the scene node should be relocated before rendering
 	 */
-	public void render(GL3 gl, Transformation t);
+	public void render(GL3 gl, Transform t);
 }

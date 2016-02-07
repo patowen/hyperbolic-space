@@ -10,7 +10,7 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.Texture;
 
 import net.patowen.hyperbolicspace.Controller;
-import net.patowen.hyperbolicspace.math.Transformation;
+import net.patowen.hyperbolicspace.math.Transform;
 
 /**
  * Holds the logic common to all {@code SceneNodeType}s
@@ -20,7 +20,7 @@ public class SceneNodeImpl
 {
 	private Controller c;
 	
-	private Transformation transformation;
+	private Transform transform;
 	
 	private Texture texture;
 	
@@ -50,7 +50,7 @@ public class SceneNodeImpl
 	public SceneNodeImpl(Controller c)
 	{
 		this.c = c;
-		transformation = new Transformation();
+		transform = Transform.identity();
 		color = new float[] {1, 1, 1, 1};
 		model = null;
 	}
@@ -96,9 +96,9 @@ public class SceneNodeImpl
 	 * Changes the location to draw the mesh when {@code render} is called
 	 * @param t the new transformation
 	 */
-	public void setTransformation(Transformation t)
+	public void setTransform(Transform t)
 	{
-		this.transformation = t;
+		this.transform = t;
 	}
 	
 	/**
@@ -189,7 +189,7 @@ public class SceneNodeImpl
 			gl.glBindVertexArray(vertexArrayBufferPos);
 		
 		mh.pushTransformation();
-		mh.addTransformation(transformation);
+		mh.addTransformation(transform);
 		mh.setColor(color);
 		mh.update(gl);
 		texture.bind(gl);

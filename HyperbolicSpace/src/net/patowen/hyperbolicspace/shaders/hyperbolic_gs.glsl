@@ -3,10 +3,10 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-in vec3 apparent_position[];
+in vec4 apparent_position[];
 out vec2 interpolated_position;
-out vec3 f_interpolated_pos;
-out vec3 f_pos[3];
+out vec4 f_interpolated_pos;
+out vec4 f_pos[3];
 
 in vec2 tex_coord[];
 out vec2 f_texcoord[3];

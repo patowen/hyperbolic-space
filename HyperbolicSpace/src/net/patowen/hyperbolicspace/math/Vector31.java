@@ -30,7 +30,7 @@ public class Vector31
 		double dist = 1.0 - v.x*v.x - v.y*v.y - v.z*v.z;
 		if (dist <= 0)
 		{
-			throw new IllegalArgumentException("Magnitude must be less than 1.");
+			throw new IllegalArgumentException("Magnitude must be less than 1: " + Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z));
 		}
 		double factor = 2/dist;
 		return new Vector31(v.x*factor, v.y*factor, v.z*factor, factor-1);

@@ -12,8 +12,10 @@ import net.patowen.hyperbolicspace.collision.Plane;
 import net.patowen.hyperbolicspace.collision.SphereCollider;
 import net.patowen.hyperbolicspace.math.MathHelper;
 import net.patowen.hyperbolicspace.math.Orientation;
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 
 /**
@@ -25,7 +27,7 @@ public class Player
 	private Controller c;
 	private World w;
 	
-	private Transformation pos;
+	private Transform pos;
 	private Vector3 vel;
 	
 	private boolean noclip;
@@ -52,7 +54,7 @@ public class Player
 //		w.addNode(indicator);
 		
 		radius = 0.2;
-		pos = new Transformation(new Orientation(), new Vector3(0, 0, Math.tanh(radius/2)));
+		pos = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, Math.tanh(radius/2))));
 		vel = new Vector3();
 		
 		noclip = true;
@@ -104,29 +106,33 @@ public class Player
 		InputHandler inputHandler = c.getInputHandler();
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_1))
 		{
-			spawnNode(new SceneNode(c.dodecahedron), new Transformation(
-					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.7)));
+			spawnNode(new SceneNode(c.dodecahedron), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.7));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_2))
 		{
-			spawnNode(new SceneNode(c.building), new Transformation(
-					new Orientation(new Vector3(-1,0,0), new Vector3(0,0,1), new Vector3(0,1,0)), new Vector3(0,0.003,-0.4)));
+			spawnNode(new SceneNode(c.building), getRotateAndTranslate(-1,0,0, 0,0,1, 0,1,0, 0,0.003,-0.4));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_3))
 		{
-			spawnNode(new SceneNode(c.horosphere), new Transformation(
-					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
+			spawnNode(new SceneNode(c.horosphere), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_4))
 		{
-			spawnNode(new SceneNode(c.plane), new Transformation(
-					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
+			spawnNode(new SceneNode(c.plane), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_5))
 		{
-			spawnNode(new SceneNode(c.sphere), new Transformation(
-					new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(0,0,-0.4)));
+			spawnNode(new SceneNode(c.sphere), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
 		}
+	}
+	
+	private Transform getRotateAndTranslate(double xx, double xy, double xz, double yx, double yy,double yz,
+			double zx, double zy, double zz, double tx, double ty, double tz)
+	{
+		int todo;
+		Transform t = new Transform(new Vector31(xx, xy, xz, 0), new Vector31(yx, yy, yz, 0),
+				new Vector31(zx, zy, zz, 0), new Vector31(0, 0, 0, 1));
+		return t.transformedBy(Transform.translation(Vector31.makePoincare(new Vector3(tx, ty, tz))));
 	}
 	
 	/**
@@ -134,9 +140,9 @@ public class Player
 	 * @param sceneNode the node to add
 	 * @param t a transformation to apply to the node before applying the player transformation
 	 */
-	private void spawnNode(SceneNode sceneNode, Transformation t)
+	private void spawnNode(SceneNode sceneNode, Transform t)
 	{
-		sceneNode.setTransformation(pos.composeBefore(t));
+		sceneNode.setTransformation(pos.transform(t));
 		w.addNode(sceneNode);
 	}
 	
@@ -175,7 +181,7 @@ public class Player
 		
 		if (noclip)
 		{
-			Vector3 goalVel = pos.getRotation().transform(new Vector3(maxVel*dx, maxVel*dy, maxVel*dz));
+			Vector3 goalVel = new Vector3(maxVel*dx, maxVel*dy, maxVel*dz);
 			approachVelocity(goalVel, maxChange);
 		}
 		else
@@ -209,33 +215,13 @@ public class Player
 	 */
 	private void handleMovement(double dt)
 	{
-		Vector3 loc = pos.getTranslation();
-		Vector3 direction = new Vector3(vel);
-		direction.normalize();
-		direction = direction.hyperTranslate(loc);
-		double velMag = vel.magnitude();
-		
-		Plane plane = new Plane(new Vector3(), new Vector3(0, 0, -1));
-		SphereCollider collider = new SphereCollider(pos, radius, direction, velMag, dt);
-		Optional<Collision> o = plane.getSphereCollision(collider);
-		collider.applyCollision(o);
-//		o = plane.getSphereCollision(collider);
-//		collider.applyCollision(o);
-		
-		pos = collider.pos;
-		velMag = collider.speed;
-		direction = collider.direction;
-		
-		direction = direction.hyperTranslate(pos.getTranslation().times(-1));
-		vel = direction.times(velMag);
+		pos = pos.transform(Transform.translation(convertToPosition(vel, dt)));
 		
 		//Spherical precision frontier
-		double mag = pos.getTranslation().magnitude();
-		double maxMag = 0.9998;
-		if (mag > maxMag)
-			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
-		
-		indicator.setTransformation(new Transformation(new Orientation(), plane.getProjection(pos.getTranslation())));
+//		double mag = pos.getTranslation().magnitude();
+//		double maxMag = 0.9998;
+//		if (mag > maxMag)
+//			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
 	}
 	
 	private double convertToCircumference(double r)
@@ -272,7 +258,8 @@ public class Player
 		if (inputHandler.getKey(InputHandler.TILT_RIGHT))
 			tilt += 1;
 		o.rotate(o.z, -tilt*dt);
-		pos = pos.composeBefore(new Transformation(o, new Vector3()));
+		vel = o.inverse().transform(vel);
+		pos = pos.transform(Transform.fromOrientation(o));
 	}
 	
 	/**
@@ -308,17 +295,21 @@ public class Player
 	
 	/**
 	 * Converts the velocity to the position an object would reach after traveling at that
-	 * velocity for one second.
+	 * velocity for the given amount of time.
 	 * @param vel the velocity to convert
+	 * @param dt the time in seconds
 	 * @return the resulting position
 	 */
-	private Vector3 convertToPosition(Vector3 vel)
+	private Vector31 convertToPosition(Vector3 vel, double dt)
 	{
 		double mag = vel.magnitude();
 		if (mag == 0)
-			return new Vector3(vel);
+			return new Vector31(0, 0, 0, 1);
 		else
-			return vel.times(Math.tanh(mag)/mag);
+		{
+			Vector3 v = vel.times(Math.sinh(mag*dt)/mag);
+			return new Vector31(v.x, v.y, v.z, Math.cosh(mag*dt));
+		}
 	}
 	
 	/**

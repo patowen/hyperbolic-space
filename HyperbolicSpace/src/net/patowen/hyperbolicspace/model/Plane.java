@@ -6,6 +6,7 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Orientation;
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
@@ -327,9 +328,9 @@ public class Plane implements SceneNodeType
 		sceneNode.setColor(new float[] {0.42f, 0.54f, 0.14f, 1});
 	}
 	
-	public void render(GL3 gl, Transformation t)
+	public void render(GL3 gl, Transform t)
 	{
-		sceneNode.setTransformation(t);
+		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}
 }
