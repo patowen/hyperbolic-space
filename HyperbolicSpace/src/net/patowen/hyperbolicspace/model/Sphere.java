@@ -5,6 +5,7 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.modelhelper.VertexGrid;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
@@ -46,8 +47,9 @@ public class Sphere implements SceneNodeType
 						Math.cos(theta)*Math.sin(phi),
 						-Math.sin(theta)*Math.sin(phi),
 						Math.cos(phi));
-				grid.setPosition(slice, stack, unitVector.times(radius));
-				grid.setNormal(slice, stack, unitVector);
+				Vector31 position = Vector31.makePoincare(unitVector.times(radius));
+				grid.setPosition(slice, stack, position);
+				grid.setNormal(slice, stack, (Transform.translation(position)).transform(position));
 			}
 		}
 		grid.setTexCoords(0, 0, 1, 1, textureStepsPerWrap, textureStepsPerWrap, 0, 0);

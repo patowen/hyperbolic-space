@@ -2,7 +2,7 @@ package net.patowen.hyperbolicspace.modelhelper;
 
 import net.patowen.hyperbolicspace.math.MathHelper;
 import net.patowen.hyperbolicspace.math.Vector2;
-import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.Vertex;
 
@@ -14,8 +14,8 @@ public class VertexGrid
 		private int size0, size1, offset0, offset1;
 	}
 	
-	private Vector3[][] positions;
-	private Vector3[][] normals;
+	private Vector31[][] positions;
+	private Vector31[][] normals;
 	private final int size0, size1;
 	
 	private TexCoordInfo texCoordInfo;
@@ -24,16 +24,16 @@ public class VertexGrid
 	{
 		this.size0 = size0;
 		this.size1 = size1;
-		positions = new Vector3[size0+1][size1+1];
-		normals = new Vector3[size0+1][size1+1];
+		positions = new Vector31[size0+1][size1+1];
+		normals = new Vector31[size0+1][size1+1];
 	}
 	
-	public void setPosition(int coord0, int coord1, Vector3 position)
+	public void setPosition(int coord0, int coord1, Vector31 position)
 	{
 		positions[coord0][coord1] = position;
 	}
 	
-	public void setNormal(int coord0, int coord1, Vector3 normal)
+	public void setNormal(int coord0, int coord1, Vector31 normal)
 	{
 		normals[coord0][coord1] = normal;
 	}

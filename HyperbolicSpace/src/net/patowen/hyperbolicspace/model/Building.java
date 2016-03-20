@@ -6,6 +6,7 @@ import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.modelhelper.Polygon;
 import net.patowen.hyperbolicspace.modelhelper.VertexGrid;
 import net.patowen.hyperbolicspace.rendering.Model;
@@ -24,7 +25,7 @@ public class Building implements SceneNodeType
 	private SceneNodeImpl sceneNode;
 	
 	private int baseSides = 5;
-	private double baseRadius = 0.35;
+	private double baseRadius = 1;
 	
 	private double totalHeight = 2;
 	private int heightStepsPerWrap = 6;
@@ -41,13 +42,14 @@ public class Building implements SceneNodeType
 		
 		double dx = Math.tanh(baseRadius);
 		double dz = Math.tanh(totalHeight/heightStepsPerWrap/numWraps);
+		Transform dzTransform = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, dz)));
 		
-		Vector3 center = new Vector3(0, 0, 0);
-		Vector3[] corners = new Vector3[baseSides];
+		Vector31 center = new Vector31(0, 0, 0, 1);
+		Vector31[] corners = new Vector31[baseSides];
 		for (int i=0; i<baseSides; i++)
 		{
 			double theta = i*Math.PI*2/baseSides;
-			corners[i] = new Vector3(dx*Math.cos(theta), dx*Math.sin(theta), 0);
+			corners[i] = new Vector31(dx*Math.cos(theta), dx*Math.sin(theta), 0, dx+1);
 		}
 		
 		//Base
@@ -75,15 +77,15 @@ public class Building implements SceneNodeType
 				int j1 = j+1; if (j1 == baseSides) j1 = 0;
 				grids[j].setPosition(0, i, corners[j]);
 				grids[j].setPosition(1, i, corners[j1]);
-				grids[j].setNormal(0, i, new Vector3());
-				grids[j].setNormal(1, i, new Vector3());
+				grids[j].setNormal(0, i, new Vector31());
+				grids[j].setNormal(1, i, new Vector31());
 			}
 			
 			if (i != numSteps)
 			{
 				for (int j=0; j<baseSides; j++)
-					corners[j] = corners[j].hyperTranslate(new Vector3(0, 0, dz));
-				center = center.hyperTranslate(new Vector3(0, 0, dz));
+					corners[j] = dzTransform.transform(corners[j]);
+				center = dzTransform.transform(center);
 			}
 		}
 		for (int j=0; j<baseSides; j++)

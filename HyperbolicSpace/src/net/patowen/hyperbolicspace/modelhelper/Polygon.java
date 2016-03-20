@@ -1,46 +1,48 @@
 package net.patowen.hyperbolicspace.modelhelper;
 
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.Vertex;
 
 public class Polygon
 {
 	boolean fanAtCenter;
-	private Vector3 centerPosition;
-	private Vector3 centerNormal;
+	private Vector31 centerPosition;
+	private Vector31 centerNormal;
 	private Vector2 centerTexCoord;
 	
-	private Vector3[] positions;
-	private Vector3[] normals;
+	private Vector31[] positions;
+	private Vector31[] normals;
 	private Vector2[] texCoords;
 	private final int numVertices;
 	
 	public Polygon(int numVertices)
 	{
 		this.numVertices = numVertices;
-		positions = new Vector3[numVertices];
-		normals = new Vector3[numVertices];
+		positions = new Vector31[numVertices];
+		normals = new Vector31[numVertices];
 		texCoords = new Vector2[numVertices];
 		fanAtCenter = false;
 	}
 	
-	public Polygon(Vector3[] positions)
+	public Polygon(Vector31[] positions)
 	{
 		this.positions = positions;
 		numVertices = positions.length;
-		normals = new Vector3[numVertices];
+		normals = new Vector31[numVertices];
 		texCoords = new Vector2[numVertices];
 		fanAtCenter = false;
 	}
 	
-	public void setPosition(int i, Vector3 pos)
+	public void setPosition(int i, Vector31 pos)
 	{
 		positions[i] = pos;
 	}
 	
-	public void setCenterPosition(Vector3 pos)
+	public void setCenterPosition(Vector31 pos)
 	{
 		fanAtCenter = true;
 		centerPosition = pos;
@@ -75,28 +77,28 @@ public class Polygon
 			int iNext = i+1;
 			if (iNext >= numVertices) iNext -= numVertices;
 			
-			Vector3 vectorPrevious = positions[iPrevious].hyperTranslate(positions[i].times(-1));
-			Vector3 vectorNext = positions[iNext].hyperTranslate(positions[i].times(-1));
+			Transform decentralizer = Transform.translation(positions[i]);
+			Transform centralizer = decentralizer.inverse();
 			
-			Vector3 normal = vectorNext.cross(vectorPrevious);
-			normal.normalize();
+			Vector31 vectorPrevious = centralizer.transform(positions[iPrevious]);
+			Vector31 vectorNext = centralizer.transform(positions[iNext]);
 			
-			normal = positions[i].times(-1).hyperDirectionTo(normal);
+			Vector3 normal = vectorNext.getOrtho().cross(vectorPrevious.getOrtho());
 			normal.normalize();
-			normals[i] = normal;
+			normals[i] = decentralizer.transform(Vector31.makeOrtho(normal));
 		}
 		
 		if (fanAtCenter)
 		{
-			Vector3 vector1 = positions[0].hyperTranslate(centerPosition.times(-1));
-			Vector3 vector2 = positions[1].hyperTranslate(centerPosition.times(-1));
+			Transform decentralizer = Transform.translation(centerPosition);
+			Transform centralizer = decentralizer.inverse();
 			
-			Vector3 normal = vector1.cross(vector2);
-			normal.normalize();
+			Vector31 vector1 = centralizer.transform(positions[0]);
+			Vector31 vector2 = centralizer.transform(positions[1]);
 			
-			normal = centerPosition.times(-1).hyperDirectionTo(normal);
+			Vector3 normal = vector1.getOrtho().cross(vector2.getOrtho());
 			normal.normalize();
-			centerNormal = normal;
+			centerNormal = decentralizer.transform(Vector31.makeOrtho(normal));
 		}
 	}
 	

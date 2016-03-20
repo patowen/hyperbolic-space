@@ -5,6 +5,7 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.modelhelper.VertexGrid;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
@@ -42,8 +43,8 @@ public class Horosphere implements SceneNodeType
 				Vector3 vertex = new Vector3();
 				vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(1,0,0), ((double)i/numSteps-0.5)*size);
 				vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(0,1,0), ((double)j/numSteps-0.5)*size);
-				grid.setPosition(i, j, vertex);
-				grid.setNormal(i, j, new Vector3());
+				grid.setPosition(i, j, Vector31.makePoincare(vertex));
+				grid.setNormal(i, j, new Vector31());
 			}
 		}
 		grid.setTexCoords(0, 0, 1, 1, textureStepsPerWrap, textureStepsPerWrap, 0, 0);

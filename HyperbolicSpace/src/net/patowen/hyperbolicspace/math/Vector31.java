@@ -36,6 +36,17 @@ public class Vector31
 		return new Vector31(v.x*factor, v.y*factor, v.z*factor, factor-1);
 	}
 	
+	public static Vector31 makeOrtho(Vector3 v)
+	{
+		double dist = v.x*v.x + v.y*v.y + v.z*v.z;
+		return new Vector31(v.x, v.y, v.z, Math.sqrt(dist));
+	}
+	
+	public static Vector31 makePerpendicular(Vector31 v1, Vector31 v2)
+	{
+		return makePoincare(v1.getPoincare().cross(v2.getPoincare()));
+	}
+	
 	public void reset()
 	{
 		x = 0; y = 0; z = 0; w = 1;
@@ -89,5 +100,10 @@ public class Vector31
 	public Vector3 getPoincare()
 	{
 		return new Vector3(x/(w+1), y/(w+1), z/(w+1));
+	}
+	
+	public Vector3 getOrtho()
+	{
+		return new Vector3(x, y, z);
 	}
 }

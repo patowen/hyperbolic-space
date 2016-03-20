@@ -7,9 +7,9 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transform;
-import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.modelhelper.Polygon;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
@@ -140,7 +140,7 @@ public class Plane implements SceneNodeType
 		private TessellatorVertex[] neighbors; //All four neighbors of the vertex
 		private int[] neighborIndices; //The index in the neighbors array of each neighbor representing this
 		private boolean[] faces; //Whether the given face (between neighbors[i] and neighbors[i+1]) has been added
-		private Transformation position; //Location and orientation if neighbors[0] is in the forward direction
+		private Transform position; //Location and orientation if neighbors[0] is in the forward direction
 		
 		/**
 		 * Initializes the seed vertex
@@ -150,7 +150,7 @@ public class Plane implements SceneNodeType
 			neighbors = new TessellatorVertex[4];
 			neighborIndices = new int[4];
 			faces = new boolean[4];
-			position = new Transformation();
+			position = Transform.identity();
 		}
 		
 		/**
@@ -159,7 +159,7 @@ public class Plane implements SceneNodeType
 		 * @param neighborIndex The index of this vertex in the perspective of the neighbor
 		 * @param position The location of the vertex
 		 */
-		private TessellatorVertex(TessellatorVertex neighbor, int neighborIndex, Transformation position)
+		private TessellatorVertex(TessellatorVertex neighbor, int neighborIndex, Transform position)
 		{
 			neighbors = new TessellatorVertex[4];
 			neighborIndices = new int[4];
@@ -172,9 +172,9 @@ public class Plane implements SceneNodeType
 		/**
 		 * Returns the location of the vertex without the orientation
 		 */
-		public Vector3 getPosition()
+		public Vector31 getPosition()
 		{
-			return position.getTranslation();
+			return position.transform(new Vector31(0, 0, 0, 1));
 		}
 		
 		/**
@@ -197,26 +197,29 @@ public class Plane implements SceneNodeType
 		{
 			double s = 0.4858682717566457; //phi^(3/2)?
 			
-			Transformation nextTransform;
+			Transform translation = Transform.translation(Vector31.makePoincare(new Vector3(s, 0, 0)));
+			Transform rotation;
 			switch (index)
 			{
 			case 0:
-				nextTransform = new Transformation(new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)), new Vector3(s, 0, 0));
+				rotation = Transform.fromOrientation(new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)));
 				break;
 			case 1:
-				nextTransform = new Transformation(new Orientation(new Vector3(0,1,0), new Vector3(-1,0,0), new Vector3(0,0,1)), new Vector3(0, s, 0));
+				rotation = Transform.fromOrientation(new Orientation(new Vector3(0,1,0), new Vector3(-1,0,0), new Vector3(0,0,1)));
 				break;
 			case 2:
-				nextTransform = new Transformation(new Orientation(new Vector3(-1,0,0), new Vector3(0,-1,0), new Vector3(0,0,1)), new Vector3(-s, 0, 0));
+				rotation = Transform.fromOrientation(new Orientation(new Vector3(-1,0,0), new Vector3(0,-1,0), new Vector3(0,0,1)));
 				break;
 			case 3:
-				nextTransform = new Transformation(new Orientation(new Vector3(0,-1,0), new Vector3(1,0,0), new Vector3(0,0,1)), new Vector3(0, -s, 0));
+				rotation = Transform.fromOrientation(new Orientation(new Vector3(0,-1,0), new Vector3(1,0,0), new Vector3(0,0,1)));
 				break;
 			default:
 				throw new IndexOutOfBoundsException(Integer.toString(index));
 			}
 			
-			neighbors[index] = new TessellatorVertex(this, index, position.composeBefore(nextTransform));
+			Transform nextTransform = rotation.transform(translation);
+			
+			neighbors[index] = new TessellatorVertex(this, index, position.transform(nextTransform));
 			neighborIndices[index] = 2;
 			
 			return neighbors[index];

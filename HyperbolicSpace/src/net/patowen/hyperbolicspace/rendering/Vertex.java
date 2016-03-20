@@ -3,7 +3,6 @@ package net.patowen.hyperbolicspace.rendering;
 import java.nio.FloatBuffer;
 
 import net.patowen.hyperbolicspace.math.Vector2;
-import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.math.Vector31;
 
 /**
@@ -17,30 +16,10 @@ public class Vertex
 	private Vector31 norm;
 	private Vector2 texCoord;
 	
-	/**
-	 * Constructs a {@code Vertex} object with the given coordinates for its position and normal.
-	 * @param x the x-coordinate of the position vector
-	 * @param y the y-coordinate of the position vector
-	 * @param z the z-coordinate of the position vector
-	 * @param nx the x-coordinate of the normal vector
-	 * @param ny the y-coordinate of the normal vector
-	 * @param nz the z-coordinate of the normal vector
-	 */
-//	public Vertex(double x, double y, double z, double nx, double ny, double nz, double tx, double ty)
-//	{
-//		this(new Vector3(x, y, z), new Vector3(nx, ny, nz), new Vector2(tx, ty));
-//	}
-	
-	/**
-	 * Constructs a {@code Vertex} object with the given vectors for its position and normal.
-	 * @param pos the position vector
-	 * @param norm the normal vector
-	 */
-	public Vertex(Vector3 pos, Vector3 norm, Vector2 texCoord)
+	public Vertex(Vector31 pos, Vector31 norm, Vector2 texCoord)
 	{
-		int todo;
-		this.pos = Vector31.makePoincare(pos);
-		this.norm = new Vector31(norm.x, norm.y, norm.z, 1);
+		this.pos = pos;
+		this.norm = norm;
 		this.texCoord = texCoord;
 	}
 	
