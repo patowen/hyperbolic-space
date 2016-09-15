@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
-import net.patowen.hyperbolicspace.math.Orientation;
 import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
@@ -29,12 +28,18 @@ public class Plane implements SceneNodeType
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
+	private int shapeType;
+	private int joinType;
+	
 	/**
 	 * Initializes the {@code Plane} mesh.
 	 * @param c
 	 */
 	public Plane(Controller c)
 	{
+		shapeType = 4;
+		joinType = 5;
+		
 		this.c = c;
 		Model model = new Model();
 		
@@ -43,8 +48,8 @@ public class Plane implements SceneNodeType
 		tessellate(tVert, tFace);
 		for (TessellatorFace f : tFace)
 		{
-			Polygon cell = new Polygon(5);
-			for (int i=0; i<5; i++)
+			Polygon cell = new Polygon(shapeType);
+			for (int i=0; i<shapeType; i++)
 			{
 				cell.setPosition(i, f.vertices[i].getPosition());
 			}
@@ -84,7 +89,6 @@ public class Plane implements SceneNodeType
 		}
 	}
 	
-	//TODO Abstract to other kinds of tessellations and abstract
 	//TODO Make seamless
 	
 	/**
@@ -104,7 +108,7 @@ public class Plane implements SceneNodeType
 		 */
 		public TessellatorFace()
 		{
-			vertices = new TessellatorVertex[5];
+			vertices = new TessellatorVertex[shapeType];
 			numVertices = 0;
 		}
 		
@@ -147,9 +151,9 @@ public class Plane implements SceneNodeType
 		 */
 		public TessellatorVertex()
 		{
-			neighbors = new TessellatorVertex[4];
-			neighborIndices = new int[4];
-			faces = new boolean[4];
+			neighbors = new TessellatorVertex[joinType];
+			neighborIndices = new int[joinType];
+			faces = new boolean[joinType];
 			position = Transform.identity();
 		}
 		
@@ -161,11 +165,11 @@ public class Plane implements SceneNodeType
 		 */
 		private TessellatorVertex(TessellatorVertex neighbor, int neighborIndex, Transform position)
 		{
-			neighbors = new TessellatorVertex[4];
-			neighborIndices = new int[4];
-			faces = new boolean[4];
-			neighbors[2] = neighbor;
-			neighborIndices[2] = neighborIndex;
+			neighbors = new TessellatorVertex[joinType];
+			neighborIndices = new int[joinType];
+			faces = new boolean[joinType];
+			neighbors[0] = neighbor;
+			neighborIndices[0] = neighborIndex;
 			this.position = position;
 		}
 		
@@ -184,7 +188,7 @@ public class Plane implements SceneNodeType
 		 */
 		private int wrapIndex(int index)
 		{
-			return ((index%4)+4)%4;
+			return ((index%joinType)+joinType)%joinType;
 		}
 		
 		/**
@@ -195,32 +199,17 @@ public class Plane implements SceneNodeType
 		 */
 		private TessellatorVertex addNeighbor(int index)
 		{
-			double s = 0.4858682717566457; //phi^(3/2)?
+			double cosShapeAngle = Math.cos(2 * Math.PI / shapeType);
+			double cosJoinAngle = Math.cos(2 * Math.PI / joinType);
+			double coshLength = (1 + 2*cosShapeAngle + cosJoinAngle) / (1 - cosJoinAngle);
+			Transform translation = Transform.translation(new Vector31(Math.sqrt(coshLength*coshLength-1), 0, 0, coshLength));
+			Transform rotation = Transform.rotation(new Vector3(0, 0, 1), Math.PI * 2 / joinType * index);
+			Transform rotation2 = Transform.rotation(new Vector3(0, 0, 1), Math.PI);
 			
-			Transform translation = Transform.translation(Vector31.makePoincare(new Vector3(s, 0, 0)));
-			Transform rotation;
-			switch (index)
-			{
-			case 0:
-				rotation = Transform.fromOrientation(new Orientation(new Vector3(1,0,0), new Vector3(0,1,0), new Vector3(0,0,1)));
-				break;
-			case 1:
-				rotation = Transform.fromOrientation(new Orientation(new Vector3(0,1,0), new Vector3(-1,0,0), new Vector3(0,0,1)));
-				break;
-			case 2:
-				rotation = Transform.fromOrientation(new Orientation(new Vector3(-1,0,0), new Vector3(0,-1,0), new Vector3(0,0,1)));
-				break;
-			case 3:
-				rotation = Transform.fromOrientation(new Orientation(new Vector3(0,-1,0), new Vector3(1,0,0), new Vector3(0,0,1)));
-				break;
-			default:
-				throw new IndexOutOfBoundsException(Integer.toString(index));
-			}
-			
-			Transform nextTransform = rotation.transform(translation);
+			Transform nextTransform = rotation.transform(translation.transform(rotation2));
 			
 			neighbors[index] = new TessellatorVertex(this, index, position.transform(nextTransform));
-			neighborIndices[index] = 2;
+			neighborIndices[index] = 0;
 			
 			return neighbors[index];
 		}
@@ -249,7 +238,7 @@ public class Plane implements SceneNodeType
 		 */
 		public void expand(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput)
 		{
-			for (int i=0; i<4; i++)
+			for (int i=0; i<joinType; i++)
 				if (!faces[i]) addFace(vOutput, fOutput, i);
 		}
 		
@@ -262,7 +251,7 @@ public class Plane implements SceneNodeType
 		 */
 		private void addFace(ArrayList<TessellatorVertex> vOutput, ArrayList<TessellatorFace> fOutput, int faceIndex)
 		{
-			int edgesLeft = 5;
+			int edgesLeft = shapeType;
 			
 			TessellatorFace face = new TessellatorFace();
 			face.addAfter(this);
@@ -327,7 +316,7 @@ public class Plane implements SceneNodeType
 	public void renderInit(GL3 gl)
 	{
 		sceneNode.renderInit(gl);
-		sceneNode.setTexture(c.getTextureBank().clouds);
+		sceneNode.setTexture(c.getTextureBank().circle);
 		sceneNode.setColor(new float[] {0.42f, 0.54f, 0.14f, 1});
 	}
 	

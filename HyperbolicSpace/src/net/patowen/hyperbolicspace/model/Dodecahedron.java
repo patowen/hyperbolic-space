@@ -64,7 +64,7 @@ public class Dodecahedron implements SceneNodeType
 	public void renderInit(GL3 gl)
 	{
 		sceneNode.renderInit(gl);
-		sceneNode.setTexture(c.getTextureBank().clouds);
+		sceneNode.setTexture(c.getTextureBank().circle);
 	}
 	
 	public void render(GL3 gl, Transform t)
