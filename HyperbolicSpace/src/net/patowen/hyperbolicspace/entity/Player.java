@@ -41,7 +41,7 @@ public class Player
 		this.c = c;
 		this.w = w;
 		
-		radius = 0.2;
+		radius = 0.2 * 6;
 		pos = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, Math.tanh(radius/2))));
 		vel = new Vector3();
 		
@@ -203,6 +203,7 @@ public class Player
 	 */
 	private void handleMovement(double dt)
 	{
+		Vector31 heading = pos.transform(new Vector31(0, 0, -1, 1));
 		pos = pos.transform(Transform.translation(convertToPosition(vel, dt)));
 		pos.normalize();
 		

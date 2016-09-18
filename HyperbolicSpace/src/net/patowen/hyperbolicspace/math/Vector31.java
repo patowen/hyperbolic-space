@@ -39,12 +39,7 @@ public class Vector31
 	public static Vector31 makeOrtho(Vector3 v)
 	{
 		double dist = v.x*v.x + v.y*v.y + v.z*v.z;
-		return new Vector31(v.x, v.y, v.z, Math.sqrt(dist));
-	}
-	
-	public static Vector31 makePerpendicular(Vector31 v1, Vector31 v2)
-	{
-		return makePoincare(v1.getPoincare().cross(v2.getPoincare()));
+		return new Vector31(v.x, v.y, v.z, Math.sqrt(dist + 1));
 	}
 	
 	public void reset()
@@ -89,12 +84,18 @@ public class Vector31
 	
 	public double squared()
 	{
-		return x*x + y*y + z*z - w*w;
+		return -x*x - y*y - z*z + w*w;
 	}
 	
 	public double dot(Vector31 v)
 	{
-		return x*v.x + y*v.y + z*v.z - w*v.w;
+		return -x*v.x - y*v.y - z*v.z + w*v.w;
+	}
+	
+	public Vector31 perpendicular(Vector31 v)
+	{
+		// The result of this dot any perpendicular vector should be 0
+		return times(dot(v)).plusMultiple(v, -1);
 	}
 	
 	public Vector3 getPoincare()
@@ -105,5 +106,14 @@ public class Vector31
 	public Vector3 getOrtho()
 	{
 		return new Vector3(x, y, z);
+	}
+	
+	public String toString()
+	{
+		StringBuilder str = new StringBuilder();
+		
+		str.append("(").append(x).append(", ").append(y).append(", ").append(z).append(", ").append(w).append(")");
+		
+		return str.toString();
 	}
 }

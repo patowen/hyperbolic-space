@@ -73,19 +73,21 @@ public class Transform {
 		// Valid vectors are assumed. If this is not the case, NaN's will propagate, and
 		// very bad stuff will happen, such as hidden, hard-to-debug errors.
 		
-		x = x.times(1.0/Math.sqrt(x.squared())); // Normalize x
-		y = y.plusMultiple(x, -y.dot(x)); // Separate y from x
-		z = z.plusMultiple(x, -z.dot(x)); // Separate z from x
-		w = w.plusMultiple(x, -w.dot(x)); // Separate w from x
+		System.out.println(w.perpendicular(new Vector31(1, 0, 0, Math.sqrt(2))).dot(w));
 		
-		y = y.times(1.0/Math.sqrt(y.squared())); // Normalize y
-		z = z.plusMultiple(y, -z.dot(y)); // Separate z from y
-		w = w.plusMultiple(y, -w.dot(y)); // Separate w from y
+		x = x.times(1.0/Math.sqrt(-x.squared())); // Normalize x
+		y = y.plusMultiple(x, y.dot(x)); // Separate y from x
+		z = z.plusMultiple(x, z.dot(x)); // Separate z from x
+		w = w.plusMultiple(x, w.dot(x)); // Separate w from x
 		
-		z = z.times(1.0/Math.sqrt(z.squared())); // Normalize z
-		w = w.plusMultiple(z, -w.dot(z)); // Separate w from z
+		y = y.times(1.0/Math.sqrt(-y.squared())); // Normalize y
+		z = z.plusMultiple(y, z.dot(y)); // Separate z from y
+		w = w.plusMultiple(y, w.dot(y)); // Separate w from y
 		
-		w = w.times(1.0/Math.sqrt(-w.squared())); // Normalize w (with reversed sign)
+		z = z.times(1.0/Math.sqrt(-z.squared())); // Normalize z
+		w = w.plusMultiple(z, w.dot(z)); // Separate w from z
+		
+		w = w.times(1.0/Math.sqrt(w.squared())); // Normalize w (with reversed sign)
 		
 		return this;
 	}

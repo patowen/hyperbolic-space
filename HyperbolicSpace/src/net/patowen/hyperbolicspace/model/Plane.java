@@ -37,8 +37,8 @@ public class Plane implements SceneNodeType
 	 */
 	public Plane(Controller c)
 	{
-		shapeType = 4;
-		joinType = 5;
+		shapeType = 5;
+		joinType = 4;
 		
 		this.c = c;
 		Model model = new Model();
