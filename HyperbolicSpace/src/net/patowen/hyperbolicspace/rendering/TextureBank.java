@@ -35,7 +35,7 @@ public class TextureBank
 	{
 		createPlaceholderTexture(gl);
 		
-		stone = createTextureFromFile(gl, "stone.jpg", "jpg");
+		stone = createTextureFromFile(gl, "stone.jpg", "jpg"); //http://wdc3d.com/blog/textures/6-seamless-stone-textures-1/
 		metal = createTextureFromFile(gl, "metal.png", "png");
 		clouds = createTextureFromFile(gl, "flat_clouds.png", "png");
 		circle = createTextureFromFile(gl, "circle.png", "png");
