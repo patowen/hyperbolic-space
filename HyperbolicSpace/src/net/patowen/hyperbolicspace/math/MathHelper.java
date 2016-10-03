@@ -30,7 +30,7 @@ public class MathHelper
 	/**
 	 * Returns the inverse hyperbolic tangent of the argument
 	 * @param x
-	 * @return arctanh x
+	 * @return artanh x
 	 */
 	public static double atanh(double x)
 	{
