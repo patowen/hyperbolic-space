@@ -72,9 +72,6 @@ public class Transform {
 	{
 		// Valid vectors are assumed. If this is not the case, NaN's will propagate, and
 		// very bad stuff will happen, such as hidden, hard-to-debug errors.
-		
-		System.out.println(w.perpendicular(new Vector31(1, 0, 0, Math.sqrt(2))).dot(w));
-		
 		x = x.times(1.0/Math.sqrt(-x.squared())); // Normalize x
 		y = y.plusMultiple(x, y.dot(x)); // Separate y from x
 		z = z.plusMultiple(x, z.dot(x)); // Separate z from x

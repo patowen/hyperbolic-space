@@ -14,6 +14,7 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 
 import net.patowen.hyperbolicspace.model.Building;
 import net.patowen.hyperbolicspace.model.Dodecahedron;
+import net.patowen.hyperbolicspace.model.Flag;
 import net.patowen.hyperbolicspace.model.Horosphere;
 import net.patowen.hyperbolicspace.model.Plane;
 import net.patowen.hyperbolicspace.model.Sphere;
@@ -37,7 +38,7 @@ public class Controller
 	private TextureBank textureBank;
 	
 	/** A renderable scene node */
-	public SceneNodeType dodecahedron, building, horosphere, plane, sphere;
+	public SceneNodeType dodecahedron, building, horosphere, plane, sphere, flag;
 	
 	/**
 	 * Constructs all meshes
@@ -49,6 +50,7 @@ public class Controller
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
 		sphere = new Sphere(this);
+		flag = new Flag(this);
 	}
 	
 	/**
@@ -65,6 +67,7 @@ public class Controller
 		horosphere.renderInit(gl);
 		plane.renderInit(gl);
 		sphere.renderInit(gl);
+		flag.renderInit(gl);
 	}
 	
 	/**
