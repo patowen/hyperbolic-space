@@ -18,7 +18,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNodeType;
  * this has not yet been implemented.
  * @author Patrick Owen
  */
-public class Flag implements SceneNodeType
+public class Cone implements SceneNodeType
 {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
@@ -32,7 +32,7 @@ public class Flag implements SceneNodeType
 	 * Initializes the {@code Building} mesh.
 	 * @param c
 	 */
-	public Flag(Controller c)
+	public Cone(Controller c)
 	{
 		this.c = c;
 		Model model = new Model();

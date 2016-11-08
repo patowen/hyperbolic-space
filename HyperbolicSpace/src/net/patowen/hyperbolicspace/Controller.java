@@ -14,7 +14,7 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 
 import net.patowen.hyperbolicspace.model.Building;
 import net.patowen.hyperbolicspace.model.Dodecahedron;
-import net.patowen.hyperbolicspace.model.Flag;
+import net.patowen.hyperbolicspace.model.Cone;
 import net.patowen.hyperbolicspace.model.Horosphere;
 import net.patowen.hyperbolicspace.model.Plane;
 import net.patowen.hyperbolicspace.model.Sphere;
@@ -50,7 +50,7 @@ public class Controller
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
 		sphere = new Sphere(this);
-		flag = new Flag(this);
+		flag = new Cone(this);
 	}
 	
 	/**
