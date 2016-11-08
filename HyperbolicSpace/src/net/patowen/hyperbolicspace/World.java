@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.GL3;
 
+import net.patowen.hyperbolicspace.entity.Flag;
 import net.patowen.hyperbolicspace.entity.Player;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 
@@ -18,6 +19,7 @@ public class World
 	
 	private ArrayList<SceneNode> nodes; //List of rendered nodes
 	private Player player; //Controllable camera
+	private Flag flag;
 	
 	private int viewportWidth, viewportHeight;
 	
@@ -51,7 +53,8 @@ public class World
 	{
 		nodes.clear();
 		player = new Player(c, this);
-		nodes.add(new SceneNode(c.plane));
+		flag = new Flag(c, this);
+		//nodes.add(new SceneNode(c.plane));
 //		SceneNode plane2 = new SceneNode(c.plane);
 //		plane2.setTransformation(new Transformation(
 //				new Orientation(new Vector3(1, 0, 0), new Vector3(0, 12.0/13, -5.0/13), new Vector3(0, 5.0/13, 12.0/13)),
@@ -76,6 +79,7 @@ public class World
 	{
 		InputHandler inputHandler = c.getInputHandler();
 		player.step(dt);
+		flag.step(dt);
 		
 		if (inputHandler.getKeyPressed(InputHandler.RESET))
 			reset();
