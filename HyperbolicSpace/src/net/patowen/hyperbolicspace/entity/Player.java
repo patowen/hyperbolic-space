@@ -114,7 +114,7 @@ public class Player
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_6))
 		{
-			spawnNode(new SceneNode(c.flag), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
+			spawnNode(new SceneNode(c.cone), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
 		}
 	}
 	

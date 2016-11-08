@@ -38,7 +38,7 @@ public class Controller
 	private TextureBank textureBank;
 	
 	/** A renderable scene node */
-	public SceneNodeType dodecahedron, building, horosphere, plane, sphere, flag;
+	public SceneNodeType dodecahedron, building, horosphere, plane, sphere, cone;
 	
 	/**
 	 * Constructs all meshes
@@ -50,7 +50,7 @@ public class Controller
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
 		sphere = new Sphere(this);
-		flag = new Cone(this);
+		cone = new Cone(this);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class Controller
 		horosphere.renderInit(gl);
 		plane.renderInit(gl);
 		sphere.renderInit(gl);
-		flag.renderInit(gl);
+		cone.renderInit(gl);
 	}
 	
 	/**
