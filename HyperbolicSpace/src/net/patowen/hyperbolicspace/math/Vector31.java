@@ -47,17 +47,34 @@ public class Vector31
 		x = 0; y = 0; z = 0; w = 1;
 	}
 	
-	public void normalizeAsPoint()
+	public boolean normalizeAsPoint()
 	{
 		double dist = w*w - x*x - y*y - z*z;
-		if (dist > 0)
+		if (dist > 1e-6)
 		{
 			double factor = 1.0/Math.sqrt(dist);
 			x *= factor;
 			y *= factor;
 			z *= factor;
 			w *= factor;
+			return true;
 		}
+		return false;
+	}
+	
+	public boolean normalizeAsDirection()
+	{
+		double dist = x*x + y*y + z*z - w*w;
+		if (dist > 1e-6)
+		{
+			double factor = 1.0/Math.sqrt(dist);
+			x *= factor;
+			y *= factor;
+			z *= factor;
+			w *= factor;
+			return true;
+		}
+		return false;
 	}
 	
 	public void rotate(Vector3 v, double theta)

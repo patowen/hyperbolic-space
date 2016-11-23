@@ -68,25 +68,27 @@ public class Transform {
 			new Vector31(-x.w, -y.w, -z.w, w.w));
 	}
 	
-	public Transform normalize()
+	public boolean normalize()
 	{
+		boolean success = true;
+		
 		// Valid vectors are assumed. If this is not the case, NaN's will propagate, and
 		// very bad stuff will happen, such as hidden, hard-to-debug errors.
-		x = x.times(1.0/Math.sqrt(-x.squared())); // Normalize x
+		success = x.normalizeAsDirection() && success; // Normalize x
+		w = w.plusMultiple(x, w.dot(x)); // Separate w from x
 		y = y.plusMultiple(x, y.dot(x)); // Separate y from x
 		z = z.plusMultiple(x, z.dot(x)); // Separate z from x
-		w = w.plusMultiple(x, w.dot(x)); // Separate w from x
 		
-		y = y.times(1.0/Math.sqrt(-y.squared())); // Normalize y
+		success = w.normalizeAsPoint() && success; // Normalize w (with reversed sign)
+		y = y.plusMultiple(w, -y.dot(w)); // Separate y from w
+		z = z.plusMultiple(w, -z.dot(w)); // Separate z from w
+		
+		success = y.normalizeAsDirection() && success; // Normalize y
 		z = z.plusMultiple(y, z.dot(y)); // Separate z from y
-		w = w.plusMultiple(y, w.dot(y)); // Separate w from y
 		
-		z = z.times(1.0/Math.sqrt(-z.squared())); // Normalize z
-		w = w.plusMultiple(z, w.dot(z)); // Separate w from z
+		success = z.normalizeAsDirection() && success; // Normalize z
 		
-		w = w.times(1.0/Math.sqrt(w.squared())); // Normalize w (with reversed sign)
-		
-		return this;
+		return success;
 	}
 	
 	public Vector31 transform(Vector31 v)
@@ -114,5 +116,14 @@ public class Transform {
 			t.transform(y),
 			t.transform(z),
 			t.transform(w));
+	}
+	
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("x: ").append(x.toString()).append("\n");
+		str.append("y: ").append(y.toString()).append("\n");
+		str.append("z: ").append(z.toString()).append("\n");
+		str.append("w: ").append(w.toString()).append("\n");
+		return str.toString();
 	}
 }

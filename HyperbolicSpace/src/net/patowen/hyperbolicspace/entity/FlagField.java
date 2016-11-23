@@ -17,23 +17,43 @@ public class FlagField {
 	
 	private class Flag
 	{
-		private Transform pos;
+		private Vector31 pos;
+		private Vector31 dir;
+		
+		private Transform trans;
 		private SceneNode cone;
 		
-		public Flag(double angle)
+		public Flag(Vector31 position, Vector31 beacon)
 		{
-			pos = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, 0)));
-			pos = Transform.rotation(new Vector3(0, 1, 0), angle).transform(pos);
+			pos = new Vector31(position);
+			pos.normalizeAsPoint();
+			dir = beacon.plusMultiple(pos, -1);
+			dir = dir.plusMultiple(pos, -dir.dot(pos));
+			dir.normalizeAsDirection();
 			
-			cone = new SceneNode(c.cone);
-			cone.setTransformation(pos);
-			w.addNode(cone);
+			init();
 		}
 		
-		public void step(double dt)
+		private void init()
 		{
-			pos = Transform.rotation(new Vector3(0, 1, 0), dt).transform(pos);
-			cone.setTransformation(pos);
+			trans = Transform.identity();
+			trans.x = dir;
+			trans.w = pos;
+			if (!trans.normalize())
+			{
+				// Random-ish rotation that should hopefully work
+				trans = Transform.rotation(new Vector3(Math.sqrt(1.0/3), Math.sqrt(1.0/3), Math.sqrt(1.0/3)), 1);
+				trans.x = dir;
+				trans.w = pos;
+				if (!trans.normalize())
+				{
+					System.out.println("Failed flag");
+				}
+			}
+			
+			cone = new SceneNode(c.cone);
+			cone.setTransformation(trans);
+			w.addNode(cone);
 		}
 	}
 	
@@ -43,17 +63,26 @@ public class FlagField {
 		this.w = w;
 		
 		flags = new ArrayList<>();
-		for (int i=0; i<4; i++)
+		Vector31 center = new Vector31(0, 0, 0, -1);
+		
+		for (int i=0; i<1000; i++)
 		{
-			flags.add(new Flag((double)i/4*Math.PI*2));
+			Vector3 randomVector;
+			do {
+				randomVector = new Vector3(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1);
+			} while (randomVector.magnitude() > 0.8);
+			Vector31 pos = Vector31.makePoincare(randomVector);
+			flags.add(new Flag(pos, center));
 		}
+		//flags.add(new Flag(new Vector31(0, 0, 0, 1), new Vector31(1, 1, 1, 2)));
+		//flags.add(new Flag(new Vector31(1, 1, 1, 2), new Vector31(0, 0, 0, 1)));
 	}
 	
 	public void step(double dt)
 	{
-		for (Flag flag : flags)
+		/*for (Flag flag : flags)
 		{
 			flag.step(dt);
-		}
+		}*/
 	}
 }

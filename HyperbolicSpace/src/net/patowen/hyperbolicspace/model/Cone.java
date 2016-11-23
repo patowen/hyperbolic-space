@@ -39,14 +39,14 @@ public class Cone implements SceneNodeType
 		
 		double dx = Math.tanh(baseRadius);
 		double dz = Math.tanh(height);
-		Transform dzTransform = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, dz)));
+		Transform dzTransform = Transform.translation(Vector31.makePoincare(new Vector3(dz, 0, 0)));
 		
 		Vector31 center = new Vector31(0, 0, 0, 1);
 		Vector31[] corners = new Vector31[baseSides];
 		for (int i=0; i<baseSides; i++)
 		{
 			double theta = i*Math.PI*2/baseSides;
-			corners[i] = new Vector31(dx*Math.cos(theta), dx*Math.sin(theta), 0, dx+1);
+			corners[i] = new Vector31(0, dx*Math.cos(theta), dx*Math.sin(theta), dx+1);
 		}
 		
 		//Base
