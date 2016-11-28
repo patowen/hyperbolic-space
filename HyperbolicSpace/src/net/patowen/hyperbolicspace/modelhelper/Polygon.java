@@ -1,8 +1,6 @@
 package net.patowen.hyperbolicspace.modelhelper;
 
-import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector2;
-import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.Vertex;
@@ -11,11 +9,10 @@ public class Polygon
 {
 	boolean fanAtCenter;
 	private Vector31 centerPosition;
-	private Vector31 centerNormal;
 	private Vector2 centerTexCoord;
 	
 	private Vector31[] positions;
-	private Vector31[] normals;
+	private Vector31 normal;
 	private Vector2[] texCoords;
 	private final int numVertices;
 	
@@ -23,7 +20,6 @@ public class Polygon
 	{
 		this.numVertices = numVertices;
 		positions = new Vector31[numVertices];
-		normals = new Vector31[numVertices];
 		texCoords = new Vector2[numVertices];
 		fanAtCenter = false;
 	}
@@ -32,7 +28,6 @@ public class Polygon
 	{
 		this.positions = positions;
 		numVertices = positions.length;
-		normals = new Vector31[numVertices];
 		texCoords = new Vector2[numVertices];
 		fanAtCenter = false;
 	}
@@ -70,36 +65,12 @@ public class Polygon
 	
 	public void setNormals()
 	{
-		for (int i=0; i<numVertices; i++)
-		{
-			int iPrevious = i-1;
-			if (iPrevious < 0) iPrevious += numVertices;
-			int iNext = i+1;
-			if (iNext >= numVertices) iNext -= numVertices;
-			
-			Transform decentralizer = Transform.translation(positions[i]);
-			Transform centralizer = decentralizer.inverse();
-			
-			Vector31 vectorPrevious = centralizer.transform(positions[iPrevious]);
-			Vector31 vectorNext = centralizer.transform(positions[iNext]);
-			
-			Vector3 normal = vectorNext.getOrtho().cross(vectorPrevious.getOrtho());
-			normal.normalize();
-			normals[i] = decentralizer.transform(Vector31.makeOrtho(normal));
-		}
+		Vector31 v1 = positions[0];
+		Vector31 v2 = positions[numVertices/3];
+		Vector31 v3 = positions[(numVertices*2)/3];
 		
-		if (fanAtCenter)
-		{
-			Transform decentralizer = Transform.translation(centerPosition);
-			Transform centralizer = decentralizer.inverse();
-			
-			Vector31 vector1 = centralizer.transform(positions[0]);
-			Vector31 vector2 = centralizer.transform(positions[1]);
-			
-			Vector3 normal = vector1.getOrtho().cross(vector2.getOrtho());
-			normal.normalize();
-			centerNormal = decentralizer.transform(Vector31.makeOrtho(normal));
-		}
+		normal = Vector31.makeOrthogonal(v1, v2, v3);
+		normal.normalizeAsDirection();
 	}
 	
 	public void addToModel(Model model)
@@ -108,12 +79,12 @@ public class Polygon
 		int[] indices = new int[numVertices];
 		for (int i=0; i<numVertices; i++)
 		{
-			indices[i] = model.addVertex(new Vertex(positions[i], normals[i], texCoords[i]));
+			indices[i] = model.addVertex(new Vertex(positions[i], normal, texCoords[i]));
 		}
 		
 		if (fanAtCenter)
 		{
-			int centerIndex = model.addVertex(new Vertex(centerPosition, centerNormal, centerTexCoord));
+			int centerIndex = model.addVertex(new Vertex(centerPosition, normal, centerTexCoord));
 			for (int i=0; i<numVertices; i++)
 			{
 				model.addTriangle(centerIndex, indices[i], indices[(i+1)%numVertices]);

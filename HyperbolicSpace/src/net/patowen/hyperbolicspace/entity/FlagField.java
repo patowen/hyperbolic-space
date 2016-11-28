@@ -15,23 +15,40 @@ public class FlagField {
 	
 	private ArrayList<Flag> flags;
 	
-	private class Flag
+	@SuppressWarnings("unused")
+	private double time;
+	
+	private static class Flag
 	{
+		private Controller c;
+		@SuppressWarnings("unused")
+		private World w;
+		
 		private Vector31 pos;
 		private Vector31 dir;
 		
 		private Transform trans;
 		private SceneNode cone;
 		
-		public Flag(Vector31 position, Vector31 beacon)
+		public Flag(Controller c, World w, Vector31 pos, Vector31 dir)
 		{
-			pos = new Vector31(position);
+			this.c = c;
+			this.w = w;
+			this.pos = pos;
+			this.dir = dir;
+			init();
+		}
+		
+		@SuppressWarnings("unused")
+		public static Flag fromBeacon(Controller c, World w, Vector31 position, Vector31 beacon)
+		{
+			Vector31 pos = new Vector31(position);
 			pos.normalizeAsPoint();
-			dir = beacon.plusMultiple(pos, -1);
+			Vector31 dir = beacon.plusMultiple(pos, -1);
 			dir = dir.plusMultiple(pos, -dir.dot(pos));
 			dir.normalizeAsDirection();
 			
-			init();
+			return new Flag(c, w, pos, dir);
 		}
 		
 		private void init()
@@ -53,7 +70,16 @@ public class FlagField {
 			
 			cone = new SceneNode(c.cone);
 			cone.setTransformation(trans);
-			w.addNode(cone);
+			//w.addNode(cone);
+		}
+		
+		@SuppressWarnings("unused")
+		public void setVisible(boolean visible)
+		{
+			if (!visible)
+				cone.setTransformation(Transform.identity());
+			else
+				cone.setTransformation(trans);
 		}
 	}
 	
@@ -61,28 +87,35 @@ public class FlagField {
 	{
 		this.c = c;
 		this.w = w;
+		time = 0;
 		
 		flags = new ArrayList<>();
-		Vector31 center = new Vector31(0, 0, 0, -1);
+		ArrayList<Vector31> pos = new ArrayList<>();
 		
-		for (int i=0; i<1000; i++)
+		for (int i=0; i<3; i++)
 		{
 			Vector3 randomVector;
 			do {
 				randomVector = new Vector3(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1);
-			} while (randomVector.magnitude() > 0.8);
-			Vector31 pos = Vector31.makePoincare(randomVector);
-			flags.add(new Flag(pos, center));
+			} while (randomVector.magnitude() > 0.5);
+			pos.add(Vector31.makePoincare(randomVector));
 		}
-		//flags.add(new Flag(new Vector31(0, 0, 0, 1), new Vector31(1, 1, 1, 2)));
-		//flags.add(new Flag(new Vector31(1, 1, 1, 2), new Vector31(0, 0, 0, 1)));
+		Vector31 direction = Vector31.makeOrthogonal(pos.get(0), pos.get(1), pos.get(2));
+		direction.normalizeAsDirection();
+		
+		for (int i=0; i<3; i++)
+		{
+			flags.add(new Flag(this.c, this.w, pos.get(i), direction));
+		}
 	}
 	
 	public void step(double dt)
 	{
-		/*for (Flag flag : flags)
+		/*time += dt;
+		double t = (time - Math.floor(time)) * 3;
+		for (int i=0; i<3; i++)
 		{
-			flag.step(dt);
+			flags.get(i).setVisible(t >= i && t < i+2 || t < i-1);
 		}*/
 	}
 }

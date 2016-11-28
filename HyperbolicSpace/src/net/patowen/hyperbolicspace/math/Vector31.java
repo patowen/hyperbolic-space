@@ -42,6 +42,15 @@ public class Vector31
 		return new Vector31(v.x, v.y, v.z, Math.sqrt(dist + 1));
 	}
 	
+	public static Vector31 makeOrthogonal(Vector31 v1, Vector31 v2, Vector31 v3)
+	{
+		double x = v1.y*v2.z*v3.w + v1.z*v2.w*v3.y + v1.w*v2.y*v3.z - v1.y*v2.w*v3.z - v1.z*v2.y*v3.w - v1.w*v2.z*v3.y;
+		double y = -(v1.x*v2.z*v3.w + v1.z*v2.w*v3.x + v1.w*v2.x*v3.z - v1.x*v2.w*v3.z - v1.z*v2.x*v3.w - v1.w*v2.z*v3.x);
+		double z = v1.x*v2.y*v3.w + v1.y*v2.w*v3.x + v1.w*v2.x*v3.y - v1.x*v2.w*v3.y - v1.y*v2.x*v3.w - v1.w*v2.y*v3.x;
+		double w = -(v1.x*v2.y*v3.z + v1.y*v2.z*v3.x + v1.z*v2.x*v3.y - v1.x*v2.z*v3.y - v1.y*v2.x*v3.z - v1.z*v2.y*v3.x);
+		return new Vector31(x, y, z, w);
+	}
+	
 	public void reset()
 	{
 		x = 0; y = 0; z = 0; w = 1;
