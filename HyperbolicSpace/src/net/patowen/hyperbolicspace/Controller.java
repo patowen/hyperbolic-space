@@ -139,10 +139,6 @@ public class Controller
 		vsCode.compile(gl);
 		prog.add(vsCode);
 		
-		ShaderCode gsCode = ShaderHandler.getShaderCode(GL3.GL_GEOMETRY_SHADER, "hyperbolic_gs");
-		gsCode.compile(gl);
-		prog.add(gsCode);
-		
 		ShaderCode fsCode = ShaderHandler.getShaderCode(GL3.GL_FRAGMENT_SHADER, "hyperbolic_fs");
 		fsCode.compile(gl);
 		prog.add(fsCode);
@@ -150,8 +146,8 @@ public class Controller
 		ShaderState shaderState = new ShaderState();
 		matrixHandler = new ShaderUniformHandler(shaderState);
 		shaderState.attachShaderProgram(gl, prog, false);
-		shaderState.bindAttribLocation(gl, 0, "vertex_position");
-		shaderState.bindAttribLocation(gl, 1, "normal_position");
+		shaderState.bindAttribLocation(gl, 0, "vertex_in");
+		shaderState.bindAttribLocation(gl, 1, "normal_in");
 		shaderState.bindAttribLocation(gl, 2, "tex_coord_in");
 		
 		prog.link(gl, System.err);

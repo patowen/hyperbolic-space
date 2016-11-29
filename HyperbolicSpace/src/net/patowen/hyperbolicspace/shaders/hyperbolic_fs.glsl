@@ -1,17 +1,15 @@
 #version 150
 
 uniform sampler2D texture_sampler;
-in vec2 f_texcoord[3];
-
 uniform vec4 color;
 
-in vec2 interpolated_position;
-in vec4 f_interpolated_pos;
-in vec4 f_pos[3];
+in vec3 vertex;
+in vec3 normal;
+in vec2 tex_coord;
 
 out vec4 fragColor;
 
 void main()
 {
-	fragColor = color * texture(texture_sampler, interpolated_position);
+	fragColor = color * texture(texture_sampler, tex_coord);
 }
