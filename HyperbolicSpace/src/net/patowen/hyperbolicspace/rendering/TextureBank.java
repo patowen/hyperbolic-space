@@ -15,8 +15,7 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
  * the application
  * @author Patrick Owen
  */
-public class TextureBank
-{
+public class TextureBank {
 	//Magenta and black checkerboard texture used when a texture is missing or
 	//fails to load.
 	private Texture placeholder;
@@ -31,8 +30,7 @@ public class TextureBank
 	 * to the loading time of the application
 	 * @param gl
 	 */
-	public void initTextures(GL3 gl)
-	{
+	public void initTextures(GL3 gl) {
 		createPlaceholderTexture(gl);
 		
 		stone = createTextureFromFile(gl, "stone.jpg", "jpg"); //http://wdc3d.com/blog/textures/6-seamless-stone-textures-1/
@@ -47,18 +45,14 @@ public class TextureBank
 	 * @param fname the filename of the texture, without its path
 	 * @return the newly-created texture
 	 */
-	private Texture createTextureFromFile(GL3 gl, String fname, String extension)
-	{
-		try
-		{
+	private Texture createTextureFromFile(GL3 gl, String fname, String extension) {
+		try {
 			ClassLoader cl = TextureBank.class.getClassLoader();
 			InputStream stream = cl.getResourceAsStream("net/patowen/hyperbolicspace/textures/"+fname);
 			Texture tex = TextureIO.newTexture(stream, true, extension);
 			gl.glGenerateMipmap(tex.getTarget());
 			return tex;
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			return placeholder;
 		}
 	}
@@ -68,16 +62,13 @@ public class TextureBank
 	 * the correct texture is missing
 	 * @param gl
 	 */
-	private void createPlaceholderTexture(GL3 gl)
-	{
+	private void createPlaceholderTexture(GL3 gl) {
 		BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_RGB);
 		WritableRaster raster = image.getRaster();
 		float[] black = new float[] {0, 0, 0};
 		float[] magenta = new float[] {255, 0, 255};
-		for (int i=0; i<image.getWidth(); i++)
-		{
-			for (int j=0; j<image.getHeight(); j++)
-			{
+		for (int i=0; i<image.getWidth(); i++) {
+			for (int j=0; j<image.getHeight(); j++) {
 				raster.setPixel(i, j, (i+j)%2==0 ? magenta : black);
 			}
 		}

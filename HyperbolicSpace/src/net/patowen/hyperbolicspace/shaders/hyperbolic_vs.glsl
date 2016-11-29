@@ -11,8 +11,7 @@ out vec4 vertex;
 out vec4 normal;
 out vec2 tex_coord;
 
-void main()
-{
+void main() {
 	vertex = vertex_in;
 	tex_coord = tex_coord_in;
 	normal = normal_in;

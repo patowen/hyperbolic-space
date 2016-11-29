@@ -4,8 +4,7 @@ package net.patowen.hyperbolicspace.math;
  * The {@code Vector3} class represents a given vector in 3-dimensional Euclidean space.
  * @author Patrick Owen
  */
-public class Vector3
-{
+public class Vector3 {
 	/**
 	 * The x-coordinate of the vector.
 	 */
@@ -24,8 +23,7 @@ public class Vector3
 	/**
 	 * Constructs a {@code Vector3} object representing the zero vector.
 	 */
-	public Vector3()
-	{
+	public Vector3() {
 		x = 0; y = 0; z = 0;
 	}
 	
@@ -33,16 +31,14 @@ public class Vector3
 	 * Constructs a {@code Vector3} object that represents the same vector as the argument.
 	 * @param v a {@code Vector3}
 	 */
-	public Vector3(Vector3 v)
-	{
+	public Vector3(Vector3 v) {
 		this(v.x, v.y, v.z);
 	}
 	
 	/**
 	 * Changes the vector to the zero vector.
 	 */
-	public void reset()
-	{
+	public void reset() {
 		x = 0; y = 0; z = 0;
 	}
 	
@@ -52,15 +48,13 @@ public class Vector3
 	 * @param y the y-coordinate of the vector.
 	 * @param z the z-coordinate of the vector.
 	 */
-	public Vector3(double x, double y, double z)
-	{
+	public Vector3(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 	
-	public Vector3(double[] coords)
-	{
+	public Vector3(double[] coords) {
 		x = coords[0];
 		y = coords[1];
 		z = coords[2];
@@ -70,11 +64,9 @@ public class Vector3
 	 * Changes the vector to the unit vector pointing in the same direction. This method
 	 * does nothing to the zero vector.
 	 */
-	public void normalize()
-	{
+	public void normalize() {
 		double dist = x*x+y*y+z*z;
-		if (dist > 0)
-		{
+		if (dist > 0) {
 			double size = Math.sqrt(dist);
 			x /= size;
 			y /= size;
@@ -86,8 +78,7 @@ public class Vector3
 	 * Returns the magnitude of the vector.
 	 * @return the magnitude, or Euclidean norm, of the vector
 	 */
-	public double magnitude()
-	{
+	public double magnitude() {
 		return Math.sqrt(x*x+y*y+z*z);
 	}
 	
@@ -95,8 +86,7 @@ public class Vector3
 	 * Returns the squared magnitude of the vector.
 	 * @return the magnitude squared, or the dot product of the vector and itself
 	 */
-	public double squared()
-	{
+	public double squared() {
 		return x*x+y*y+z*z;
 	}
 	
@@ -105,8 +95,7 @@ public class Vector3
 	 * @param v a vector
 	 * @return the vector plus the argument
 	 */
-	public Vector3 plus(Vector3 v)
-	{
+	public Vector3 plus(Vector3 v) {
 		return new Vector3(x+v.x, y+v.y, z+v.z);
 	}
 	
@@ -116,8 +105,7 @@ public class Vector3
 	 * @param c a scalar factor
 	 * @return the vector plus the argument times the given scalar
 	 */
-	public Vector3 plusMultiple(Vector3 v, double c)
-	{
+	public Vector3 plusMultiple(Vector3 v, double c) {
 		return new Vector3(x+v.x*c, y+v.y*c, z+v.z*c);
 	}
 	
@@ -126,8 +114,7 @@ public class Vector3
 	 * @param v a vector
 	 * @return the vector minus the argument
 	 */
-	public Vector3 minus(Vector3 v)
-	{
+	public Vector3 minus(Vector3 v) {
 		return new Vector3(x-v.x, y-v.y, z-v.z);
 	}
 	
@@ -136,8 +123,7 @@ public class Vector3
 	 * @param c a scalar factor
 	 * @return the vector times the scalar factor
 	 */
-	public Vector3 times(double c)
-	{
+	public Vector3 times(double c) {
 		return new Vector3(c*x, c*y, c*z);
 	}
 	
@@ -146,8 +132,7 @@ public class Vector3
 	 * @param v a vector
 	 * @return the dot product of the vector and the argument
 	 */
-	public double dot(Vector3 v)
-	{
+	public double dot(Vector3 v) {
 		return (x*v.x + y*v.y + z*v.z);
 	}
 	
@@ -156,8 +141,7 @@ public class Vector3
 	 * @param v a vector
 	 * @return the cross product of the vector and the argument
 	 */
-	public Vector3 cross(Vector3 v)
-	{
+	public Vector3 cross(Vector3 v) {
 		return new Vector3(y*v.z-z*v.y, z*v.x-x*v.z, x*v.y-y*v.x);
 	}
 	
@@ -166,8 +150,7 @@ public class Vector3
 	 * @param v a unit vector
 	 * @param theta the angle in radians
 	 */
-	public void rotate(Vector3 v, double theta)
-	{
+	public void rotate(Vector3 v, double theta) {
 		double xx = v.x, yy = v.y, zz = v.z;
 		double c = Math.cos(theta), s = Math.sin(theta);
 		
@@ -184,8 +167,7 @@ public class Vector3
 	 * @param v a vector of magnitude less than 1
 	 * @return the vector after the translation
 	 */
-	public Vector3 hyperTranslate(Vector3 v)
-	{
+	public Vector3 hyperTranslate(Vector3 v) {
 		double denom = v.squared()*squared() + 2*dot(v) + 1;
 		double vFactor = 1 + squared() + 2*dot(v);
 		double factor = 1 - v.squared();
@@ -199,8 +181,7 @@ public class Vector3
 	 * @param x a unit vector
 	 * @return the direction from the vector to {@code x}
 	 */
-	public Vector3 hyperDirectionTo(Vector3 x)
-	{
+	public Vector3 hyperDirectionTo(Vector3 x) {
 		Vector3 v = this;
 		Vector3 diff = x.minus(v);
 		return diff.times(2*diff.dot(x)/diff.squared()).minus(x);
@@ -213,8 +194,7 @@ public class Vector3
 	 * @param v the distance along the horocycle the origin is moved
 	 * @return the rotated vector
 	 */
-	public Vector3 horoRotate(Vector3 q, Vector3 r, double v)
-	{
+	public Vector3 horoRotate(Vector3 q, Vector3 r, double v) {
 		double zmqs = this.minus(q).squared();
 		double denom = v*v*zmqs + 2*v*this.dot(r) + 1;
 		double rFactor = v*zmqs;
@@ -227,8 +207,7 @@ public class Vector3
 	/**
 	 * Returns a string representation of the vector
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return "(" + x + "," + y + "," + z + ")";
 	}
 }

@@ -12,14 +12,12 @@ import com.jogamp.opengl.GLEventListener;
  * Handles the window and its render loop.
  * @author Patrick Owen
  */
-public class Renderer
-{
+public class Renderer {
 	private Controller c;
 	
 	private World world;
 	
-	public Renderer(Controller c)
-	{
+	public Renderer(Controller c) {
 		this.c = c;
 		
 		GLWindow win = c.getWindow();
@@ -28,36 +26,30 @@ public class Renderer
 		win.setTitle("Hyperworld");
 		win.setDefaultCloseOperation(WindowClosingMode.DO_NOTHING_ON_CLOSE);
 		
-		win.addWindowListener(new WindowAdapter()
-		{
+		win.addWindowListener(new WindowAdapter() {
 			private Controller c = Renderer.this.c;
 			
 			//Exit the simulation if the user closes the window
-			public void windowDestroyNotify(WindowEvent e)
-			{
+			public void windowDestroyNotify(WindowEvent e) {
 				c.exit();
 			}
 		});
 		
-		win.addGLEventListener(new GLEventListener()
-		{
+		win.addGLEventListener(new GLEventListener() {
 			private Controller c = Renderer.this.c;
 			
 			//Performs a single frame of the render loop, also updating the physics of the world
-			public void display(GLAutoDrawable drawable)
-			{
+			public void display(GLAutoDrawable drawable) {
 				step(1.0/60);
 				render(drawable.getGL().getGL3());
 			}
 			
-			public void dispose(GLAutoDrawable drawable)
-			{
+			public void dispose(GLAutoDrawable drawable) {
 				//Nothing to dispose. Garbage collection takes care of everything.
 			}
 			
 			//Configures OpenGL's settings, initializes textures and meshes for rendering, and sets up shaders
-			public void init(GLAutoDrawable drawable)
-			{
+			public void init(GLAutoDrawable drawable) {
 				GL3 gl = drawable.getGL().getGL3();
 				c.renderInit(gl);
 				gl.glClearColor(0, 0, 0, 1);
@@ -67,8 +59,7 @@ public class Renderer
 			}
 			
 			//Modifies the perspective to match the size of the window
-			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
-			{
+			public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 				//Perspective is done in the player's main method
 				world.setViewport(width, height);
 			}
@@ -81,8 +72,7 @@ public class Renderer
 	/**
 	 * Creates the world and initializes input
 	 */
-	public void initialize()
-	{
+	public void initialize() {
 		c.createInputHandler();
 		world = new World(c);
 	}
@@ -91,8 +81,7 @@ public class Renderer
 	 * Performs a single frame of the simulation
 	 * @param dt the time step in seconds
 	 */
-	public void step(double dt)
-	{
+	public void step(double dt) {
 		world.step(dt);
 	}
 	
@@ -100,8 +89,7 @@ public class Renderer
 	 * Renders the world at its current state
 	 * @param gl
 	 */
-	public void render(GL3 gl)
-	{
+	public void render(GL3 gl) {
 		gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 		c.getMatrixHandler().reset();
 		

@@ -16,8 +16,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNodeType;
  * can be tiled throughout hyperbolic space, although this has not yet been implemented.
  * @author Patrick Owen
  */
-public class Dodecahedron implements SceneNodeType
-{
+public class Dodecahedron implements SceneNodeType {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
@@ -25,8 +24,7 @@ public class Dodecahedron implements SceneNodeType
 	 * Initializes the {@code Dodecahedron} mesh.
 	 * @param c
 	 */
-	public Dodecahedron(Controller c)
-	{
+	public Dodecahedron(Controller c) {
 		this.c = c;
 		Model model = new Model();
 		
@@ -61,14 +59,12 @@ public class Dodecahedron implements SceneNodeType
 		sceneNode.setModel(model);
 	}
 	
-	public void renderInit(GL3 gl)
-	{
+	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().circle);
 	}
 	
-	public void render(GL3 gl, Transform t)
-	{
+	public void render(GL3 gl, Transform t) {
 		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}

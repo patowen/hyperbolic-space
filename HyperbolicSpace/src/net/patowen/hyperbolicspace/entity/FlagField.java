@@ -18,8 +18,7 @@ public class FlagField {
 	@SuppressWarnings("unused")
 	private double time;
 	
-	private static class Flag
-	{
+	private static class Flag {
 		private Controller c;
 		@SuppressWarnings("unused")
 		private World w;
@@ -30,8 +29,7 @@ public class FlagField {
 		private Transform trans;
 		private SceneNode cone;
 		
-		public Flag(Controller c, World w, Vector31 pos, Vector31 dir)
-		{
+		public Flag(Controller c, World w, Vector31 pos, Vector31 dir) {
 			this.c = c;
 			this.w = w;
 			this.pos = pos;
@@ -40,8 +38,7 @@ public class FlagField {
 		}
 		
 		@SuppressWarnings("unused")
-		public static Flag fromBeacon(Controller c, World w, Vector31 position, Vector31 beacon)
-		{
+		public static Flag fromBeacon(Controller c, World w, Vector31 position, Vector31 beacon) {
 			Vector31 pos = new Vector31(position);
 			pos.normalizeAsPoint();
 			Vector31 dir = beacon.plusMultiple(pos, -1);
@@ -51,19 +48,16 @@ public class FlagField {
 			return new Flag(c, w, pos, dir);
 		}
 		
-		private void init()
-		{
+		private void init() {
 			trans = Transform.identity();
 			trans.x = dir;
 			trans.w = pos;
-			if (!trans.normalize())
-			{
+			if (!trans.normalize()) {
 				// Random-ish rotation that should hopefully work
 				trans = Transform.rotation(new Vector3(Math.sqrt(1.0/3), Math.sqrt(1.0/3), Math.sqrt(1.0/3)), 1);
 				trans.x = dir;
 				trans.w = pos;
-				if (!trans.normalize())
-				{
+				if (!trans.normalize()) {
 					System.out.println("Failed flag");
 				}
 			}
@@ -74,8 +68,7 @@ public class FlagField {
 		}
 		
 		@SuppressWarnings("unused")
-		public void setVisible(boolean visible)
-		{
+		public void setVisible(boolean visible) {
 			if (!visible)
 				cone.setTransformation(Transform.identity());
 			else
@@ -83,8 +76,7 @@ public class FlagField {
 		}
 	}
 	
-	public FlagField(Controller c, World w)
-	{
+	public FlagField(Controller c, World w) {
 		this.c = c;
 		this.w = w;
 		time = 0;
@@ -92,8 +84,7 @@ public class FlagField {
 		flags = new ArrayList<>();
 		ArrayList<Vector31> pos = new ArrayList<>();
 		
-		for (int i=0; i<3; i++)
-		{
+		for (int i=0; i<3; i++) {
 			Vector3 randomVector;
 			do {
 				randomVector = new Vector3(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1);
@@ -103,18 +94,15 @@ public class FlagField {
 		Vector31 direction = Vector31.makeOrthogonal(pos.get(0), pos.get(1), pos.get(2));
 		direction.normalizeAsDirection();
 		
-		for (int i=0; i<3; i++)
-		{
+		for (int i=0; i<3; i++) {
 			flags.add(new Flag(this.c, this.w, pos.get(i), direction));
 		}
 	}
 	
-	public void step(double dt)
-	{
+	public void step(double dt) {
 		/*time += dt;
 		double t = (time - Math.floor(time)) * 3;
-		for (int i=0; i<3; i++)
-		{
+		for (int i=0; i<3; i++) {
 			flags.get(i).setVisible(t >= i && t < i+2 || t < i-1);
 		}*/
 	}

@@ -6,8 +6,7 @@ package net.patowen.hyperbolicspace.math;
  * can be applied to vertices and to normals.
  * @author Patrick Owen
  */
-public class Transformation
-{
+public class Transformation {
 	/*
 	 * Internally, a transformation is represented as a rotation
 	 * followed by a hyperbolic translation.
@@ -18,8 +17,7 @@ public class Transformation
 	/**
 	 * Constructs a {@code Transformation} object representing the identity transformation.
 	 */
-	public Transformation()
-	{
+	public Transformation() {
 		rotation = new Orientation();
 		translation = new Vector3();
 	}
@@ -27,8 +25,7 @@ public class Transformation
 	/**
 	 * Constructs a {@code Transformation} object representing the given rotation
 	 */
-	public Transformation(Orientation rotation)
-	{
+	public Transformation(Orientation rotation) {
 		this.rotation = rotation;
 		translation = new Vector3();
 	}
@@ -36,8 +33,7 @@ public class Transformation
 	/**
 	 * Constructs a {@code Transformation} object representing the given translation
 	 */
-	public Transformation(Vector3 translation)
-	{
+	public Transformation(Vector3 translation) {
 		rotation = new Orientation();
 		this.translation = translation;
 	}
@@ -46,8 +42,7 @@ public class Transformation
 	 * Constructs a {@code Transformation} object representing the given rotation followed
 	 * by the given translation.
 	 */
-	public Transformation(Orientation rotation, Vector3 translation)
-	{
+	public Transformation(Orientation rotation, Vector3 translation) {
 		this.rotation = rotation;
 		this.translation = translation;
 	}
@@ -55,8 +50,7 @@ public class Transformation
 	/**
 	 * Copy constructor. Completes a shallow copy of the given transformation object
 	 */
-	public Transformation(Transformation t)
-	{
+	public Transformation(Transformation t) {
 		rotation = t.rotation;
 		translation = t.translation;
 	}
@@ -65,8 +59,7 @@ public class Transformation
 	 * Returns the transform that when combined with the current one, will return the identity transformation.
 	 * @return the inverse transformation
 	 */
-	public Transformation inverse()
-	{
+	public Transformation inverse() {
 		Orientation inverseRotation = rotation.inverse();
 		return new Transformation(inverseRotation, inverseRotation.transform(translation).times(-1));
 	}
@@ -77,8 +70,7 @@ public class Transformation
 	 * @param t a transformation
 	 * @return the resulting transformation
 	 */
-	public Transformation composeAfter(Transformation t)
-	{
+	public Transformation composeAfter(Transformation t) {
 		Vector3 trans = t.rotation.transform(translation);
 		Orientation rot = t.rotation.transform(rotation);
 		
@@ -91,8 +83,7 @@ public class Transformation
 	 * @param t a transformation
 	 * @return the resulting transformation
 	 */
-	public Transformation composeBefore(Transformation t)
-	{
+	public Transformation composeBefore(Transformation t) {
 		Vector3 trans = rotation.transform(t.translation);
 		Orientation rot = rotation.transform(t.rotation);
 		
@@ -104,8 +95,7 @@ public class Transformation
 	 * @param v a vector
 	 * @return the transformed vector
 	 */
-	public Vector3 transform(Vector3 v)
-	{
+	public Vector3 transform(Vector3 v) {
 		return rotation.transform(v).hyperTranslate(translation);
 	}
 	
@@ -114,8 +104,7 @@ public class Transformation
 	 * @param v a vector
 	 * @return the transformed vector
 	 */
-	public Vector3 inverseTransform(Vector3 v)
-	{
+	public Vector3 inverseTransform(Vector3 v) {
 		return rotation.useAsBasis(v.hyperTranslate(translation.times(-1)));
 	}
 	
@@ -123,8 +112,7 @@ public class Transformation
 	 * Returns the initial rotation of the transformation.
 	 * @return the initial rotation of the transformation
 	 */
-	public Orientation getRotation()
-	{
+	public Orientation getRotation() {
 		return rotation;
 	}
 	
@@ -132,8 +120,7 @@ public class Transformation
 	 * Returns the final translation of the transformation.
 	 * @return the final translation of the transformation
 	 */
-	public Vector3 getTranslation()
-	{
+	public Vector3 getTranslation() {
 		return translation;
 	}
 }

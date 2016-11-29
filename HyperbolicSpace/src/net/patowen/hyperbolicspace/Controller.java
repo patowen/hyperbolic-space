@@ -28,8 +28,7 @@ import net.patowen.hyperbolicspace.rendering.TextureBank;
  * data without having to pass things around arbitrary.
  * @author Patrick Owen
  */
-public class Controller
-{
+public class Controller {
 	private FPSAnimator anim;
 	private ShaderUniformHandler matrixHandler;
 	private InputHandler inputHandler;
@@ -43,8 +42,7 @@ public class Controller
 	/**
 	 * Constructs all meshes
 	 */
-	public void init()
-	{
+	public void init() {
 		dodecahedron = new Dodecahedron(this);
 		building = new Building(this);
 		horosphere = new Horosphere(this);
@@ -57,8 +55,7 @@ public class Controller
 	 * Initializes all textures and prepares all meshes for rendering
 	 * @param gl
 	 */
-	public void renderInit(GL3 gl)
-	{
+	public void renderInit(GL3 gl) {
 		textureBank = new TextureBank();
 		textureBank.initTextures(gl);
 		
@@ -73,16 +70,14 @@ public class Controller
 	/**
 	 * Gracefully quits the application
 	 */
-	public void exit()
-	{
+	public void exit() {
 		anim.stop();
 	}
 	
 	/**
 	 * Begins the render loop
 	 */
-	public void startAnimation()
-	{
+	public void startAnimation() {
 		anim = new FPSAnimator(win, 60, true);
 		anim.start();
 	}
@@ -90,23 +85,18 @@ public class Controller
 	/**
 	 * Toggles whether the window is fullscreen
 	 */
-	public void toggleFullscreen()
-	{
+	public void toggleFullscreen() {
 		win.setFullscreen(!win.isFullscreen());
 	}
 	
 	/**
 	 * Initializes OpenGL and creates a window with the OpenGL3 context
 	 */
-	public void createWindow()
-	{
+	public void createWindow() {
 		GLCapabilities caps;
-		try
-		{
+		try {
 			caps = new GLCapabilities(GLProfile.get("GL3"));
-		}
-		catch (GLException e)
-		{
+		} catch (GLException e) {
 			JOptionPane.showMessageDialog(null, "Your video card does not support OpenGL3, which is required to run this application.",
 					"OpenGL3 not supported", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -121,8 +111,7 @@ public class Controller
 	/**
 	 * Initializes the listener for input
 	 */
-	public void createInputHandler()
-	{
+	public void createInputHandler() {
 		inputHandler = new InputHandler(this);
 	}
 	
@@ -130,8 +119,7 @@ public class Controller
 	 * Loads the shader resources and compiles all the shaders
 	 * @param gl
 	 */
-	public void initShaders(GL3 gl)
-	{
+	public void initShaders(GL3 gl) {
 		ShaderProgram prog = new ShaderProgram();
 		prog.init(gl);
 		
@@ -159,8 +147,7 @@ public class Controller
 	 * Returns the main {@code MatrixHandler} object
 	 * @return a reference to the main {@code MatrixHandler} object
 	 */
-	public ShaderUniformHandler getMatrixHandler()
-	{
+	public ShaderUniformHandler getMatrixHandler() {
 		return matrixHandler;
 	}
 	
@@ -168,8 +155,7 @@ public class Controller
 	 * Returns the main {@code InputHandler} object
 	 * @return a reference to the main {@code InputHandler} object
 	 */
-	public InputHandler getInputHandler()
-	{
+	public InputHandler getInputHandler() {
 		return inputHandler;
 	}
 	
@@ -177,8 +163,7 @@ public class Controller
 	 * Returns the main window
 	 * @return a reference to the main window
 	 */
-	public GLWindow getWindow()
-	{
+	public GLWindow getWindow() {
 		return win;
 	}
 	
@@ -186,8 +171,7 @@ public class Controller
 	 * Returns the main {@code TextureBank} object
 	 * @return a reference to the main {@code TextureBank} object
 	 */
-	public TextureBank getTextureBank()
-	{
+	public TextureBank getTextureBank() {
 		return textureBank;
 	}
 }

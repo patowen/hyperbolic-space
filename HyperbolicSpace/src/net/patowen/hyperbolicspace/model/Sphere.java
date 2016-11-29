@@ -17,8 +17,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNodeType;
  * horosphere represented is equivalent to a large square in Euclidean geometry.
  * @author Patrick Owen
  */
-public class Sphere implements SceneNodeType
-{
+public class Sphere implements SceneNodeType {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
@@ -30,17 +29,14 @@ public class Sphere implements SceneNodeType
 	 * Initializes the {@code Horosphere} mesh.
 	 * @param c
 	 */
-	public Sphere(Controller c)
-	{
+	public Sphere(Controller c) {
 		this.c = c;
 		Model model = new Model();
 		int slices = numSteps*2, stacks = numSteps;
 		VertexGrid grid = new VertexGrid(slices, stacks); //slices, stacks
 		
-		for (int slice=0; slice<=slices; slice++)
-		{
-			for (int stack=0; stack<=stacks; stack++)
-			{
+		for (int slice=0; slice<=slices; slice++) {
+			for (int stack=0; stack<=stacks; stack++) {
 				double phi = stack*Math.PI/stacks;
 				double theta = slice*Math.PI*2/slices;
 				Vector3 unitVector = new Vector3(
@@ -58,14 +54,12 @@ public class Sphere implements SceneNodeType
 		sceneNode.setModel(model);
 	}
 	
-	public void renderInit(GL3 gl)
-	{
+	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().stone);
 	}
 	
-	public void render(GL3 gl, Transform t)
-	{
+	public void render(GL3 gl, Transform t) {
 		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}

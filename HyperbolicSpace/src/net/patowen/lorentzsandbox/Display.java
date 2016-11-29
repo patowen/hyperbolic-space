@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Display extends JPanel implements MouseListener, MouseMotionListener
-{
+public class Display extends JPanel implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 1L;
 	
 	private DrawHelper helper;
@@ -22,8 +21,7 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 	private ArrayList<Node> nodes;
 	private Node activeNode;
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		JFrame frame = new JFrame("Lorentz Sandbox");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -35,8 +33,7 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		frame.setVisible(true);
 	}
 	
-	public Display()
-	{
+	public Display() {
 		setPreferredSize(new Dimension(480, 480));
 		helper = new DrawHelper();
 		
@@ -49,8 +46,7 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		addMouseMotionListener(this);
 	}
 	
-	public void paint(Graphics g1)
-	{
+	public void paint(Graphics g1) {
 		Graphics2D g = (Graphics2D)g1;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
@@ -63,8 +59,7 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 		draw(g);
 	}
 	
-	public void draw(Graphics2D g)
-	{
+	public void draw(Graphics2D g) {
 		helper.drawEuclideanCircle(g, new Vector2(), 1, false);
 		
 		for (int i=0; i<nodes.size(); i++)
@@ -75,10 +70,8 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e)
-	{
-		if (activeNode != null)
-		{
+	public void mouseDragged(MouseEvent e) {
+		if (activeNode != null) {
 			Vector2 v = new Vector2(helper.getX(e.getX()), helper.getY(e.getY()));
 			double magnitude = v.magnitude();
 			if (magnitude > 0.999)
@@ -95,18 +88,15 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e)
-	{
+	public void mousePressed(MouseEvent e) {
 		Vector2 mouse = new Vector2(helper.getX(e.getX()), helper.getY(e.getY()));
 		
 		double maxDist = 0.05;
 		activeNode = null;
 		
-		for (Node node : nodes)
-		{
+		for (Node node : nodes) {
 			double newDist = node.v.poincare().minus(mouse).magnitude();
-			if (newDist < maxDist)
-			{
+			if (newDist < maxDist) {
 				maxDist = newDist;
 				activeNode = node;
 			}
@@ -114,8 +104,7 @@ public class Display extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e)
-	{
+	public void mouseReleased(MouseEvent e) {
 		activeNode = null;
 	}
 

@@ -19,8 +19,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNodeType;
  * this has not yet been implemented.
  * @author Patrick Owen
  */
-public class Building implements SceneNodeType
-{
+public class Building implements SceneNodeType {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
@@ -35,8 +34,7 @@ public class Building implements SceneNodeType
 	 * Initializes the {@code Building} mesh.
 	 * @param c
 	 */
-	public Building(Controller c)
-	{
+	public Building(Controller c) {
 		this.c = c;
 		Model model = new Model();
 		
@@ -46,8 +44,7 @@ public class Building implements SceneNodeType
 		
 		Vector31 center = new Vector31(0, 0, 0, 1);
 		Vector31[] corners = new Vector31[baseSides];
-		for (int i=0; i<baseSides; i++)
-		{
+		for (int i=0; i<baseSides; i++) {
 			double theta = i*Math.PI*2/baseSides;
 			corners[i] = new Vector31(dx*Math.cos(theta), dx*Math.sin(theta), 0, dx+1);
 		}
@@ -55,8 +52,7 @@ public class Building implements SceneNodeType
 		//Base
 		Polygon base = new Polygon(baseSides);
 		base.setCenterPosition(center);
-		for (int j=0; j<baseSides; j++)
-		{
+		for (int j=0; j<baseSides; j++) {
 			base.setPosition(j, corners[baseSides-j-1]);
 		}
 		base.setTexCoordsRegular(new Vector2(0.75, 0.25), 0.25, 0.25, 0);
@@ -65,15 +61,12 @@ public class Building implements SceneNodeType
 		//Sides
 		VertexGrid[] grids = new VertexGrid[baseSides];
 		int numSteps = numWraps*heightStepsPerWrap;
-		for (int j=0; j<baseSides; j++)
-		{
+		for (int j=0; j<baseSides; j++) {
 			grids[j] = new VertexGrid(1, numSteps);
 			grids[j].setTexCoords(0, 0, 0.5, 1, 1, heightStepsPerWrap, 0, 0);
 		}
-		for (int i=0; i<=numSteps; i++)
-		{
-			for (int j=0; j<baseSides; j++)
-			{
+		for (int i=0; i<=numSteps; i++) {
+			for (int j=0; j<baseSides; j++) {
 				int j1 = j+1; if (j1 == baseSides) j1 = 0;
 				grids[j].setPosition(0, i, corners[j]);
 				grids[j].setPosition(1, i, corners[j1]);
@@ -81,15 +74,13 @@ public class Building implements SceneNodeType
 				grids[j].setNormal(1, i, new Vector31());
 			}
 			
-			if (i != numSteps)
-			{
+			if (i != numSteps) {
 				for (int j=0; j<baseSides; j++)
 					corners[j] = dzTransform.transform(corners[j]);
 				center = dzTransform.transform(center);
 			}
 		}
-		for (int j=0; j<baseSides; j++)
-		{
+		for (int j=0; j<baseSides; j++) {
 			grids[j].addToModel(model);
 		}
 		
@@ -106,14 +97,12 @@ public class Building implements SceneNodeType
 		sceneNode.setModel(model);
 	}
 	
-	public void renderInit(GL3 gl)
-	{
+	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().metal);
 	}
 	
-	public void render(GL3 gl, Transform t)
-	{
+	public void render(GL3 gl, Transform t) {
 		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}

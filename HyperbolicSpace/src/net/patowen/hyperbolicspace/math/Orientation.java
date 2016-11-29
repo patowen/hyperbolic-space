@@ -6,8 +6,7 @@ package net.patowen.hyperbolicspace.math;
  * orientation the object would assume if directly translated to the origin.
  * @author Patrick Owen
  */
-public class Orientation
-{
+public class Orientation {
 	/**
 	 * The forward-facing component of the orientation, or the first column of the matrix.
 	 */
@@ -29,8 +28,7 @@ public class Orientation
 	 * @param y the right-facing component of the orientation, or the second column of the matrix
 	 * @param z the up-facing component of the orientation, or the third column of the matrix
 	 */
-	public Orientation(Vector3 x, Vector3 y, Vector3 z)
-	{
+	public Orientation(Vector3 x, Vector3 y, Vector3 z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -40,16 +38,14 @@ public class Orientation
 	 * Constructs an {@code Orientation} object that represents the same orientation as the argument.
 	 * @param o an {@code Orientation}
 	 */
-	public Orientation(Orientation o)
-	{
+	public Orientation(Orientation o) {
 		this(new Vector3(o.x), new Vector3(o.y), new Vector3(o.z));
 	}
 	
 	/**
 	 * Constructs an {@code Orientation} object with the identity matrix, representing a neutral orientation.
 	 */
-	public Orientation()
-	{
+	public Orientation() {
 		this(new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1));
 	}
 	
@@ -57,8 +53,7 @@ public class Orientation
 	 * Returns the orientation that when combined with the current one, will return the neutral orientation.
 	 * @return the inverse orientation
 	 */
-	public Orientation inverse()
-	{
+	public Orientation inverse() {
 		return new Orientation(new Vector3(x.x, y.x, z.x), new Vector3(x.y, y.y, z.y), new Vector3(x.z, y.z, z.z));
 	}
 	
@@ -68,8 +63,7 @@ public class Orientation
 	 * of the x and z vectors before the call to this method. The purpose of this method is to prevent
 	 * floating point errors from building up and ruining the matrix.
 	 */
-	public void normalize()
-	{
+	public void normalize() {
 		x.normalize();
 		y = z.cross(x);
 		y.normalize();
@@ -81,8 +75,7 @@ public class Orientation
 	 * @param v a unit vector
 	 * @param theta the angle in radians
 	 */
-	public void rotate(Vector3 v, double theta)
-	{
+	public void rotate(Vector3 v, double theta) {
 		x.rotate(v, theta);
 		y.rotate(v, theta);
 		z.rotate(v, theta);
@@ -95,8 +88,7 @@ public class Orientation
 	 * @param v a vector
 	 * @return a vector that represents the argument in the basis given by the orientation
 	 */
-	public Vector3 useAsBasis(Vector3 v)
-	{
+	public Vector3 useAsBasis(Vector3 v) {
 		return new Vector3(x.dot(v), y.dot(v), z.dot(v));
 	}
 	
@@ -105,8 +97,7 @@ public class Orientation
 	 * @param v a vector
 	 * @return a vector that represents the argument transformed by the orientation
 	 */
-	public Vector3 transform(Vector3 v)
-	{
+	public Vector3 transform(Vector3 v) {
 		return new Vector3(
 				x.x*v.x+y.x*v.y+z.x*v.z,
 				x.y*v.x+y.y*v.y+z.y*v.z,
@@ -118,8 +109,7 @@ public class Orientation
 	 * @param o an orientation
 	 * @return an orientation that represents the argument transformed by the orientation
 	 */
-	public Orientation transform(Orientation o)
-	{
+	public Orientation transform(Orientation o) {
 		return new Orientation(transform(o.x), transform(o.y), transform(o.z));
 	}
 	
@@ -130,8 +120,7 @@ public class Orientation
 	 * @param v a vector of magnitude less than 1
 	 * @return the orientation after the translation
 	 */
-	public Orientation hyperTranslate(Vector3 pos, Vector3 v)
-	{
+	public Orientation hyperTranslate(Vector3 pos, Vector3 v) {
 		Vector3 x = this.x.hyperTranslate(pos).hyperTranslate(v);
 		Vector3 y = this.y;
 		Vector3 z = this.z.hyperTranslate(pos).hyperTranslate(v);
@@ -149,8 +138,7 @@ public class Orientation
 	/**
 	 * Returns a string representation of the orientation
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return "[" + x + "," + y + "," + z + "]";
 	}
 }

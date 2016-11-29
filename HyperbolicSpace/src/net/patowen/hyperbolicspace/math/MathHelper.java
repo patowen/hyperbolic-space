@@ -5,15 +5,13 @@ package net.patowen.hyperbolicspace.math;
  * the {@code Math} class for certain operations.
  * @author Patrick Owen
  */
-public class MathHelper
-{
+public class MathHelper {
 	/**
 	 * Returns the inverse hyperbolic sine of the argument
 	 * @param x
 	 * @return arsinh x
 	 */
-	public static double asinh(double x)
-	{
+	public static double asinh(double x) {
 		return Math.log(x + Math.sqrt(1+x*x));
 	}
 	
@@ -22,8 +20,7 @@ public class MathHelper
 	 * @param x
 	 * @return arcosh x
 	 */
-	public static double acosh(double x)
-	{
+	public static double acosh(double x) {
 		return Math.log(x + Math.sqrt(x*x-1));
 	}
 	
@@ -32,8 +29,7 @@ public class MathHelper
 	 * @param x
 	 * @return artanh x
 	 */
-	public static double atanh(double x)
-	{
+	public static double atanh(double x) {
 		return 0.5 * (Math.log1p(x) - Math.log1p(-x));
 	}
 	
@@ -42,8 +38,7 @@ public class MathHelper
 	 * @param x
 	 * @return x^2
 	 */
-	public static double sqr(double x)
-	{
+	public static double sqr(double x) {
 		return x*x;
 	}
 	
@@ -54,8 +49,7 @@ public class MathHelper
 	 * @param lower
 	 * @return x + a*n in the specified range for some a
 	 */
-	public static int modBound(int x, int n, int lower)
-	{
+	public static int modBound(int x, int n, int lower) {
 		return Math.floorMod(x-lower, n)+lower;
 	}
 }

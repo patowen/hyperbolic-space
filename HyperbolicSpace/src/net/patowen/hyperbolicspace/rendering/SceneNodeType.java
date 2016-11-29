@@ -8,8 +8,7 @@ import net.patowen.hyperbolicspace.math.Transform;
  * Represents a mesh with a texture that can be drawn at any location
  * @author Patrick Owen
  */
-public interface SceneNodeType
-{
+public interface SceneNodeType {
 	/**
 	 * Prepares all scene nodes of this type for rendering.
 	 * @param gl

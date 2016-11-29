@@ -8,8 +8,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
 
 @SuppressWarnings("unused")
-public class Cylinder implements SceneNodeType
-{
+public class Cylinder implements SceneNodeType {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
@@ -20,8 +19,7 @@ public class Cylinder implements SceneNodeType
 	private int heightStepsPerWrap = 6;
 	private int numWraps = 7;
 	
-	public Cylinder(Controller c)
-	{
+	public Cylinder(Controller c) {
 //		this.c = c;
 //		ArrayList<Vertex> v = new ArrayList<Vertex>();
 //		
@@ -149,14 +147,12 @@ public class Cylinder implements SceneNodeType
 //		sceneNode.prepare();
 	}
 	
-	public void renderInit(GL3 gl)
-	{
+	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().metal);
 	}
 	
-	public void render(GL3 gl, Transform t)
-	{
+	public void render(GL3 gl, Transform t) {
 		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}

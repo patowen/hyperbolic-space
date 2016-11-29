@@ -4,8 +4,7 @@ package net.patowen.hyperbolicspace.math;
  * The {@code Vector3} class represents a given vector in 3-dimensional Euclidean space.
  * @author Patrick Owen
  */
-public class Vector2
-{
+public class Vector2 {
 	/**
 	 * The x-coordinate of the vector.
 	 */
@@ -19,8 +18,7 @@ public class Vector2
 	/**
 	 * Constructs a {@code Vector2} object representing the zero vector.
 	 */
-	public Vector2()
-	{
+	public Vector2() {
 		x = 0; y = 0;
 	}
 	
@@ -28,16 +26,14 @@ public class Vector2
 	 * Constructs a {@code Vector2} object that represents the same vector as the argument.
 	 * @param v a {@code Vector2}
 	 */
-	public Vector2(Vector2 v)
-	{
+	public Vector2(Vector2 v) {
 		this(v.x, v.y);
 	}
 	
 	/**
 	 * Changes the vector to the zero vector.
 	 */
-	public void reset()
-	{
+	public void reset() {
 		x = 0; y = 0;
 	}
 	
@@ -46,14 +42,12 @@ public class Vector2
 	 * @param x the x-coordinate of the vector.
 	 * @param y the y-coordinate of the vector.
 	 */
-	public Vector2(double x, double y)
-	{
+	public Vector2(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public Vector2(double[] coords)
-	{
+	public Vector2(double[] coords) {
 		x = coords[0];
 		y = coords[1];
 	}
@@ -62,11 +56,9 @@ public class Vector2
 	 * Changes the vector to the unit vector pointing in the same direction. This method
 	 * does nothing to the zero vector.
 	 */
-	public void normalize()
-	{
+	public void normalize() {
 		double dist = x*x+y*y;
-		if (dist > 0)
-		{
+		if (dist > 0) {
 			double size = Math.sqrt(dist);
 			x /= size;
 			y /= size;
@@ -77,8 +69,7 @@ public class Vector2
 	 * Returns the magnitude of the vector.
 	 * @return the magnitude, or Euclidean norm, of the vector
 	 */
-	public double magnitude()
-	{
+	public double magnitude() {
 		return Math.sqrt(x*x+y*y);
 	}
 	
@@ -86,8 +77,7 @@ public class Vector2
 	 * Returns the squared magnitude of the vector.
 	 * @return the magnitude squared, or the dot product of the vector and itself
 	 */
-	public double squared()
-	{
+	public double squared() {
 		return x*x+y*y;
 	}
 	
@@ -96,8 +86,7 @@ public class Vector2
 	 * @param v a vector
 	 * @return the vector plus the argument
 	 */
-	public Vector2 plus(Vector2 v)
-	{
+	public Vector2 plus(Vector2 v) {
 		return new Vector2(x+v.x, y+v.y);
 	}
 	
@@ -107,8 +96,7 @@ public class Vector2
 	 * @param c a scalar factor
 	 * @return the vector plus the argument times the given scalar
 	 */
-	public Vector2 plusMultiple(Vector2 v, double c)
-	{
+	public Vector2 plusMultiple(Vector2 v, double c) {
 		return new Vector2(x+v.x*c, y+v.y*c);
 	}
 	
@@ -117,8 +105,7 @@ public class Vector2
 	 * @param v a vector
 	 * @return the vector minus the argument
 	 */
-	public Vector2 minus(Vector2 v)
-	{
+	public Vector2 minus(Vector2 v) {
 		return new Vector2(x-v.x, y-v.y);
 	}
 	
@@ -127,8 +114,7 @@ public class Vector2
 	 * @param c a scalar factor
 	 * @return the vector times the scalar factor
 	 */
-	public Vector2 times(double c)
-	{
+	public Vector2 times(double c) {
 		return new Vector2(c*x, c*y);
 	}
 	
@@ -137,8 +123,7 @@ public class Vector2
 	 * @param v a vector
 	 * @return the dot product of the vector and the argument
 	 */
-	public double dot(Vector2 v)
-	{
+	public double dot(Vector2 v) {
 		return (x*v.x + y*v.y);
 	}
 	
@@ -146,8 +131,7 @@ public class Vector2
 	 * Returns a perpendicular vector to the current vector.
 	 * @return the cross product of the vector and <0,0,1>
 	 */
-	public Vector2 cross()
-	{
+	public Vector2 cross() {
 		return new Vector2(y, -x);
 	}
 	
@@ -155,8 +139,7 @@ public class Vector2
 	 * Rotates the vector about the origin by {@code theta}.
 	 * @param theta the angle in radians
 	 */
-	public void rotate(double theta)
-	{
+	public void rotate(double theta) {
 		double c = Math.cos(theta), s = Math.sin(theta);
 		
 		double xNew = x*c - y*s;
@@ -171,8 +154,7 @@ public class Vector2
 	 * @param v a vector of magnitude less than 1
 	 * @return the vector after the translation
 	 */
-	public Vector2 hyperTranslate(Vector2 v)
-	{
+	public Vector2 hyperTranslate(Vector2 v) {
 		double denom = v.squared()*squared() + 2*dot(v) + 1;
 		double vFactor = 1 + squared() + 2*dot(v);
 		double factor = 1 - v.squared();
@@ -186,8 +168,7 @@ public class Vector2
 	 * @param x a unit vector
 	 * @return the direction from the vector to {@code x}
 	 */
-	public Vector2 hyperDirectionTo(Vector2 x)
-	{
+	public Vector2 hyperDirectionTo(Vector2 x) {
 		Vector2 v = this;
 		Vector2 diff = x.minus(v);
 		return diff.times(2*diff.dot(x)/diff.squared()).minus(x);
@@ -200,8 +181,7 @@ public class Vector2
 	 * @param v the distance along the horocycle the origin is moved
 	 * @return the rotated vector
 	 */
-	public Vector2 horoRotate(Vector2 q, Vector2 r, double v)
-	{
+	public Vector2 horoRotate(Vector2 q, Vector2 r, double v) {
 		double zmqs = this.minus(q).squared();
 		double denom = v*v*zmqs + 2*v*this.dot(r) + 1;
 		double rFactor = v*zmqs;
@@ -214,8 +194,7 @@ public class Vector2
 	/**
 	 * Returns a string representation of the vector
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return "(" + x + "," + y + ")";
 	}
 }

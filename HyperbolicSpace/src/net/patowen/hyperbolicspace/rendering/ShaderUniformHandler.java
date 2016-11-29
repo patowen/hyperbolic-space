@@ -17,8 +17,7 @@ import net.patowen.hyperbolicspace.math.Transform;
  * values.
  * @author Patrick Owen
  */
-public class ShaderUniformHandler
-{
+public class ShaderUniformHandler {
 	private ShaderState shaderState;
 	
 	private Transform transform;
@@ -37,8 +36,7 @@ public class ShaderUniformHandler
 	 * @param shaderState the {@code ShaderState} representing the shader whose
 	 * uniforms are set
 	 */
-	public ShaderUniformHandler(ShaderState shaderState)
-	{
+	public ShaderUniformHandler(ShaderState shaderState) {
 		this.shaderState = shaderState;
 		
 		transform = Transform.identity();
@@ -57,8 +55,7 @@ public class ShaderUniformHandler
 	/**
 	 * Sets the stored transformation to the identity
 	 */
-	public void reset()
-	{
+	public void reset() {
 		transform = Transform.identity();
 	}
 	
@@ -66,16 +63,14 @@ public class ShaderUniformHandler
 	 * Adds the specified transformation relative to the current transformation
 	 * @param t The transformation to apply before the current one
 	 */
-	public void addTransformation(Transform t)
-	{
+	public void addTransformation(Transform t) {
 		transform = transform.transform(t);
 	}
 	
 	/**
 	 * Stores the current transformation onto a stack for later retrieval
 	 */
-	public void pushTransformation()
-	{
+	public void pushTransformation() {
 		transformStack.push(transform);
 	}
 	
@@ -83,8 +78,7 @@ public class ShaderUniformHandler
 	 * Sets the current transformation to the previously stored transformation
 	 * on the stack
 	 */
-	public void popTransformation()
-	{
+	public void popTransformation() {
 		transform = transformStack.pop();
 	}
 	
@@ -93,8 +87,7 @@ public class ShaderUniformHandler
 	 * @param perspective the perspective matrix represented via a
 	 * 16-value array in column-major order
 	 */
-	public void setPerspective(float[] perspective)
-	{
+	public void setPerspective(float[] perspective) {
 		System.arraycopy(perspective, 0, perspectiveArray, 0, 16);
 	}
 	
@@ -102,8 +95,7 @@ public class ShaderUniformHandler
 	 * Sets the stored color to the given color
 	 * @param color the color represented via a 4-value array (r, g, b, a)
 	 */
-	public void setColor(float[] color)
-	{
+	public void setColor(float[] color) {
 		System.arraycopy(color, 0, colorArray, 0, 4);
 	}
 	
@@ -112,8 +104,7 @@ public class ShaderUniformHandler
 	 * should be called before drawing anything if anything was changed.
 	 * @param gl
 	 */
-	public void update(GL3 gl)
-	{
+	public void update(GL3 gl) {
 		transformBuf.put(new float[] {
 				(float)transform.x.x, (float)transform.x.y, (float)transform.x.z, (float)transform.x.w,
 				(float)transform.y.x, (float)transform.y.y, (float)transform.y.z, (float)transform.y.w,

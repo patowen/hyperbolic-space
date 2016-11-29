@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import net.patowen.hyperbolicspace.math.Vector3;
 
 @SuppressWarnings("unused")
-public class CollisionHandler
-{
-	private static class Wall
-	{
+public class CollisionHandler {
+	private static class Wall {
 		public Vector3 v1, v2, v3; //vertices
 		
 		public Wall(Vector3 v1, Vector3 v2, Vector3 v3)
@@ -19,8 +17,7 @@ public class CollisionHandler
 		}
 	}
 	
-	private static class Collision
-	{
+	private static class Collision {
 		public double t; //time
 		public Vector3 n; //normal
 		
@@ -39,18 +36,15 @@ public class CollisionHandler
 	
 	private ArrayList<Wall> walls;
 	
-	public CollisionHandler()
-	{
+	public CollisionHandler() {
 		walls = new ArrayList<Wall>();
 	}
 	
-	public void addWall(Vector3 v1, Vector3 v2, Vector3 v3)
-	{
+	public void addWall(Vector3 v1, Vector3 v2, Vector3 v3) {
 		walls.add(new Wall(v1, v2, v3));
 	}
 	
-	public double getSphereCollision(double px, double py, double pz, double radius, double pxd, double pyd, double pzd)
-	{
+	public double getSphereCollision(double px, double py, double pz, double radius, double pxd, double pyd, double pzd) {
 		double buffer = 0.001;
 		if (pxd == 0 && pyd == 0 && pzd == 0) return 1;
 		double pd = Math.sqrt(pxd*pxd + pyd*pyd + pzd*pzd); buffer /= pd; //TODO Euclidean
@@ -64,8 +58,7 @@ public class CollisionHandler
 		double nx = 0, ny = 0, nz = 0;
 		
 		//Check for collision with environment walls.
-		for (int i=0; i<walls.size(); i+=1)
-		{
+		for (int i=0; i<walls.size(); i+=1) {
 //			double x1 = cX1.get(i), y1 = cY1.get(i), z1 = cZ1.get(i);
 //			double x2 = cX2.get(i), y2 = cY2.get(i), z2 = cZ2.get(i);
 //			double x3 = cX3.get(i), y3 = cY3.get(i), z3 = cZ3.get(i);

@@ -8,8 +8,7 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 
-public class Model
-{
+public class Model {
 	private ArrayList<Vertex> vertices;
 	private ArrayList<Integer> elements;
 	
@@ -20,29 +19,25 @@ public class Model
 	private int texCoordBufferPos;
 	private int elementBufferPos;
 	
-	public Model()
-	{
+	public Model() {
 		vertices = new ArrayList<>();
 		elements = new ArrayList<>();
 	}
 	
-	public void init(GL3 gl)
-	{
+	public void init(GL3 gl) {
 		FloatBuffer vertexBuffer = Buffers.newDirectFloatBuffer(4*vertices.size());
 		FloatBuffer normalBuffer = Buffers.newDirectFloatBuffer(4*vertices.size());
 		FloatBuffer texCoordBuffer = Buffers.newDirectFloatBuffer(2*vertices.size());
 		IntBuffer elementBuffer = Buffers.newDirectIntBuffer(elements.size());
 		
-		for (Vertex vertex : vertices)
-		{
+		for (Vertex vertex : vertices) {
 			vertex.use(vertexBuffer, normalBuffer, texCoordBuffer);
 		}
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
 		texCoordBuffer.rewind();
 		
-		for (int element : elements)
-		{
+		for (int element : elements) {
 			elementBuffer.put(element);
 		}
 		elementBuffer.rewind();
@@ -82,28 +77,24 @@ public class Model
 		gl.glBindVertexArray(0);
 	}
 	
-	public int addVertex(Vertex vertex)
-	{
+	public int addVertex(Vertex vertex) {
 		int nextVertex = vertices.size();
 		vertices.add(vertex);
 		return nextVertex;
 	}
 	
-	public void addTriangle(int v1, int v2, int v3)
-	{
+	public void addTriangle(int v1, int v2, int v3) {
 		elements.add(v1);
 		elements.add(v2);
 		elements.add(v3);
 	}
 	
-	public void addQuad(int v1, int v2, int v3, int v4)
-	{
+	public void addQuad(int v1, int v2, int v3, int v4) {
 		addTriangle(v1, v2, v3);
 		addTriangle(v1, v3, v4);
 	}
 	
-	public void render(GL3 gl)
-	{
+	public void render(GL3 gl) {
 		gl.glBindVertexArray(vertexArrayBufferPos);
 		
 		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);

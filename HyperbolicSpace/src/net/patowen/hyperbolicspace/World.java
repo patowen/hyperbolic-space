@@ -13,8 +13,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNode;
  * represents the scene itself
  * @author Patrick Owen
  */
-public class World
-{
+public class World {
 	private Controller c;
 	
 	private ArrayList<SceneNode> nodes; //List of rendered nodes
@@ -27,8 +26,7 @@ public class World
 	 * Initializes the world and its {@code Player} object
 	 * @param c
 	 */
-	public World(Controller c)
-	{
+	public World(Controller c) {
 		this.c = c;
 		
 		nodes = new ArrayList<SceneNode>();
@@ -40,8 +38,7 @@ public class World
 	 * @param width The width in pixels of the viewport
 	 * @param height The height in pixels of the viewport
 	 */
-	public void setViewport(int width, int height)
-	{
+	public void setViewport(int width, int height) {
 		viewportWidth = width;
 		viewportHeight = height;
 	}
@@ -49,8 +46,7 @@ public class World
 	/**
 	 * Resets the world to how it was before it was initialized
 	 */
-	public void reset()
-	{
+	public void reset() {
 		nodes.clear();
 		player = new Player(c, this);
 		flag = new FlagField(c, this);
@@ -66,8 +62,7 @@ public class World
 	 * Spawns the specified node into the scene
 	 * @param sceneNode the node to add
 	 */
-	public void addNode(SceneNode sceneNode)
-	{
+	public void addNode(SceneNode sceneNode) {
 		nodes.add(sceneNode);
 	}
 	
@@ -75,8 +70,7 @@ public class World
 	 * Handles a step of the world's logic
 	 * @param dt the time step in seconds
 	 */
-	public void step(double dt)
-	{
+	public void step(double dt) {
 		InputHandler inputHandler = c.getInputHandler();
 		player.step(dt);
 		flag.step(dt);
@@ -93,8 +87,7 @@ public class World
 	 * Renders a single frame of the world
 	 * @param gl
 	 */
-	public void render(GL3 gl)
-	{
+	public void render(GL3 gl) {
 		player.setPerspective((float)viewportWidth/viewportHeight);
 		player.setView();
 		

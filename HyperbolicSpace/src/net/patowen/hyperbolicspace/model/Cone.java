@@ -18,8 +18,7 @@ import net.patowen.hyperbolicspace.rendering.SceneNodeType;
  * this has not yet been implemented.
  * @author Patrick Owen
  */
-public class Cone implements SceneNodeType
-{
+public class Cone implements SceneNodeType {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
@@ -32,8 +31,7 @@ public class Cone implements SceneNodeType
 	 * Initializes the {@code Building} mesh.
 	 * @param c
 	 */
-	public Cone(Controller c)
-	{
+	public Cone(Controller c) {
 		this.c = c;
 		Model model = new Model();
 		
@@ -43,8 +41,7 @@ public class Cone implements SceneNodeType
 		
 		Vector31 center = new Vector31(0, 0, 0, 1);
 		Vector31[] corners = new Vector31[baseSides];
-		for (int i=0; i<baseSides; i++)
-		{
+		for (int i=0; i<baseSides; i++) {
 			double theta = i*Math.PI*2/baseSides;
 			corners[i] = new Vector31(0, dx*Math.cos(theta), dx*Math.sin(theta), dx+1);
 		}
@@ -52,8 +49,7 @@ public class Cone implements SceneNodeType
 		//Base
 		Polygon base = new Polygon(baseSides);
 		base.setCenterPosition(center);
-		for (int j=0; j<baseSides; j++)
-		{
+		for (int j=0; j<baseSides; j++) {
 			base.setPosition(j, corners[baseSides-j-1]);
 		}
 		base.setTexCoordsRegular(new Vector2(0.75, 0.25), 0.25, 0.25, 0);
@@ -63,8 +59,7 @@ public class Cone implements SceneNodeType
 		Vector31 tip = dzTransform.transform(center);
 		Polygon apex = new Polygon(baseSides);
 		apex.setCenterPosition(tip);
-		for (int j=0; j<baseSides; j++)
-		{
+		for (int j=0; j<baseSides; j++) {
 			apex.setPosition(j, corners[baseSides-j-1]);
 		}
 		apex.setTexCoordsRegular(new Vector2(0.75, 0.25), 0.25, 0.25, 0);
@@ -74,14 +69,12 @@ public class Cone implements SceneNodeType
 		sceneNode.setModel(model);
 	}
 	
-	public void renderInit(GL3 gl)
-	{
+	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().clouds);
 	}
 	
-	public void render(GL3 gl, Transform t)
-	{
+	public void render(GL3 gl, Transform t) {
 		sceneNode.setTransform(t);
 		sceneNode.render(gl);
 	}

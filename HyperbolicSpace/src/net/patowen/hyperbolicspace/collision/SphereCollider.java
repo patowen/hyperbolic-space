@@ -5,16 +5,14 @@ import java.util.Optional;
 import net.patowen.hyperbolicspace.math.Transformation;
 import net.patowen.hyperbolicspace.math.Vector3;
 
-public class SphereCollider
-{
+public class SphereCollider {
 	public Transformation pos;
 	public double radius;
 	public Vector3 direction;
 	public double speed;
 	public double time;
 	
-	public SphereCollider(Transformation pos, double radius, Vector3 direction, double speed, double time)
-	{
+	public SphereCollider(Transformation pos, double radius, Vector3 direction, double speed, double time) {
 		this.pos = pos;
 		this.radius = radius;
 		this.direction = direction;
@@ -22,24 +20,20 @@ public class SphereCollider
 		this.time = time;
 	}
 	
-	private Vector3 getRelativeDirection()
-	{
+	private Vector3 getRelativeDirection() {
 		return direction.hyperTranslate(pos.getTranslation().times(-1));
 	}
 	
-	private void adjustPos(Vector3 relativePos)
-	{
+	private void adjustPos(Vector3 relativePos) {
 		Vector3 loc = pos.getTranslation();
 		pos = new Transformation(pos.getRotation(), relativePos);
 		pos = pos.composeAfter(new Transformation(loc));
 	}
 	
-	public void applyCollision(Optional<Collision> collisionOption)
-	{
+	public void applyCollision(Optional<Collision> collisionOption) {
 		Vector3 dPos;
 		Vector3 relativeDirection = getRelativeDirection();
-		if (collisionOption.isPresent())
-		{
+		if (collisionOption.isPresent()) {
 			Collision collision = collisionOption.get();
 			dPos = relativeDirection.times(Math.tanh(speed*time*collision.distance/2));
 			adjustPos(dPos);
@@ -53,9 +47,7 @@ public class SphereCollider
 			speed = vel.magnitude();
 			vel.normalize();
 			relativeDirection = vel;
-		}
-		else
-		{
+		} else {
 			dPos = relativeDirection.times(Math.tanh(speed*time/2));
 			adjustPos(dPos);
 			time = 0;

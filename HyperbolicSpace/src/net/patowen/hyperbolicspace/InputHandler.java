@@ -15,8 +15,7 @@ import com.jogamp.newt.opengl.GLWindow;
  * The {@code InputHandler} class handles mouse grabbing and keyboard input.
  * @author Patrick Owen
  */
-public class InputHandler implements KeyListener, MouseListener
-{
+public class InputHandler implements KeyListener, MouseListener {
 	private Controller c;
 	private Robot robot;
 	private boolean focused;
@@ -75,17 +74,13 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Initializes the inputs and sets up a {@code Robot} that controls the mouse.
 	 * @param c
 	 */
-	public InputHandler(Controller c)
-	{
+	public InputHandler(Controller c) {
 		this.c = c;
 		GLWindow win = c.getWindow();
 		
-		try
-		{
+		try {
 			robot = new Robot();
-		}
-		catch (AWTException e)
-		{
+		} catch (AWTException e) {
 			throw new RuntimeException("The program will not function properly with the current permissions");
 		}
 		
@@ -132,16 +127,14 @@ public class InputHandler implements KeyListener, MouseListener
 		mouseCanceled = new boolean[NUM_MOUSE_BUTTONS];
 		mousePressed = new boolean[NUM_MOUSE_BUTTONS];
 		mouseHelper = new boolean[NUM_MOUSE_BUTTONS];
-		for (int i=0; i<NUM_KEYS; i++)
-		{
+		for (int i=0; i<NUM_KEYS; i++) {
 			keyDown[i] = false;
 			keyCanceled[i] = false;
 			keyPressed[i] = false;
 			keyHelper[i] = false;
 		}
 		
-		for (int i=0; i<NUM_MOUSE_BUTTONS; i++)
-		{
+		for (int i=0; i<NUM_MOUSE_BUTTONS; i++) {
 			mouseDown[i] = false;
 			mouseCanceled[i] = false;
 			mousePressed[i] = false;
@@ -155,12 +148,10 @@ public class InputHandler implements KeyListener, MouseListener
 	 * @see #getMouseX
 	 * @see #getMouseY
 	 */
-	public void readMouse()
-	{
+	public void readMouse() {
 		GLWindow win = c.getWindow();
 		
-		if (win.hasFocus() && focused)
-		{
+		if (win.hasFocus() && focused) {
 			Point mousePos = MouseInfo.getPointerInfo().getLocation();
 			int centerX = win.getX() + win.getWidth()/2;
 			int centerY = win.getY() + win.getHeight()/2;
@@ -169,9 +160,7 @@ public class InputHandler implements KeyListener, MouseListener
 			mouseY = (mousePos.getY()-centerY)*mouseSensitivity;
 			
 			robot.mouseMove(centerX, centerY);
-		}
-		else
-		{
+		} else {
 			setFocused(false);
 			mouseX = 0;
 			mouseY = 0;
@@ -182,30 +171,21 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Updates which keys are pressed and which are not. This should
 	 * be called once per frame.
 	 */
-	public void updatePressed()
-	{
-		for (int i=0; i<NUM_KEYS; i++)
-		{
-			if (keyHelper[i])
-			{
+	public void updatePressed() {
+		for (int i=0; i<NUM_KEYS; i++) {
+			if (keyHelper[i]) {
 				keyPressed[i] = true;
 				keyHelper[i] = false;
-			}
-			else
-			{
+			} else {
 				keyPressed[i] = false;
 			}
 		}
 		
-		for (int i=0; i<NUM_MOUSE_BUTTONS; i++)
-		{
-			if (mouseHelper[i])
-			{
+		for (int i=0; i<NUM_MOUSE_BUTTONS; i++) {
+			if (mouseHelper[i]) {
 				mousePressed[i] = true;
 				mouseHelper[i] = false;
-			}
-			else
-			{
+			} else {
 				mousePressed[i] = false;
 			}
 		}
@@ -215,14 +195,12 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Prevents anything from receiving a given mouse event until the mouse button is released.
 	 * @param button
 	 */
-	public void cancelMouseButton(int button)
-	{
+	public void cancelMouseButton(int button) {
 		if (mouseDown[button])
 			mouseCanceled[button] = true;
 		
 		//Cancel all equivalent mouse events
-		for (int i=0; i<NUM_MOUSE_BUTTONS; i++)
-		{
+		for (int i=0; i<NUM_MOUSE_BUTTONS; i++) {
 			if (i == button) continue;
 			
 			if (mouseDown[i] && mouseButton[i] == mouseButton[button])
@@ -234,14 +212,12 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Prevents anything from receiving a given key event until the key is released.
 	 * @param key
 	 */
-	public void cancelKey(int key)
-	{
+	public void cancelKey(int key) {
 		if (keyDown[key])
 			keyCanceled[key] = true;
 		
 		//Cancel all equivalent key events
-		for (int i=0; i<NUM_KEYS; i++)
-		{
+		for (int i=0; i<NUM_KEYS; i++) {
 			if (i == key) continue;
 			
 			if (keyDown[i] && keyCode[i] == keyCode[key])
@@ -253,8 +229,7 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Returns the x-component of the displacement of the mouse determined by the readMouse method.
 	 * @see readMouse
 	 */
-	public double getMouseX()
-	{
+	public double getMouseX() {
 		return mouseX;
 	}
 	
@@ -262,8 +237,7 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Returns the y-component of the displacement of the mouse determined by the readMouse method.
 	 * @see readMouse
 	 */
-	public double getMouseY()
-	{
+	public double getMouseY() {
 		return mouseY;
 	}
 	
@@ -271,8 +245,7 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Returns whether a specific control is down.
 	 * @param key Which key to check.
 	 */
-	public boolean getKey(int key)
-	{
+	public boolean getKey(int key) {
 		if (keyCanceled[key]) return false;
 		return keyDown[key];
 	}
@@ -281,8 +254,7 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Returns whether a specific mouse button is down.
 	 * @param button Which button to check.
 	 */
-	public boolean getMouseButton(int button)
-	{
+	public boolean getMouseButton(int button) {
 		if (mouseCanceled[button]) return false;
 		return mouseDown[button];
 	}
@@ -291,8 +263,7 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Returns whether a specific control was just pressed.
 	 * @param key Which key to check.
 	 */
-	public boolean getKeyPressed(int key)
-	{
+	public boolean getKeyPressed(int key) {
 		if (keyCanceled[key]) return false;
 		return keyPressed[key];
 	}
@@ -301,8 +272,7 @@ public class InputHandler implements KeyListener, MouseListener
 	 * Returns whether a specific mouse button was just pressed.
 	 * @param button Which button to check.
 	 */
-	public boolean getMouseButtonPressed(int button)
-	{
+	public boolean getMouseButtonPressed(int button) {
 		if (mouseCanceled[button]) return false;
 		return mousePressed[button];
 	}
@@ -310,22 +280,18 @@ public class InputHandler implements KeyListener, MouseListener
 	/*
 	 * Grabs or releases the mouse depending on the argument.
 	 */
-	private void setFocused(boolean focused)
-	{
+	private void setFocused(boolean focused) {
 		GLWindow win = c.getWindow();
 		
 		this.focused = focused;
-		if (focused)
-		{
+		if (focused) {
 			win.setPointerVisible(false);
 			
 			//Prevent sudden direction changes by resetting the mouse
 			int centerX = win.getX() + win.getWidth()/2;
 			int centerY = win.getY() + win.getHeight()/2;			
 			robot.mouseMove(centerX, centerY);
-		}
-		else
-		{
+		} else {
 			win.setPointerVisible(true);
 		}
 	}
@@ -333,26 +299,21 @@ public class InputHandler implements KeyListener, MouseListener
 	/**
 	 * Updates the keys based on the event received by the component.
 	 */
-	public void keyPressed(KeyEvent e)
-	{
+	public void keyPressed(KeyEvent e) {
 		if (e.isAutoRepeat()) return;
 		
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-		{
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			c.exit();
 		}
 		
-		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-		{
+		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 			if (focused)
 				setFocused(false);
 		}
-		if (e.getKeyCode() == KeyEvent.VK_F11)
-		{
+		if (e.getKeyCode() == KeyEvent.VK_F11) {
 			c.toggleFullscreen();
 			
-			if (focused)
-			{
+			if (focused) {
 				//Prevent sudden direction changes by resetting the mouse
 				GLWindow win = c.getWindow();
 				int centerX = win.getX() + win.getWidth()/2;
@@ -362,10 +323,8 @@ public class InputHandler implements KeyListener, MouseListener
 		}
 		
 		//Handle keys
-		for (int i=0; i<NUM_KEYS; i++)
-		{
-			if (e.getKeyCode() == keyCode[i])
-			{
+		for (int i=0; i<NUM_KEYS; i++) {
+			if (e.getKeyCode() == keyCode[i]) {
 				if (!keyDown[i]) keyHelper[i] = true;
 				keyDown[i] = true;
 			}
@@ -375,15 +334,12 @@ public class InputHandler implements KeyListener, MouseListener
 	/**
 	 * Updates the keys based on the event received by the component.
 	 */
-	public void keyReleased(KeyEvent e)
-	{
+	public void keyReleased(KeyEvent e) {
 		if (e.isAutoRepeat()) return;
 		
 		//Handle all keys
-		for (int i=0; i<NUM_KEYS; i++)
-		{
-			if (e.getKeyCode() == keyCode[i])
-			{
+		for (int i=0; i<NUM_KEYS; i++) {
+			if (e.getKeyCode() == keyCode[i]) {
 				keyDown[i] = false;
 				keyCanceled[i] = false;
 			}
@@ -395,18 +351,14 @@ public class InputHandler implements KeyListener, MouseListener
 	/**
 	 * Updates the mouse buttons based on the event received by the component.
 	 */
-	public void mousePressed(MouseEvent e)
-	{
+	public void mousePressed(MouseEvent e) {
 		//Handle other keys
-		for (int i=0; i<NUM_MOUSE_BUTTONS; i++)
-		{
-			if (e.getButton() == mouseButton[i])
-			{
+		for (int i=0; i<NUM_MOUSE_BUTTONS; i++) {
+			if (e.getButton() == mouseButton[i]) {
 				if (!mouseDown[i]) mouseHelper[i] = true;
 				mouseDown[i] = true;
 				
-				if (focused == false)
-				{
+				if (focused == false) {
 					setFocused(true);
 					mouseCanceled[i] = true;
 				}
@@ -419,13 +371,10 @@ public class InputHandler implements KeyListener, MouseListener
 	/**
 	 * Updates the mouse buttons based on the event received by the component.
 	 */
-	public void mouseReleased(MouseEvent e)
-	{
+	public void mouseReleased(MouseEvent e) {
 		//Handle all buttons
-		for (int i=0; i<NUM_MOUSE_BUTTONS; i++)
-		{
-			if (e.getButton() == mouseButton[i])
-			{
+		for (int i=0; i<NUM_MOUSE_BUTTONS; i++) {
+			if (e.getButton() == mouseButton[i]) {
 				mouseDown[i] = false;
 				mouseCanceled[i] = false;
 			}
