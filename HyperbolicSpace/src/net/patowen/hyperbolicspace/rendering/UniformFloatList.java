@@ -10,10 +10,18 @@ public class UniformFloatList implements ShaderUniformData {
 	private int rows, cols;
 	public float[] list;
 	
-	public UniformFloatList(int rows, int cols) {
+	public UniformFloatList(int rows, int cols, int count) {
 		this.rows = rows;
 		this.cols = cols;
-		list = new float[rows*cols];
+		list = new float[rows*cols*count];
+	}
+	
+	public UniformFloatList(int rows, int cols) {
+		this(rows, cols, 1);
+	}
+	
+	public UniformFloatList(int rows) {
+		this(rows, 1, 1);
 	}
 	
 	public Buffer createBuffer() {
