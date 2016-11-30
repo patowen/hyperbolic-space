@@ -1,7 +1,6 @@
 package net.patowen.hyperbolicspace.math;
 
-public class Vector31
-{
+public class Vector31 {
 	public double x;
 	public double y;
 	public double z;
