@@ -141,15 +141,15 @@ public class SceneNodeImpl {
 			gl.glEnableVertexAttribArray(2);
 			
 			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, vertexBufferPos);
-			gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_DYNAMIC_DRAW);
+			gl.glBufferData(GL3.GL_ARRAY_BUFFER, vertexBuffer.capacity()*4, vertexBuffer, GL3.GL_STATIC_DRAW);
 			gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 0, 0);
 			
 			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, normalBufferPos);
-			gl.glBufferData(GL3.GL_ARRAY_BUFFER, normalBuffer.capacity()*4, normalBuffer, GL3.GL_DYNAMIC_DRAW);
+			gl.glBufferData(GL3.GL_ARRAY_BUFFER, normalBuffer.capacity()*4, normalBuffer, GL3.GL_STATIC_DRAW);
 			gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 0, 0);
 			
 			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, texCoordBufferPos);
-			gl.glBufferData(GL3.GL_ARRAY_BUFFER, texCoordBuffer.capacity()*4, texCoordBuffer, GL3.GL_DYNAMIC_DRAW);
+			gl.glBufferData(GL3.GL_ARRAY_BUFFER, texCoordBuffer.capacity()*4, texCoordBuffer, GL3.GL_STATIC_DRAW);
 			gl.glVertexAttribPointer(2, 2, GL3.GL_FLOAT, false, 0, 0);
 			
 			gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, elementBufferPos);
