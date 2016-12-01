@@ -3,13 +3,19 @@
 uniform sampler2D texture_sampler;
 uniform vec4 color;
 
-in vec3 vertex;
-in vec3 normal;
+in vec4 vertex;
+in vec4 normal;
 in vec2 tex_coord;
+
+uniform mat4 transform;
 
 out vec4 fragColor;
 
 void main() {
+	vec4 apos = transform*vertex;
+	if (length(apos.xyz) < 0.3*apos.w) {
+		discard;
+	}
 	fragColor = color * texture(texture_sampler, tex_coord);
 }
 

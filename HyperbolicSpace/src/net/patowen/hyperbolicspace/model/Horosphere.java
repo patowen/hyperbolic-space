@@ -21,7 +21,7 @@ public class Horosphere implements SceneNodeType {
 	private Controller c;
 	private SceneNodeImpl sceneNode;
 	
-	private int textureStepsPerWrap = 10;
+	private int textureStepsPerWrap = 4;
 	private int numSteps = 200;
 	private double size = 10;
 	
@@ -51,7 +51,7 @@ public class Horosphere implements SceneNodeType {
 	
 	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
-		sceneNode.setTexture(c.getTextureBank().stone);
+		sceneNode.setTexture(c.getTextureBank().tile);
 	}
 	
 	public void render(GL3 gl, Transform t) {

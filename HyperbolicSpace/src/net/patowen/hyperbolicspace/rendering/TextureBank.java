@@ -23,7 +23,7 @@ public class TextureBank {
 	/**
 	 * One of the textures used in the application
 	 */
-	public Texture stone, metal, clouds, circle;
+	public Texture stone, metal, clouds, circle, tile;
 	
 	/**
 	 * Loads all textures into the OpenGL context. This contributes the most
@@ -37,6 +37,7 @@ public class TextureBank {
 		metal = createTextureFromFile(gl, "metal.png", "png");
 		clouds = createTextureFromFile(gl, "flat_clouds.png", "png");
 		circle = createTextureFromFile(gl, "circle.png", "png");
+		tile = createTextureFromFile(gl, "tile.png", "png");
 	}
 	
 	/**

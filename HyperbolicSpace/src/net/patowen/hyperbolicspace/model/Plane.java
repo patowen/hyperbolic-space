@@ -291,7 +291,7 @@ public class Plane implements SceneNodeType {
 	public void renderInit(GL3 gl) {
 		sceneNode.renderInit(gl);
 		sceneNode.setTexture(c.getTextureBank().circle);
-		sceneNode.setColor(new float[] {0.42f, 0.54f, 0.14f, 1});
+		sceneNode.setColor(new float[] {1.0f, 1.0f, 1.0f, 1});
 	}
 	
 	public void render(GL3 gl, Transform t) {
