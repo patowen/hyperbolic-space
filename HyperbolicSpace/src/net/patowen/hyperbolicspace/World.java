@@ -6,7 +6,9 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.entity.FlagField;
 import net.patowen.hyperbolicspace.entity.Player;
+import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
+import net.patowen.hyperbolicspace.rendering.ShaderUniformHandler;
 
 /**
  * Handles the logic and rendering of all elements in the scene and
@@ -89,6 +91,12 @@ public class World {
 	 */
 	public void render(GL3 gl) {
 		player.setPerspective((float)viewportWidth/viewportHeight);
+		
+		ShaderUniformHandler sh = c.getMatrixHandler();
+		sh.setLightAmbient(new float[] {0.1f, 0.1f, 0.1f});
+		sh.setLightPosition(0, new Vector31(0, 0, 0, -1));
+		sh.setLightDiffuse(0, new float[] {0.9f, 0.9f, 0.9f});
+		
 		player.setView();
 		
 		for (SceneNode node : nodes)

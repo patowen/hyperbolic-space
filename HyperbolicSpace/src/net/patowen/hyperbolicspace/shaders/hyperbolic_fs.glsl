@@ -22,11 +22,22 @@ uniform vec3 material_diffuse;
 
 out vec4 fragColor;
 
+vec4 normalize_as_position(vec4 input) {
+	vec3 xyz = input.xyz;
+	float w = input.w;
+	float dist = -dot(xyz, xyz) + w*w;
+	return input * (1/sqrt(dist));
+}
+
 vec4 normalize_as_direction(vec4 input) {
 	vec3 xyz = input.xyz;
 	float w = input.w;
 	float dist = dot(xyz, xyz) - w*w;
 	return input * (1/sqrt(dist));
+}
+
+float hypdot(vec4 v1, vec4 v2) {
+	return -dot(v1.xyz, v2.xyz) + (v1.w * v2.w);
 }
 
 void main() {
@@ -36,20 +47,24 @@ void main() {
 	}
 	vec3 color_multiplier = light_ambient * material_ambient;
 	vec4 norm = normalize_as_direction(normal);
+	vec4 vert = normalize_as_position(vertex);
+	
+	float ddd = 0;
 	
 	for (int i=0; i<NUM_LIGHTS; i++) {
-		vec4 light_direction = light_position[i] - vertex; // TODO: Fix for hyperbolic space
-		float light_distance = length(light_direction);
-		light_direction /= light_distance; // TODO: Normalize properly
+		vec4 light_direction = light_position[i] - vert;
+		light_direction -= vert * hypdot(light_direction, vert);
+		light_direction = normalize_as_direction(light_direction); //TODO: Get some distance measure for attenuation
 		
-		float directness = dot(light_direction, norm); // TODO: Use hyperbolic dot product
+		float directness = abs(hypdot(light_direction, norm));
+		ddd = directness;
 		
 		if (directness > 0) {
 			color_multiplier += directness * light_diffuse[i] * material_diffuse;
 		}
 	}
 	
-	fragColor = color * texture(texture_sampler, tex_coord);
+	fragColor = vec4(color_multiplier, 1) * texture(texture_sampler, tex_coord);
 }
 
 /*

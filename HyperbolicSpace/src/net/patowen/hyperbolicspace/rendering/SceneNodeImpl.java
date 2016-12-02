@@ -174,7 +174,8 @@ public class SceneNodeImpl {
 		
 		mh.pushTransformation();
 		mh.addTransformation(transform);
-		mh.setColor(color);
+		mh.setMaterialAmbient(color);
+		mh.setMaterialDiffuse(color);
 		mh.update(gl);
 		texture.bind(gl);
 		
