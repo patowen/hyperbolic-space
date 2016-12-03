@@ -12,11 +12,11 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
-import net.patowen.hyperbolicspace.model.Building;
-import net.patowen.hyperbolicspace.model.Dodecahedron;
 import net.patowen.hyperbolicspace.model.Cone;
+import net.patowen.hyperbolicspace.model.Dodecahedron;
 import net.patowen.hyperbolicspace.model.Horosphere;
 import net.patowen.hyperbolicspace.model.Plane;
+import net.patowen.hyperbolicspace.model.Prism;
 import net.patowen.hyperbolicspace.model.Sphere;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
 import net.patowen.hyperbolicspace.rendering.ShaderHandler;
@@ -37,14 +37,14 @@ public class Controller {
 	private TextureBank textureBank;
 	
 	/** A renderable scene node */
-	public SceneNodeType dodecahedron, building, horosphere, plane, sphere, cone;
+	public SceneNodeType dodecahedron, prism, horosphere, plane, sphere, cone;
 	
 	/**
 	 * Constructs all meshes
 	 */
 	public void init() {
 		dodecahedron = new Dodecahedron(this);
-		building = new Building(this);
+		prism = new Prism(this);
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
 		sphere = new Sphere(this);
@@ -60,7 +60,7 @@ public class Controller {
 		textureBank.initTextures(gl);
 		
 		dodecahedron.renderInit(gl);
-		building.renderInit(gl);
+		prism.renderInit(gl);
 		horosphere.renderInit(gl);
 		plane.renderInit(gl);
 		sphere.renderInit(gl);

@@ -27,9 +27,6 @@ public class Player {
 	//Perspective
 	private double zoom = 0.6;
 	
-	//Non-noclip values
-	private double radius;
-	
 	/**
 	 * Initializes the {@code Player} and puts it in the specified {@code World}
 	 * @param c
@@ -39,8 +36,7 @@ public class Player {
 		this.c = c;
 		this.w = w;
 		
-		radius = 0.2 * 6;
-		pos = Transform.translation(Vector31.makePoincare(new Vector3(0, 0, Math.tanh(radius/2))));
+		pos = Transform.translation(new Vector31(1, 1, 1, 2));
 		vel = new Vector3();
 		
 		noclip = true;
@@ -87,7 +83,7 @@ public class Player {
 			spawnNode(new SceneNode(c.dodecahedron), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.7));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_2)) {
-			spawnNode(new SceneNode(c.building), getRotateAndTranslate(-1,0,0, 0,0,1, 0,1,0, 0,0.003,-0.4));
+			spawnNode(new SceneNode(c.prism), getRotateAndTranslate(0,0,-1, 0,1,0, 1,0,0, 0,0.003,-0.4));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_3)) {
 			spawnNode(new SceneNode(c.horosphere), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));

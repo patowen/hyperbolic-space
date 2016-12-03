@@ -6,6 +6,7 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.entity.FlagField;
 import net.patowen.hyperbolicspace.entity.Player;
+import net.patowen.hyperbolicspace.entity.PrismTree;
 import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 import net.patowen.hyperbolicspace.rendering.ShaderUniformHandler;
@@ -21,6 +22,7 @@ public class World {
 	private ArrayList<SceneNode> nodes; //List of rendered nodes
 	private Player player; //Controllable camera
 	private FlagField flag;
+	private PrismTree prismTree;
 	
 	private int viewportWidth, viewportHeight;
 	
@@ -52,6 +54,7 @@ public class World {
 		nodes.clear();
 		player = new Player(c, this);
 		flag = new FlagField(c, this);
+		prismTree = new PrismTree(c, this);
 		//nodes.add(new SceneNode(c.plane));
 //		SceneNode plane2 = new SceneNode(c.plane);
 //		plane2.setTransformation(new Transformation(

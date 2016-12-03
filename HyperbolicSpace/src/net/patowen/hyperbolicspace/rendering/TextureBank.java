@@ -23,7 +23,7 @@ public class TextureBank {
 	/**
 	 * One of the textures used in the application
 	 */
-	public Texture stone, metal, clouds, circle, tile;
+	public Texture blank, stone, metal, clouds, circle, tile;
 	
 	/**
 	 * Loads all textures into the OpenGL context. This contributes the most
@@ -32,6 +32,7 @@ public class TextureBank {
 	 */
 	public void initTextures(GL3 gl) {
 		createPlaceholderTexture(gl);
+		createBlankTexture(gl);
 		
 		stone = createTextureFromFile(gl, "stone.jpg", "jpg"); //http://wdc3d.com/blog/textures/6-seamless-stone-textures-1/
 		metal = createTextureFromFile(gl, "metal.png", "png");
@@ -56,6 +57,24 @@ public class TextureBank {
 		} catch (IOException e) {
 			return placeholder;
 		}
+	}
+	
+	/**
+	 * Creates a clear white 1x1 texture for rendering objects without textures
+	 * @param gl
+	 */
+	private void createBlankTexture(GL3 gl) {
+		BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		WritableRaster raster = image.getRaster();
+		float[] white = new float[] {255, 255, 255};
+		for (int i=0; i<image.getWidth(); i++) {
+			for (int j=0; j<image.getHeight(); j++) {
+				raster.setPixel(i, j, white);
+			}
+		}
+		
+		blank = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
+		blank.setTexParameteri(gl, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_NEAREST);
 	}
 	
 	/**
