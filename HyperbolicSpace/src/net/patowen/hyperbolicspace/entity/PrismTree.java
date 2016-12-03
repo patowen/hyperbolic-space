@@ -16,6 +16,8 @@ public class PrismTree {
 		this.c = c;
 		this.w = w;
 		
+		w.addNode(new SceneNode(c.pts1));
+		
 		int iterations = 4;
 		populatePrisms(iterations, Transform.identity());
 		populatePrisms(iterations, Transform.rotation(new Vector3(0, 0, 1), Math.PI/2));
@@ -26,9 +28,9 @@ public class PrismTree {
 	}
 	
 	private void populatePrisms(int iterations, Transform t) {
-		SceneNode prism = new SceneNode(c.prism);
+		SceneNode prism = new SceneNode(c.pts2);
 		prism.setTransformation(t);
-		w.addNode(prism);
+		if (iterations == 0 || iterations == 3) w.addNode(prism);
 		
 		if (iterations > 0) {
 			double length = MathHelper.acosh(3);

@@ -17,6 +17,7 @@ import net.patowen.hyperbolicspace.model.Dodecahedron;
 import net.patowen.hyperbolicspace.model.Horosphere;
 import net.patowen.hyperbolicspace.model.Plane;
 import net.patowen.hyperbolicspace.model.Prism;
+import net.patowen.hyperbolicspace.model.PrismTreeSection;
 import net.patowen.hyperbolicspace.model.Sphere;
 import net.patowen.hyperbolicspace.rendering.SceneNodeType;
 import net.patowen.hyperbolicspace.rendering.ShaderHandler;
@@ -37,7 +38,7 @@ public class Controller {
 	private TextureBank textureBank;
 	
 	/** A renderable scene node */
-	public SceneNodeType dodecahedron, prism, horosphere, plane, sphere, cone;
+	public SceneNodeType dodecahedron, prism, horosphere, plane, sphere, cone, pts1, pts2;
 	
 	/**
 	 * Constructs all meshes
@@ -49,6 +50,8 @@ public class Controller {
 		plane = new Plane(this);
 		sphere = new Sphere(this);
 		cone = new Cone(this);
+		pts1 = new PrismTreeSection(this, true, 0);
+		pts2 = new PrismTreeSection(this, false, 2);
 	}
 	
 	/**
@@ -65,6 +68,8 @@ public class Controller {
 		plane.renderInit(gl);
 		sphere.renderInit(gl);
 		cone.renderInit(gl);
+		pts1.renderInit(gl);
+		pts2.renderInit(gl);
 	}
 	
 	/**
