@@ -4,7 +4,6 @@ import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.Transform;
-import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.modelhelper.VertexGrid;
 import net.patowen.hyperbolicspace.rendering.Model;
@@ -22,8 +21,8 @@ public class Horosphere implements SceneNodeType {
 	private SceneNodeImpl sceneNode;
 	
 	private int textureStepsPerWrap = 4;
-	private int numSteps = 200;
-	private double size = 10;
+	private int numSteps = 200; //200
+	private double size = 10; //10
 	
 	/**
 	 * Initializes the {@code Horosphere} mesh.
@@ -36,11 +35,11 @@ public class Horosphere implements SceneNodeType {
 		
 		for (int i=0; i<=numSteps; i++) {
 			for (int j=0; j<=numSteps; j++) {
-				Vector3 vertex = new Vector3();
-				vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(1,0,0), ((double)i/numSteps-0.5)*size);
-				vertex = vertex.horoRotate(new Vector3(0,0,-1), new Vector3(0,1,0), ((double)j/numSteps-0.5)*size);
-				grid.setPosition(i, j, Vector31.makePoincare(vertex));
-				grid.setNormal(i, j, new Vector31());
+				double xx = ((double)i/numSteps-0.5)*size;
+				double yy = ((double)j/numSteps-0.5)*size;
+				Transform t = Transform.horoRotation(xx, yy);
+				grid.setPosition(i, j, t.transform(new Vector31(0, 0, 0, 1)));
+				grid.setNormal(i, j, t.transform(new Vector31(0, 0, 1, 0)));
 			}
 		}
 		grid.setTexCoords(0, 0, 1, 1, textureStepsPerWrap, textureStepsPerWrap, 0, 0);

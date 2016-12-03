@@ -44,9 +44,12 @@ public class Building implements SceneNodeType {
 		
 		Vector31 center = new Vector31(0, 0, 0, 1);
 		Vector31[] corners = new Vector31[baseSides];
+		Vector31[] sideNormals = new Vector31[baseSides];
 		for (int i=0; i<baseSides; i++) {
 			double theta = i*Math.PI*2/baseSides;
+			double normalTheta = (i+0.5)*Math.PI*2/baseSides;
 			corners[i] = new Vector31(dx*Math.cos(theta), dx*Math.sin(theta), 0, dx+1);
+			sideNormals[i] = new Vector31(Math.cos(normalTheta), Math.sin(normalTheta), 0, 0);
 		}
 		
 		//Base
@@ -70,13 +73,15 @@ public class Building implements SceneNodeType {
 				int j1 = j+1; if (j1 == baseSides) j1 = 0;
 				grids[j].setPosition(0, i, corners[j]);
 				grids[j].setPosition(1, i, corners[j1]);
-				grids[j].setNormal(0, i, new Vector31());
-				grids[j].setNormal(1, i, new Vector31());
+				grids[j].setNormal(0, i, sideNormals[j]);
+				grids[j].setNormal(1, i, sideNormals[j]);
 			}
 			
 			if (i != numSteps) {
-				for (int j=0; j<baseSides; j++)
+				for (int j=0; j<baseSides; j++) {
 					corners[j] = dzTransform.transform(corners[j]);
+					sideNormals[j] = dzTransform.transform(sideNormals[j]);
+				}
 				center = dzTransform.transform(center);
 			}
 		}

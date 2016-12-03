@@ -34,6 +34,16 @@ public class Transform {
 			new Vector31(v.x, v.y, v.z, v.w));
 	}
 	
+	public static Transform horoRotation(double x, double y) {
+		// Fixes ideal point (0, 0, 1, 1)
+		double sqrSum = 0.5*(x*x + y*y);
+		return new Transform(
+				new Vector31(1, 0, -x, x),
+				new Vector31(0, 1, -y, y),
+				new Vector31(x, y, -sqrSum+1, sqrSum),
+				new Vector31(x, y, -sqrSum, sqrSum+1));
+	}
+	
 	public static Transform rotation(Vector3 v, double theta) {
 		double xx = v.x, yy = v.y, zz = v.z;
 		double c = Math.cos(theta), s = Math.sin(theta);

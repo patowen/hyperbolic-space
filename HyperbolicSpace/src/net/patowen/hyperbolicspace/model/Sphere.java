@@ -45,7 +45,7 @@ public class Sphere implements SceneNodeType {
 						Math.cos(phi));
 				Vector31 position = Vector31.makePoincare(unitVector.times(radius));
 				grid.setPosition(slice, stack, position);
-				grid.setNormal(slice, stack, (Transform.translation(position)).transform(position));
+				grid.setNormal(slice, stack, new Vector31(unitVector.x, unitVector.y, unitVector.z, 0));
 			}
 		}
 		grid.setTexCoords(0, 0, 1, 1, textureStepsPerWrap, textureStepsPerWrap, 0, 0);
