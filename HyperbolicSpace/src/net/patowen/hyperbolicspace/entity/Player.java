@@ -94,9 +94,6 @@ public class Player {
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_5)) {
 			spawnNode(new SceneNode(c.sphere), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
 		}
-		if (inputHandler.getKeyPressed(InputHandler.SPAWN_6)) {
-			spawnNode(new SceneNode(c.cone), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));
-		}
 	}
 	
 	private Transform getRotateAndTranslate(double xx, double xy, double xz, double yx, double yy,double yz,

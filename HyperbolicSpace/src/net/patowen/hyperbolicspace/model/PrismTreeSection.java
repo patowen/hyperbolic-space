@@ -82,9 +82,8 @@ public class PrismTreeSection implements SceneNodeType {
 		Vector31[] corners = new Vector31[baseSides];
 		Vector31[] sideNormals = new Vector31[baseSides];
 		for (int i=0; i<baseSides; i++) {
-			double theta = 
-					(i-0.5)*Math.PI*2/baseSides;
-			double normalTheta = (i+0.5)*Math.PI*2/baseSides;
+			double theta = (i-0.5)*Math.PI*2/baseSides;
+			double normalTheta = (i)*Math.PI*2/baseSides;
 			corners[i] = new Vector31(0, radiusS*Math.cos(theta), radiusS*Math.sin(theta), radiusC);
 			sideNormals[i] = new Vector31(0, Math.cos(normalTheta), Math.sin(normalTheta), 0);
 		}

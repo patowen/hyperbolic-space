@@ -7,6 +7,7 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.entity.FlagField;
 import net.patowen.hyperbolicspace.entity.Player;
 import net.patowen.hyperbolicspace.entity.PrismTree;
+import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 import net.patowen.hyperbolicspace.rendering.ShaderUniformHandler;
@@ -54,13 +55,16 @@ public class World {
 		nodes.clear();
 		player = new Player(c, this);
 		flag = new FlagField(c, this);
-		prismTree = new PrismTree(c, this);
-		//nodes.add(new SceneNode(c.plane));
-//		SceneNode plane2 = new SceneNode(c.plane);
-//		plane2.setTransformation(new Transformation(
-//				new Orientation(new Vector3(1, 0, 0), new Vector3(0, 12.0/13, -5.0/13), new Vector3(0, 5.0/13, 12.0/13)),
-//				new Vector3()));
-//		nodes.add(plane2);
+		//prismTree = new PrismTree(c, this);
+		
+		/*int s = 8;
+		for (int i=-s; i<=s; i++) {
+			for (int j=-s; j<=s; j++) {
+				SceneNode node = new SceneNode(c.horosphere);
+				node.setTransformation(Transform.horoRotation(i*10, j*10));
+				nodes.add(node);
+			}
+		}*/
 	}
 	
 	/**

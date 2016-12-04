@@ -48,68 +48,16 @@ void main() {
 	vec3 color_multiplier = light_ambient * material_ambient;
 	vec4 norm = normalize_as_direction(normal);
 	vec4 vert = normalize_as_position(vertex);
-	
-	float ddd = 0;
+	float face = gl_FrontFacing ? 1.0 : -1.0;
 	
 	for (int i=0; i<NUM_LIGHTS; i++) {
 		vec4 light_direction = light_position[i] - vert;
 		light_direction -= vert * hypdot(light_direction, vert);
 		light_direction = normalize_as_direction(light_direction); //TODO: Get some distance measure for attenuation
 		
-		float directness = abs(hypdot(light_direction, norm));
-		ddd = directness;
-		
-		if (directness > 0) {
-			color_multiplier += directness * light_diffuse[i] * material_diffuse;
-		}
+		float directness = max(0, face*hypdot(light_direction, norm));
+		color_multiplier += directness * light_diffuse[i] * material_diffuse;
 	}
 	
 	fragColor = vec4(color_multiplier, 1) * texture(texture_sampler, tex_coord);
 }
-
-/*
-#version 150
-
-#define NUM_LIGHTS 1
-
-uniform sampler2D texture_sampler;
-
-in vec3 vertex;
-in vec2 tex_coord;
-in vec3 normal;
-
-//Lighting
-uniform vec3 viewer_position;
-uniform vec3 light_ambient;
-uniform vec3 light_position[NUM_LIGHTS];
-uniform vec3 light_diffuse[NUM_LIGHTS];
-
-//Material
-uniform vec3 material_ambient;
-uniform vec3 material_diffuse;
-uniform vec3 material_emission;
-uniform float material_transparency;
-
-uniform vec2 noise_displacement;
-
-out vec4 fragColor;
-
-void main() {
-	vec3 color_multiplier = light_ambient * material_ambient + material_emission;
-	vec3 norm = normalize(normal);
-	
-	for (int i=0; i<NUM_LIGHTS; i++) {
-		vec3 light_direction = light_position[i] - vertex;
-		float light_distance = length(light_direction);
-		light_direction /= light_distance;
-		
-		float directness = dot(light_direction, norm);
-		
-		if (directness > 0) {
-			color_multiplier += directness * light_diffuse[i] * material_diffuse * attenuation;
-		}
-	}
-	
-	fragColor = vec4(color_multiplier, material_transparency)*texture(texture_sampler, tex_coord);
-}
-*/
