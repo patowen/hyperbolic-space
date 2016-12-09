@@ -24,6 +24,8 @@ public class Player {
 	
 	private boolean noclip;
 	
+	private boolean rotationLock;
+	
 	//Perspective
 	private double zoom = 0.6;
 	
@@ -40,6 +42,7 @@ public class Player {
 		vel = new Vector3();
 		
 		noclip = true;
+		rotationLock = false;
 		
 		handleOrientation();
 	}
@@ -51,6 +54,7 @@ public class Player {
 	 */
 	public void step(double dt) {
 		handleNoclip();
+		handleRotationLock();
 		
 		handleTurning(dt);
 		handleAcceleration(dt);
@@ -70,6 +74,16 @@ public class Player {
 				noclip = false;
 			} else {
 				noclip = true;
+			}
+		}
+	}
+	
+	private void handleRotationLock() {
+		if (c.getInputHandler().getKeyPressed(InputHandler.ROTATION_LOCK)) {
+			if (rotationLock) {
+				rotationLock = false;
+			} else {
+				rotationLock = true;
 			}
 		}
 	}
@@ -171,15 +185,34 @@ public class Player {
 	 * @param dt the time step
 	 */
 	private void handleMovement(double dt) {
-		Vector31 heading = pos.transform(new Vector31(0, 0, -1, 1));
-		pos = pos.transform(Transform.translation(convertToPosition(vel, dt)));
+		Transform translation = Transform.translation(convertToPosition(vel, dt));
+		
+		Vector31 heading = new Vector31(0, 0, -1, 1);
+		Vector31 newHeading = translation.inverse().transform(heading);
+		
+		Vector3 headingO = heading.getOrtho();
+		headingO.normalize();
+		Vector3 newHeadingO = newHeading.getOrtho();
+		newHeadingO.normalize();
+		double angle = Math.acos(headingO.dot(newHeadingO));
+		
+		Vector3 axis = headingO.cross(newHeadingO);
+		axis.normalize();
+		
+		Transform rotation = Transform.rotation(axis, angle);
+		if (Math.abs(angle) < 1e-10) rotation = Transform.identity();
+		pos = pos.transform(translation);
+		if (rotationLock) pos = pos.transform(rotation);
 		pos.normalize();
 		
 		//Spherical precision frontier
-//		double mag = pos.getTranslation().magnitude();
-//		double maxMag = 0.9998;
-//		if (mag > maxMag)
-//			pos = new Transformation(pos.getRotation(), pos.getTranslation().times(maxMag/mag));
+		double mag = pos.w.getPoincare().magnitude();
+		double maxMag = 0.999999;
+		if (mag > maxMag)
+		{
+			Vector31 goalPos = Vector31.makePoincare(pos.w.getPoincare().times(maxMag / mag));
+			pos = pos.transform(Transform.translation(pos.inverse().transform(goalPos)));
+		};
 	}
 	
 	private void handleOrientation() {

@@ -23,7 +23,6 @@ public class World {
 	private ArrayList<SceneNode> nodes; //List of rendered nodes
 	private Player player; //Controllable camera
 	private FlagField flag;
-	private PrismTree prismTree;
 	
 	private int viewportWidth, viewportHeight;
 	
@@ -55,16 +54,6 @@ public class World {
 		nodes.clear();
 		player = new Player(c, this);
 		flag = new FlagField(c, this);
-		//prismTree = new PrismTree(c, this);
-		
-		/*int s = 8;
-		for (int i=-s; i<=s; i++) {
-			for (int j=-s; j<=s; j++) {
-				SceneNode node = new SceneNode(c.horosphere);
-				node.setTransformation(Transform.horoRotation(i*10, j*10));
-				nodes.add(node);
-			}
-		}*/
 	}
 	
 	/**
@@ -88,6 +77,21 @@ public class World {
 			reset();
 		if (inputHandler.getKeyPressed(InputHandler.CLEAR))
 			nodes.clear();
+		if (inputHandler.getKeyPressed(InputHandler.SCENE_1)) {
+			reset();
+			int s = 8;
+			for (int i=-s; i<=s; i++) {
+				for (int j=-s; j<=s; j++) {
+					SceneNode node = new SceneNode(c.horosphere);
+					node.setTransformation(Transform.horoRotation(i*10, j*10));
+					nodes.add(node);
+				}
+			}
+		}
+		if (inputHandler.getKeyPressed(InputHandler.SCENE_2)) {
+			reset();
+			new PrismTree(c, this);
+		}
 		
 		inputHandler.updatePressed();
 	}
