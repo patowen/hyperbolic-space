@@ -5,10 +5,8 @@ import com.jogamp.opengl.GL3;
 import net.patowen.hyperbolicspace.Controller;
 import net.patowen.hyperbolicspace.math.MathHelper;
 import net.patowen.hyperbolicspace.math.Transform;
-import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector3;
 import net.patowen.hyperbolicspace.math.Vector31;
-import net.patowen.hyperbolicspace.modelhelper.Polygon;
 import net.patowen.hyperbolicspace.modelhelper.VertexGrid;
 import net.patowen.hyperbolicspace.rendering.Model;
 import net.patowen.hyperbolicspace.rendering.SceneNodeImpl;
@@ -39,14 +37,14 @@ public class PrismTreeSection implements SceneNodeType {
 		this.c = c;
 		Model model = new Model();
 		
-		populatePrisms(model, iterations, Transform.identity());
+		populatePrisms(model, iterations-1, Transform.identity());
 		
 		if (isCenter) {
-			populatePrisms(model, iterations, Transform.rotation(new Vector3(0, 0, 1), Math.PI/2));
-			populatePrisms(model, iterations, Transform.rotation(new Vector3(0, 0, -1), Math.PI/2));
-			populatePrisms(model, iterations, Transform.rotation(new Vector3(0, 1, 0), Math.PI/2));
-			populatePrisms(model, iterations, Transform.rotation(new Vector3(0, -1, 0), Math.PI/2));
-			populatePrisms(model, iterations, Transform.rotation(new Vector3(0, 0, 1), Math.PI));
+			populatePrisms(model, iterations-1, Transform.rotation(new Vector3(0, 0, 1), Math.PI/2));
+			populatePrisms(model, iterations-1, Transform.rotation(new Vector3(0, 0, -1), Math.PI/2));
+			populatePrisms(model, iterations-1, Transform.rotation(new Vector3(0, 1, 0), Math.PI/2));
+			populatePrisms(model, iterations-1, Transform.rotation(new Vector3(0, -1, 0), Math.PI/2));
+			populatePrisms(model, iterations-1, Transform.rotation(new Vector3(0, 0, 1), Math.PI));
 		}
 		
 		sceneNode = new SceneNodeImpl(this.c);
@@ -88,15 +86,6 @@ public class PrismTreeSection implements SceneNodeType {
 			sideNormals[i] = new Vector31(0, Math.cos(normalTheta), Math.sin(normalTheta), 0);
 		}
 		
-		//Base
-		/*Polygon base = new Polygon(baseSides);
-		base.setCenterPosition(t.transform(center));
-		for (int j=0; j<baseSides; j++) {
-			base.setPosition(j, t.transform(corners[baseSides-j-1]));
-		}
-		base.setTexCoordsRegular(new Vector2(0.75, 0.25), 0.25, 0.25, 0);
-		base.addToModel(model);*/
-		
 		//Sides
 		VertexGrid[] grids = new VertexGrid[baseSides];
 		int numSteps = numWraps*heightStepsPerWrap;
@@ -124,15 +113,6 @@ public class PrismTreeSection implements SceneNodeType {
 		for (int j=0; j<baseSides; j++) {
 			grids[j].addToModel(model);
 		}
-		
-		//Top
-		Polygon top = new Polygon(baseSides);
-		top.setCenterPosition(center);
-		for (int j=0; j<baseSides; j++) {
-			top.setPosition(j, corners[j]);
-		}
-		top.setTexCoordsRegular(new Vector2(0.75, 0.75), 0.25, 0.25, 0);
-		top.addToModel(model);
 	}
 	
 	public void renderInit(GL3 gl) {

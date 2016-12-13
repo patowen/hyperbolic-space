@@ -12,6 +12,7 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
+import net.patowen.hyperbolicspace.entity.PrismTree;
 import net.patowen.hyperbolicspace.model.Cone;
 import net.patowen.hyperbolicspace.model.Dodecahedron;
 import net.patowen.hyperbolicspace.model.Horosphere;
@@ -50,8 +51,8 @@ public class Controller {
 		plane = new Plane(this);
 		sphere = new Sphere(this);
 		cone = new Cone(this);
-		pts1 = new PrismTreeSection(this, true, 0);
-		pts2 = new PrismTreeSection(this, false, 2);
+		pts1 = new PrismTreeSection(this, true, PrismTree.totalIterations % 3);
+		pts2 = new PrismTreeSection(this, false, 3);
 	}
 	
 	/**

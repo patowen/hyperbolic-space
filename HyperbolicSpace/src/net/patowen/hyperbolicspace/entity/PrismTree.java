@@ -9,6 +9,8 @@ import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 
 public class PrismTree {
+	public static int totalIterations = 7;
+	
 	private Controller c;
 	private World w;
 	
@@ -18,7 +20,7 @@ public class PrismTree {
 		
 		w.addNode(new SceneNode(c.pts1));
 		
-		int iterations = 4;
+		int iterations = totalIterations - 3;
 		populatePrisms(iterations, Transform.identity());
 		populatePrisms(iterations, Transform.rotation(new Vector3(0, 0, 1), Math.PI/2));
 		populatePrisms(iterations, Transform.rotation(new Vector3(0, 0, -1), Math.PI/2));
@@ -30,7 +32,7 @@ public class PrismTree {
 	private void populatePrisms(int iterations, Transform t) {
 		SceneNode prism = new SceneNode(c.pts2);
 		prism.setTransformation(t);
-		if (iterations == 0 || iterations == 3) w.addNode(prism);
+		if (iterations % 3 == 0) w.addNode(prism);
 		
 		if (iterations > 0) {
 			double length = MathHelper.acosh(3);
