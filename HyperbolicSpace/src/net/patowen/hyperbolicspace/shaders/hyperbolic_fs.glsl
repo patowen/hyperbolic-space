@@ -22,18 +22,18 @@ uniform vec3 material_diffuse;
 
 out vec4 fragColor;
 
-vec4 normalize_as_position(vec4 input) {
-	vec3 xyz = input.xyz;
-	float w = input.w;
+vec4 normalize_as_position(vec4 input_vec) {
+	vec3 xyz = input_vec.xyz;
+	float w = input_vec.w;
 	float dist = -dot(xyz, xyz) + w*w;
-	return input * (1/sqrt(dist));
+	return input_vec * (1/sqrt(dist));
 }
 
-vec4 normalize_as_direction(vec4 input) {
-	vec3 xyz = input.xyz;
-	float w = input.w;
+vec4 normalize_as_direction(vec4 input_vec) {
+	vec3 xyz = input_vec.xyz;
+	float w = input_vec.w;
 	float dist = dot(xyz, xyz) - w*w;
-	return input * (1/sqrt(dist));
+	return input_vec * (1/sqrt(dist));
 }
 
 float hypdot(vec4 v1, vec4 v2) {

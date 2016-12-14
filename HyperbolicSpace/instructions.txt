@@ -2,7 +2,8 @@ To run this program, you need to have Java 8 installed on this computer. It shou
 Windows, Mac, and Linux and 32 or 64-bit java, but it has only been tested with 64-bit Java on
 Windows.
 
-To run the application, open 'hyperbolic-space.jar'. It will open a window with a hyperbolic plane.
+To run the application, open 'hyperbolic-space.jar'. It will open a window. It may take a little
+while to load, but once it does, you will see a hyperbolic plane.
 
 You can look around with the mouse. Clicking on the window to allow the application to capture the
 mouse, allowing you to look around with it. Pressing Backspace will release the mouse. Pressing
