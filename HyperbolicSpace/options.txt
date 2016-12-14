@@ -1,5 +1,16 @@
-#4 or 7
-tree_levels=7
+# The options.txt file gives you a chance to improve the look of the program by having the tree
+# you get by pressing F2 branch out more or having the horosphere you get by pressing F1 extend
+# further. Depending on the power of your computer, values that are too high may lag the program
+# or cause the computer to crash.
 
-#3 or 8
+# On my laptop, the values I used for tree_levels and horosphere_size are 5 and 1, respectively.
+# On my desktop, I can increase the values to 7 and 8.
+
+# How many times to branch the tree. Increasing this value approximately increases the amount
+# to render by a factor of 5, so it is best to try increasing it by just one at a time.
+tree_levels=5
+
+# How many times to extend the horosphere. If the value is n, the length of this horosphere will
+# be proportional to 2n+1, so its area will be proportional to (2n+1)^2. Therefore, increasing
+# this argument has less of an effect on framerate than tree_levels.
 horosphere_size=1

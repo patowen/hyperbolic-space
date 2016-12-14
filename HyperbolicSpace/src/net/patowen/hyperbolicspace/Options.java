@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 public class Options {
@@ -15,8 +14,8 @@ public class Options {
 	
 	// Set defaults
 	public Options() {
-		treeLevels = 7;
-		horosphereSize = 8;
+		treeLevels = 5;
+		horosphereSize = 1;
 	}
 	
 	public void readOptionsFile() {

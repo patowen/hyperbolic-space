@@ -12,7 +12,6 @@ import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.jogamp.opengl.util.glsl.ShaderState;
 
-import net.patowen.hyperbolicspace.entity.PrismTree;
 import net.patowen.hyperbolicspace.model.Cone;
 import net.patowen.hyperbolicspace.model.Dodecahedron;
 import net.patowen.hyperbolicspace.model.Horosphere;
