@@ -14,7 +14,12 @@ enabled.
 
 Holding down the left or right mouse button makes you go forwards or backwards, respectively.
 
-Q and E tilt the camera left and right.
+Hold down shift while using the movement buttons to move more slowly.
+
+Note that if you move too far away from the center of the scene, you will be blocked from moving
+further to prevent glitches.
+
+Press Q and E to tilt the camera left and right.
 
 The number keys allow you to place objects in front of you.
 1- Regular dodecahedron
@@ -33,6 +38,13 @@ F1- Larger section of a horosphere than you would get by pressing 3.
 F2- My personal favorite, a tree such that each intersection has edges extending at right angles.
 
 You can also press F11 to toggle fullscreen.
+
+Advanced controls:
+O/P: Change the field of view (zoom in and out)
+Ctrl: Toggle rotation lock. When rotation lock is enabled, the camera automatically rotates to look
+at a fixed point at infinity. Moving the mouse still works and changes the point at infinity the
+camera is looking at. This mode is recommended for rotating around objects.
+Delete: Delete everything from the scene (Pressing R is usually a better idea).
 
 Lastly, there is an "options.txt" file. Depending on how fast your computer is, you can modify
 some values to improve the look of either the F1 or F2 scene.
