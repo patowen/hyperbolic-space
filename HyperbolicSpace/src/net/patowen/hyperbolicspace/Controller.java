@@ -41,17 +41,22 @@ public class Controller {
 	/** A renderable scene node */
 	public SceneNodeType dodecahedron, prism, horosphere, plane, sphere, cone, pts1, pts2;
 	
+	public Options options;
+	
 	/**
 	 * Constructs all meshes
 	 */
 	public void init() {
+		options = new Options();
+		options.readOptionsFile();
+		
 		dodecahedron = new Dodecahedron(this);
 		prism = new Prism(this);
 		horosphere = new Horosphere(this);
 		plane = new Plane(this);
 		sphere = new Sphere(this);
 		cone = new Cone(this);
-		pts1 = new PrismTreeSection(this, true, PrismTree.totalIterations % 3);
+		pts1 = new PrismTreeSection(this, true, options.treeLevels % 3);
 		pts2 = new PrismTreeSection(this, false, 3);
 	}
 	

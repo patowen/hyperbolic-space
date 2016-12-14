@@ -3,7 +3,6 @@ package net.patowen.hyperbolicspace.model;
 import com.jogamp.opengl.GL3;
 
 import net.patowen.hyperbolicspace.Controller;
-import net.patowen.hyperbolicspace.math.MathHelper;
 import net.patowen.hyperbolicspace.math.Transform;
 import net.patowen.hyperbolicspace.math.Vector2;
 import net.patowen.hyperbolicspace.math.Vector31;
@@ -26,7 +25,7 @@ public class Prism implements SceneNodeType {
 	private int baseSides = 8;
 	private double baseRadius = 0.1;
 	
-	private double totalHeight = MathHelper.acosh(3);
+	private double totalHeight = 10;
 	private int heightStepsPerWrap = 6;
 	private int numWraps = 7;
 	
@@ -41,18 +40,19 @@ public class Prism implements SceneNodeType {
 		double radiusC = Math.cosh(baseRadius);
 		double radiusS = Math.sinh(baseRadius);
 		double heightStep = totalHeight/heightStepsPerWrap/numWraps;
-		double hStepC = Math.cosh(heightStep);
-		double hStepS = Math.sinh(heightStep);
-		Transform dzTransform = Transform.translation(new Vector31(hStepS, 0, 0, hStepC));
+		Transform dzTransform = Transform.translation(new Vector31(Math.sinh(heightStep), 0, 0, Math.cosh(heightStep)));
 		
-		Vector31 center = new Vector31(0, 0, 0, 1);
+		double initialHeightStep = -totalHeight/2.0;
+		Transform initialTransform = Transform.translation(new Vector31(Math.sinh(initialHeightStep), 0, 0, Math.cosh(initialHeightStep)));
+		
+		Vector31 center = initialTransform.transform(new Vector31(0, 0, 0, 1));
 		Vector31[] corners = new Vector31[baseSides];
 		Vector31[] sideNormals = new Vector31[baseSides];
 		for (int i=0; i<baseSides; i++) {
 			double theta = (i-0.5)*Math.PI*2/baseSides;
 			double normalTheta = (i)*Math.PI*2/baseSides;
-			corners[i] = new Vector31(0, radiusS*Math.cos(theta), radiusS*Math.sin(theta), radiusC);
-			sideNormals[i] = new Vector31(0, Math.cos(normalTheta), Math.sin(normalTheta), 0);
+			corners[i] = initialTransform.transform(new Vector31(0, radiusS*Math.cos(theta), radiusS*Math.sin(theta), radiusC));
+			sideNormals[i] = initialTransform.transform(new Vector31(0, Math.cos(normalTheta), Math.sin(normalTheta), 0));
 		}
 		
 		//Base

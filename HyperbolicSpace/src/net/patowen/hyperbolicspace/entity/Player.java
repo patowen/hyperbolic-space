@@ -39,6 +39,8 @@ public class Player {
 		this.w = w;
 		
 		pos = Transform.translation(new Vector31(1, 1, 1, 2));
+		pos = pos.transform(Transform.rotation(new Vector3(0, 1, 0), Math.PI/4));
+		pos = pos.transform(Transform.rotation(new Vector3(1, 0, 0), -Math.PI/6));
 		vel = new Vector3();
 		
 		noclip = true;
@@ -97,7 +99,7 @@ public class Player {
 			spawnNode(new SceneNode(c.dodecahedron), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.7));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_2)) {
-			spawnNode(new SceneNode(c.prism), getRotateAndTranslate(0,0,-1, 0,1,0, 1,0,0, 0,0.003,-0.4));
+			spawnNode(new SceneNode(c.prism), getRotateAndTranslate(0,0,-1, 0,1,0, 1,0,0, 0,0,0));
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SPAWN_3)) {
 			spawnNode(new SceneNode(c.horosphere), getRotateAndTranslate(1,0,0, 0,1,0, 0,0,1, 0,0,-0.4));

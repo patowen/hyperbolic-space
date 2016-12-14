@@ -1,0 +1,5 @@
+#4 or 7
+tree_levels=7
+
+#3 or 8
+horosphere_size=1

@@ -9,12 +9,10 @@ import net.patowen.hyperbolicspace.math.Vector31;
 import net.patowen.hyperbolicspace.rendering.SceneNode;
 
 public class PrismTree {
-	public static int totalIterations = 7;
-	
 	private Controller c;
 	private World w;
 	
-	public PrismTree(Controller c, World w) {
+	public PrismTree(Controller c, World w, int totalIterations) {
 		this.c = c;
 		this.w = w;
 		

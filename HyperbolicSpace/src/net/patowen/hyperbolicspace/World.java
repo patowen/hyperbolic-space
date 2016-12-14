@@ -79,7 +79,7 @@ public class World {
 			nodes.clear();
 		if (inputHandler.getKeyPressed(InputHandler.SCENE_1)) {
 			reset();
-			int s = 8;
+			int s = c.options.horosphereSize;
 			for (int i=-s; i<=s; i++) {
 				for (int j=-s; j<=s; j++) {
 					SceneNode node = new SceneNode(c.horosphere);
@@ -90,7 +90,7 @@ public class World {
 		}
 		if (inputHandler.getKeyPressed(InputHandler.SCENE_2)) {
 			reset();
-			new PrismTree(c, this);
+			new PrismTree(c, this, c.options.treeLevels);
 		}
 		
 		inputHandler.updatePressed();
