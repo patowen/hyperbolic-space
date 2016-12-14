@@ -71,13 +71,13 @@ public class Player {
 	}
 	
 	private void handleNoclip() {
-		if (c.getInputHandler().getKeyPressed(InputHandler.NOCLIP)) {
+		/*if (c.getInputHandler().getKeyPressed(InputHandler.NOCLIP)) {
 			if (noclip) {
 				noclip = false;
 			} else {
 				noclip = true;
 			}
-		}
+		}*/
 	}
 	
 	private void handleRotationLock() {

@@ -1,0 +1,37 @@
+To run this program, you need to have Java 8 installed on this computer. It should work with
+Windows, Mac, and Linux and 32 or 64-bit java, but it has only been tested with 64-bit Java on
+Windows.
+
+To run the application, open 'hyperbolic-space.jar'. It will open a window with a hyperbolic plane.
+
+You can look around with the mouse. Clicking on the window to allow the application to capture the
+mouse, allowing you to look around with it. Pressing Backspace will release the mouse. Pressing
+Escape will quit the application (although the close button also works).
+
+WASD controls "strafe" the camera without going forwards or backwards. The arrow keys are not
+enabled.
+
+Holding down the left or right mouse button makes you go forwards or backwards, respectively.
+
+Q and E tilt the camera left and right.
+
+The number keys allow you to place objects in front of you.
+1- Regular dodecahedron
+2- Line segment extending forwards and backwards from your position (actually an extruded octagon)
+3- Section of a horosphere
+4- Plane
+5- Small sphere
+
+Pressing R will reset everything, removing all objects from the scene, including the original plane.
+Everything will be all black with no reference points until you spawn an object.
+
+You can also press function keys to take you to new scenes. Note that this will clear any objects
+you have spawned in front of you.
+
+F1- Larger section of a horosphere than you would get by pressing 3.
+F2- My personal favorite, a tree such that each intersection has edges extending at right angles.
+
+You can also press F11 to toggle fullscreen.
+
+Lastly, there is an "options.txt" file. Depending on how fast your computer is, you can modify
+some values to improve the look of either the F1 or F2 scene.

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.GL3;
 
-import net.patowen.hyperbolicspace.entity.FlagField;
 import net.patowen.hyperbolicspace.entity.Player;
 import net.patowen.hyperbolicspace.entity.PrismTree;
 import net.patowen.hyperbolicspace.math.Transform;
@@ -22,7 +21,6 @@ public class World {
 	
 	private ArrayList<SceneNode> nodes; //List of rendered nodes
 	private Player player; //Controllable camera
-	private FlagField flag;
 	
 	private int viewportWidth, viewportHeight;
 	
@@ -35,6 +33,7 @@ public class World {
 		
 		nodes = new ArrayList<SceneNode>();
 		reset();
+		nodes.add(new SceneNode(c.plane));
 	}
 	
 	/**
@@ -53,7 +52,6 @@ public class World {
 	public void reset() {
 		nodes.clear();
 		player = new Player(c, this);
-		flag = new FlagField(c, this);
 	}
 	
 	/**
@@ -71,7 +69,6 @@ public class World {
 	public void step(double dt) {
 		InputHandler inputHandler = c.getInputHandler();
 		player.step(dt);
-		flag.step(dt);
 		
 		if (inputHandler.getKeyPressed(InputHandler.RESET))
 			reset();
