@@ -1,5 +1,7 @@
 Hyperworld
 =========
+IMPORTANT NOTE: All future development will be in C++, found in the https://github.com/patowen/hyperworld repository.
+
 All necessary java files are included.
 
 The JOGL plugin (JogAmp version 2.3.1 or above tested) is needed to run this program.
